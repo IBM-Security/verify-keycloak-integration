@@ -1,0 +1,5 @@
+com.ibm.security.access.authenticator.CloudIdentityAuthenticatorFactory
+com.ibm.security.access.authenticator.CloudIdentityDemoAuthenticatorFactory
+com.ibm.security.access.authenticator.CloudIdentityFidoRegistrationRequiredActionAuthenticatorFactory
+com.ibm.security.access.authenticator.CloudIdentityQrLoginAuthenticatorFactory
+com.ibm.security.access.authenticator.CloudIdentityVerifyRegistrationRequiredActionAuthenticatorFactory
