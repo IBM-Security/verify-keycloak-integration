@@ -108,13 +108,23 @@ _Provide an overview of the architecture of the product offering that this docum
 
 ### 6.2. Data Model
 
-_Provide here details of the Data Model, how it is extensible, how to preserve backward compatibility, etc._
-
 There are a few pieces of data persisted by these custom authenticators, in various locations:
 
 #### Data stored within Cloud Identity
 
-For some of the planned integrations, it is required to persist some data within Cloud Identity.
+For some of the planned integrations, it is required to persist some data within Cloud Identity. This data includes:
+
+* **User entries** - Some of the authentication factor registrations (FIDO, IBM Verify) require a user record within Cloud Identity for proper identity association. Keycloak users that register with FIDO or IBM Verify will have a corresponding user account created in Cloud Identity for linking purposes.
+
+* **IBM Verify Registrations** - As mentioned above, registering an IBM Verify app for a given user requires a registration resource be created, through public Cloud Identity APIs.
+
+* **FIDO Registrations** - As mentioned above, registering a FIDO device for a given user requires a registration resource be created, through public Cloud Identity APIs.
+
+#### Data stored within Keycloak
+
+As mentioned in the above section, certain integrations require a user account be created within Cloud Identity's directory that corresponds to a user in the Keycloak directory. Once that user account is created within Cloud Identity, the externally available unique ID for that account will be stored as a custom attribute on the Keycloak user directory entry. The proposed key for this custom attribute is `cloudIdentityUserId`, but we should also consider exposing this as a configurable option within the custom authenticator modules, allowing Alice to specify what the attribute should be named.
+
+We can also consider alternative linking strategies between CI and Keycloak user accounts, potentially offering Alice a mechanism outside of custom user attributes. If such a need is identified, we can explore it further. The custom user attribute is just the first, functional approach identified.
 
 ### 6.3. Multi-tenancy
 
@@ -122,23 +132,47 @@ Not relevant to this design, as the product of this design does not run within C
 
 ### 6.4. Management Interfaces
 
-_Provide details of all external interfaces, API and CLI etc._
+Each custom authenticator built by this project will expose a certain set of configuration criteria, which Alice will be required to supply. These configurations are provided through the Keycloak administrator console, when the custom authenticators are added to an authentication flow. These configurations include but are not limited to:
+
+* **Cloud Identity Tenant FQDN** - The fully-qualified domain name (FQDN) of the Cloud Identity tenant Alice intends to integrate with. This is used to properly route API calls from the custom authenticators.
+
+* **API Client ID** - The Client ID of the OAuth-based API Client, as provided by Cloud Identity. It is up to Alice to create and properly entitle an API Client using the Cloud Identity Adminstrator UI. Entitlement requirements will be called out specifically for each integration point elsewhere in this document.
+
+* **API Client Secret** - The Client Secret of the OAuth-based API Client, as provided by Cloud Identity. See the above description of API Client ID for more information.
 
 ### 6.5. User Interfaces
 
-_Provide here an overview of technologies used for User Interface as well as User Interface details of this design._
+This project will include User Interfaces that are invoked in runtime authentication flows by Jessica, the end user. These UIs will expose the various authentication methods/factors that Jessica can configure/use.
+
+Keycloak custom authenticators use the [FreeMarker Template Engine](https://freemarker.apache.org/) to process and render all UIs that are part of the authentication process. The expectation is that we will hook into this existing system to build our UIs, though this does not necessarily dictate any specific client-side technology. There is still some research to be done to determine how we could potentially pull in external dependencies for client-side UI technology, integrating them into the FreeMarker template pages.
+
+We will be responsible for building UIs that expose the ability for Jessica to:
+
+1. Register an IBM Verify application on her mobile device
+
+2. Register a FIDO/WebAuthn security device
+
+3. Perform First Factor authentication by scanning a QR code with her IBM Verify application
+
+4. Perform First Factor authentication via a FIDO/WebAuthn device
+
+... as other user stories are prioritized.
+
+The current plan is to implement these UIs following the visual design patterns currently in place by Keycloak, out of the box. However, we should also expose a mechanism for Alice to supply her own template files to replace ours, giving Alice the ability to customize the user experience her users encounter, as it is likely that she has already performed similar actions on the pre-existing template pages to provide proper branding.
 
 ### 6.6. Deprecated Interfaces
 
-_Provide an overview of external interfaces that are being deprecated in this release and tie this to scenarios that are being deprecated._
+The intent of this project is not to provide programmatic interfaces that Alice will consume (though it could be extended to do that, if we discover such a need). Therefore, there is not really a threat of deprecating external interfaces.
+
+However, it should be noted that a majority of the functionality that will be packaged in these custom authenticators is dependent upon SPIs provided by Keycloak that are subject to change with newer Keycloak releases. That means we will need to identify, which each released artifact, a set of compatible Keycloak versions.
 
 ### 6.7. Audit Logging
 
-_Outline what audit events will be generated by this design and details of such events._
+This is still TBD, but we will need to figure out what events from the runtime flow are interesting/audit-worthy, and establish a pattern of logging/tracing for proper code support in production environments.
 
 ### 6.8. Reporting
 
-_Provide here an overview of technologies used for Reporting as well as reports relevant to this design._
+N/A
 
 ### 6.9. Security Considerations
 
