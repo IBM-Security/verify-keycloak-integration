@@ -10,8 +10,8 @@
 - [2. Traceability](#2-traceability)
 - [3. Requirements](#3-requirements)
 - [4. Assumptions and Dependencies](#4-assumptions-and-dependencies)
-	- [4.1 Assumptions](#41-assumptions)
-	- [4.2 Dependencies](#42-dependencies)
+	- [4.1. Assumptions](#41-assumptions)
+	- [4.2. Dependencies](#42-dependencies)
 - [5. Scenarios/User Stories](#5-scenariosuser-stories)
 - [6. Design Details](#6-design-details)
     - [6.1. Architecture](#61-architecture)
@@ -37,15 +37,13 @@
     - [7.6. Disaster Recovery](#76-disaster-recovery)
     - [7.7. Performance and Stability](#77-performance-and-stability)
     - [7.8. Other](#78-other)
-- [8. Documentation](#8-documentation)
-- [9. Testing](#9-testing)
+- [8. CI/CD Pipeline and Testing](#8-cicd-pipeline-and-testing)
+- [9. Documentation](#9-documentation)
 
 <!-- /MarkdownTOC -->
 </details>
 
 ## 1. Overview
-
-_Provide an overview of the functionality that is being designed._
 
 This document will outline and describe the nature and design of how IBM Cloud Identity can be leveraged to provide advanced authentication and authorization features for RedHat SSO (Keycloak) deployments.
 
@@ -93,8 +91,6 @@ Standard Cloud Identity personas are in play here:
 ## 6. Design Details
 
 ### 6.1. Architecture
-
-_Provide an overview of the architecture of the product offering that this document discusses the design for. Include an architecture diagram, and a 4-5 line description of each component in this diagram stating its purpose. Highlight new and updated components for this design and tie it to the  scenarios._
 
 ![Architecture](./images/architecture.png)
 
@@ -156,7 +152,7 @@ We will be responsible for building UIs that expose the ability for Jessica to:
 
 4. Perform First Factor authentication via a FIDO/WebAuthn device
 
-... as other user stories are prioritized.
+Other UIs will be built as the user stories are identified and prioritized.
 
 The current plan is to implement these UIs following the visual design patterns currently in place by Keycloak, out of the box. However, we should also expose a mechanism for Alice to supply her own template files to replace ours, giving Alice the ability to customize the user experience her users encounter, as it is likely that she has already performed similar actions on the pre-existing template pages to provide proper branding.
 
@@ -202,43 +198,64 @@ _List here technical options that were considered but discarded_
 
 ### 7.1. Deployment
 
-_Describe what is required to deploy the new/changed capability.  Include considerations such as restart, downtime, and whether it can be rolled back._
+Deployment of these custom authenticators is delegated to Alice, as the custom authenticators will run within a pre-existing Keycloak deployment. As new releases are built, any kind of data migration requirements will be considered at that time.
 
 ### 7.2. Automation
 
-_Describe what is required to automate the deployment_
+Out of scope.
 
 ### 7.3. Security
 
-_Describe any impacts to security classification, data storage and privacy, certificate/key management, new identities, etc._
+All data storage is handled by Keycloak and Cloud Identity. These extensions themselves are just drop-ins that add functionality. Data security is therefore inherited from Keycloak and Cloud Identity.
 
 ### 7.4. Monitoring
 
-_New/changed monitoring interfaces, logs, trace data, etc.  How this data integrates with existing data.  Consider that you are writing this for the person who needs to update the status server used by Ops._
+As of now, monitoring of these custom authenticators will be handled by log traversal within Keycloak deployments. If there is any kind of monitoring/health check SPIs made available by Keycloak, we will integrate with them, as needed.
 
 ### 7.5. High Availability
 
-_Provide an overview of architectural approach of how this design is made highly available._
+HA of Keycloak deployments is out of scope for us, and up to Alice. HA of Cloud Identity resources is also out of scope of this effort, and up to Cloud Identity itself.
 
 ### 7.6. Disaster Recovery
 
-_Provide an overview of this design supports disaster recovery._
+DR of Keycloak deployments is out of scope for us, and up to Alice. DR of Cloud Identity resources is also out of scope of this effort, and up to Cloud Identity itself.
 
 ### 7.7. Performance and Stability
 
-_Provide an overview of considerations to make this design performant and scalable.  How will you deliver key performance indicators and satisfy SLOs._
+Custom authenticator performance is dependent upon the following factors:
+* Performance of the various Cloud Identity APIs leveraged by a given custom authenticator
+* Optimization of Cloud Identity API requests made by custom authenticators (caching access tokens instead of requesting fresh ones per flow, etc.)
+* Optimization of interaction with Keycloak user directory when user lookups are required, especially based on custom attributes (potential need for custom DB indices based on user lookup approaches)
 
 ### 7.8. Other
 
-_Indicate anything else that an Operations person needs to be aware of._
+None at the moment.
 
-## 8. Documentation
+## 8. CI/CD Pipeline and Testing
 
-_This section will contain information which is geared to the IDD developer so that they know how to document this new functionality. The section should provide enough information for the IDD developer to write the official documentation_
+This project will follow the existing patterns for Cloud Identity development, testing, continuous integration, and continuous release cycles.
 
-## 9. Testing
+Unit tests will be written for individual functions/features within the development code.
 
-_This section will contain any unit test cases which will be implemented/executed as a part of this design.. The following table provides an example of what the test case design should look like_
+Integration tests will be performed by setting up testing environments with various Keycloak deployments (for whichever version(s) we intend to support), in both _new_ deployments and _existing_ deployments. There will also be a set of Cloud Identity tenants (from the PRODUCTION environment) made available to continuously test integrations between Keycloak deployments and Cloud Identity subscriptions. Given these environments, tests will be written to recreate both Alice and Jessica flows surrounding the custom authenticators being built.
+
+There will be daily test runs executed against these various test environments, verifying continued support of known features/functions. Additionally, as active development continues, new tests will be written to verify newly developed features. These new features and tests will be executed by the _development_ build/test pipelines.
+
+All of this will be orchestrated via the existing Jenkins instance setup within the Cloud Identity development organization.
+
+Build/test/release pipelines will be setup to support automating development and release builds, which involves testing the produced artifacts. Once a stable, release-ready artifact is produced, the release portion of the pipeline will be executed. As described earlier, the artifacts produced by this project will be bundled JAR files that can be dropped into Alice's Keycloak deployment. The release portion of the pipeline will then be responsible for publishing the artifact(s) to a publicly-accessible artifact repository. Specifics are still TBD, but something like [Maven Central](https://search.maven.org/) is the leading candidate.
+
+## 9. Documentation
+
+Extension documentation will be housed at the [GitHub repository](https://github.com/IBM-Security/cloud-identity-keycloak-integration) using various `markdown` files.
+
+Documentation should include but not be limited to:
+* Enumeration and explanation of available custom authenticators
+* API Client entitlement requirements for each available custom authenticator
+* Configuration options for each available custom authenticator
+* Integration/setup steps, guiding Alice through using the Keycloak admin console to integrate one of more custom authenticators
+* Walkthrough of sample integration(s)
+
 
 # DOCUMENT PROPERTIES
 
