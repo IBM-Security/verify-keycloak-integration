@@ -13,9 +13,13 @@
 	- [4.1. Assumptions](#41-assumptions)
 	- [4.2. Dependencies](#42-dependencies)
 - [5. Scenarios/User Stories](#5-scenariosuser-stories)
+	- [5.1. Personas](#51-personas)
+	- [5.2. Scenarios](#52-scenarios)
 - [6. Design Details](#6-design-details)
     - [6.1. Architecture](#61-architecture)
     - [6.2. Data Model](#62-data-model)
+		- [6.2.1. Data stored within Cloud Identity](#621-data-stored-within-cloud-identity)
+		- [6.2.2. Data stored within Keycloak](#622-data-stored-within-keycloak)
     - [6.3. Multi-tenancy](#63-multi-tenancy)
     - [6.4. Management Interfaces](#64-management-interfaces)
     - [6.5. User Interfaces](#65-user-interfaces)
@@ -106,7 +110,7 @@ Standard Cloud Identity personas are in play here:
 
 There are a few pieces of data persisted by these custom authenticators, in various locations:
 
-#### Data stored within Cloud Identity
+#### 6.2.1. Data stored within Cloud Identity
 
 For some of the planned integrations, it is required to persist some data within Cloud Identity. This data includes:
 
@@ -116,11 +120,11 @@ For some of the planned integrations, it is required to persist some data within
 
 * **FIDO Registrations** - As mentioned above, registering a FIDO device for a given user requires a registration resource be created, through public Cloud Identity APIs.
 
-#### Data stored within Keycloak
+#### 6.2.2. Data stored within Keycloak
 
-As mentioned in the above section, certain integrations require a user account be created within Cloud Identity's directory that corresponds to a user in the Keycloak directory. Once that user account is created within Cloud Identity, the externally available unique ID for that account will be stored as a custom attribute on the Keycloak user directory entry. The proposed key for this custom attribute is `cloudIdentityUserId`, but we should also consider exposing this as a configurable option within the custom authenticator modules, allowing Alice to specify what the attribute should be named.
+As mentioned in the above section, certain integrations require a user account be created within Cloud Identity's directory that corresponds to a user in the Keycloak directory. Once that user account is created within Cloud Identity, the externally available unique ID for that account will be stored as a custom attribute on the corresponding Keycloak user directory entry. The proposed key for this custom attribute is `cloudIdentityUserId`, but we should also consider exposing this as a configurable option within the custom authenticator modules, allowing Alice to specify what the attribute should be named.
 
-We can also consider alternative linking strategies between CI and Keycloak user accounts, potentially offering Alice a mechanism outside of custom user attributes. If such a need is identified, we can explore it further. The custom user attribute is just the first, functional approach identified.
+We can also consider alternative linking strategies between CI and Keycloak user accounts, potentially offering Alice a mechanism outside of custom user attributes. If such a need is identified, we can explore it further. The custom user attribute is just the first functional approach identified.
 
 ### 6.3. Multi-tenancy
 
@@ -161,6 +165,8 @@ The current plan is to implement these UIs following the visual design patterns 
 The intent of this project is not to provide programmatic interfaces that Alice will consume (though it could be extended to do that, if we discover such a need). Therefore, there is not really a threat of deprecating external interfaces.
 
 However, it should be noted that a majority of the functionality that will be packaged in these custom authenticators is dependent upon SPIs provided by Keycloak that are subject to change with newer Keycloak releases. That means we will need to identify, which each released artifact, a set of compatible Keycloak versions.
+
+These extensions are also dependent upon Cloud Identity public APIs. As these APIs evolve and are deprecated/removed from service, the extensions will need to be kept in sync. This is likely to be less of an issue compared to Keycloak's SPIs given the public nature of the CI APIs and that contractually Cloud Identity is expected to support public APIs for a given period of time.
 
 ### 6.7. Audit Logging
 
