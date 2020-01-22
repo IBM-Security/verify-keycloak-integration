@@ -178,27 +178,27 @@ N/A
 
 ### 6.9. Security Considerations
 
-_Aspects of the design that ensure that the product doesn't create vulnerabilities._
+Proper session management and timeouts are required during the authentication flow. In addition, cleanup of authentication transactions through Cloud Identity APIs should be performed.
 
 ### 6.10. Integration
 
-_Provide here an overview of technologies used by this design to integrate with other IBM and non-IBM products and tie back to the integration related scenarios outlined in the Blueprint._
+This whole project is an integration. I won't go into detail here.
 
 ### 6.11. PII/GDPR
 
-_We need to be wary of how we use Personally Identifiable Information (PII).  Because of the EU GDPR requlations, IBM could face fines and have our software blocked/banned from EU if we don't comply with the GDPR rules and regulrations. For this design, note what PII data is used, why it is used/needed, where it is stored, and how long it is retained. If this design does not impact PII, then leave a sentence declaring as much._
+This project stores data in Keycloak and CI, so PII/GDPR concerns will be addressed by those products.
 
 ### 6.12. Migration
 
-_Include all migration considerations, including both across product versions as well as how customers can move data from one environment to another. Typically, customers have multiple environment such as Dev, Function Test, Integration Test, Performance, Production, Disaster Recovery._
+As this is a new project, we do not yet have any migration concerns. As we iteratively release new versions/artifacts, we will address this concern as needed.
 
 ### 6.13. Future Considerations
 
-_List here items that need to be considered for future_
+TBD
 
 ### 6.14. Discarded Technical Options
 
-_List here technical options that were considered but discarded_
+N/A
 
 ## 7. Operational Impacts
 
