@@ -269,4 +269,4 @@ Documentation should include but not be limited to:
 
 **Status**: DRAFT
 
-**Review PR**: _Link to the Github Pull Request that contains design review comments_
+**Review PR**: [GitHub PR](https://github.com/IBM-Security/cloud-identity-keycloak-integration/pull/3)
