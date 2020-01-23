@@ -142,6 +142,58 @@ else Jessica does not opt in to register
 end
 -->
 
+#### 5.2.3 As a Keycloak end user (Jessica), I want to be able to sign in to my account using IBM Verify and QR Code verification as passwordless authentication
+
+Once Jessica has completed IBM Verify enrollment, she can now opt in to authenticate by scanning a QR code with her IBM Verify mobile app. She should be given an option to sign in using traditional methods as well, as there is no way to know whether all users have setup IBM Verify. See the below sequence diagram for what that flow will look like:
+
+![QR Code login flow sequence diagram](./images/qr-login-sequence-diagram.png)
+<!--
+@startuml
+
+title Keycloak + Cloud Identity Verify QR Login FLow
+
+'This is a single line comment
+
+/'
+This is a multi-
+line comment
+'/
+actor User
+entity Keycloak
+entity "CI Custom Authenticator" as Authn
+entity "CI OIDC" as OIDC
+entity "CI Authenticators" as Authenticators
+entity "CI Authn Factors" as Factors
+
+autonumber "<b>[000]"
+User -> Keycloak: Request protected application
+Keycloak -> Authn: Generate login page with QR Code and fallback options
+Authn -> OIDC: Get access token\nPOST /v1.0/endpoint/default/token\nclient_id=foo&client_secret=bar&grant_type=client_credentials
+OIDC -> Authn: Return access token
+Authn -> Authn: Store access token in session for re-use
+Authn -> Authenticators: Get IBM Verify Registration Profile info\nGET /v1.o/authenticators/clients
+Authenticators -> Authn: Return IBM Verify Profile information
+Authn -> Factors: Initiate QR Login\nGET /v2.0/factors/qr/authenticate
+Factors -> Authn: Return QR code and lookup info for status polling
+Authn -> Keycloak: Build and return login page with QR code
+Keycloak -> User: Render login page
+User -> User: Scan QR code with IBM Verify on phone
+loop on short interval (~5s)
+    User -> Authn: QR Login form auto-submits
+    Authn -> Factors: Poll QR Login status\nGET /v2.0/factors/qr/authenticate/{id}
+    Factors -> Authn: Return QR Login status\n(PENDING/TIMEOUT/CANCELED/FAILED/SUCCESS)
+    alt If QR Login result is SUCCESS
+        Authn -> Keycloak: Lookup authenticated user by User Id from successful QR Login
+        Keycloak -> Authn: Return authenticted user matching User Id
+        Authn -> Keycloak: Associate authenticated user with session
+        Keycloak -> User: Allow access to protected application (exit loop)
+    else If QR Login result is not SUCCESS
+        Authn -> Keycloak: Authentication not complete, re-render QR Login Page
+        Keycloak -> User: Render QR Login Page
+    end
+end
+@enduml
+-->
 ## 6. Design Details
 
 ### 6.1. Architecture
