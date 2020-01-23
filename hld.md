@@ -78,7 +78,7 @@ Keycloak provides a first-class extension mechanism where custom code can be int
 
 > These will be further enumerated based on the Aha! epic.
 
-### 5.1 Personas
+### 5.1. Personas
 
 Standard Cloud Identity personas are in play here:
 
@@ -86,11 +86,11 @@ Standard Cloud Identity personas are in play here:
 
 * **Jessica** - End user of a customer's Keycloak deployment. Jessica will benefit from the CI - Keycloak integration by being able to use additional authentication factors to access her Keycloak account.
 
-### 5.2 Scenarios
+### 5.2. Scenarios
 
-#### 5.2.1 As a keycloak developer (Alice), I want to be able to download Cloud Identity Extensions to drop into my Keycloak Deployment
+#### 5.2.1. As a Keycloak developer (Alice), I want to be able to download Cloud Identity Extensions to drop into my Keycloak Deployment.
 
-#### 5.2.2 As a keycloak end user (Jessica), I want to be given the option to setup passwordless authentication for my account so I don't have to use my username and password anymore. (IBM Verify - QR Code variant)
+#### 5.2.2. As a Keycloak end user (Jessica), I want to be given the option to setup passwordless authentication for my account so I don't have to use my username and password anymore. (IBM Verify - QR Code variant)
 
 During a _normal_ authentication flow, Jessica will be prompted with an option to setup passwordless authentication by installing IBM Verify on her mobile device, and completing the registration process in her current session. See the below sequence diagram for what that flow will look like:
 
@@ -112,7 +112,7 @@ OIDC->-CI Authenticator: Return access token
 CI Authenticator->CI Authenticator: (5) Store access token in session for re-use
 CI Authenticator->CI Authenticator: (6) Get Cloud Identity User ID for authenticated User
 opt
-    CI Authenticator->+Directory: (7) If keycloak user does not have a corresponding Cloud Identity User account, create one\n POST /v2.0/Users
+    CI Authenticator->+Directory: (7) If Keycloak user does not have a corresponding Cloud Identity User account, create one\n POST /v2.0/Users
     Directory->-CI Authenticator: return new User info, including unique ID
     CI Authenticator->CI Authenticator: (8) Associate Cloud Identity User ID with Keycloak user
 end
@@ -142,7 +142,7 @@ else Jessica does not opt in to register
 end
 -->
 
-#### 5.2.3 As a Keycloak end user (Jessica), I want to be able to sign in to my account using IBM Verify and QR Code verification as passwordless authentication
+#### 5.2.3. As a Keycloak end user (Jessica), I want to be able to sign in to my account using IBM Verify and QR Code verification as passwordless authentication.
 
 Once Jessica has completed IBM Verify enrollment, she can now opt in to authenticate by scanning a QR code with her IBM Verify mobile app. She should be given an option to sign in using traditional methods as well, as there is no way to know whether all users have setup IBM Verify. See the below sequence diagram for what that flow will look like:
 
@@ -194,6 +194,17 @@ loop on short interval (~5s)
 end
 @enduml
 -->
+
+#### 5.2.4. As a Keycloak end user (Jessica), I want to be given the option to setup passwordless authentication for my account so I don't have to use my username and password anymore. (FIDO/WebAuthn Device)
+
+#### 5.2.5. As a Keycloak end user (Jessica), I want to be able to sign in to my account using my FIDO/WebAuthn device as passwordless authentication
+
+#### 5.2.6. As a Keycloak end user (Jessica), I want to be able to complete a MFA challenge by using my registered IBM Verify mobile app via Push Notification.
+
+#### 5.2.7. As a new Keycloak end user, I want to be given an option to enroll IBM Verify so I can use it for passwordless first factor authentication, and second factor authentication via push notification
+
+#### 5.2.8. As a new Keycloak end user, I want to be given an option to set my FIDO/WebAuthn device so I can use it for passwordless authentication.
+
 ## 6. Design Details
 
 ### 6.1. Architecture
@@ -324,7 +335,7 @@ As of now, monitoring of these custom authenticators will be handled by log trav
 
 HA of Keycloak deployments is out of scope for us, and up to Alice. HA of Cloud Identity resources is also out of scope of this effort, and up to Cloud Identity itself.
 
-One aspect that needs validation for this scenario: in multi-node keycloak deployments where a custom authenticator could be executed on different servers, is there any kind of statefulness or node affinity established for a given authentication session? As a majority of authentication flows require multiple steps i.e. an initial challenge/prompt, followed by a subsequent validation based on initial data that is stored on the user session, it will be essential that a user is returned to the same keycloak node that their authentication session started on. This may already be the case, or perhaps in multi-node keycloak deployments, there may be some sort of session sharing mechanism so that node affinity is not required. This needs further investigation. I've included this in the HA section as it pertains to multi-node deployments, but there may be a more relevant section.
+One aspect that needs validation for this scenario: in multi-node Keycloak deployments where a custom authenticator could be executed on different servers, is there any kind of statefulness or node affinity established for a given authentication session? As a majority of authentication flows require multiple steps i.e. an initial challenge/prompt, followed by a subsequent validation based on initial data that is stored on the user session, it will be essential that a user is returned to the same Keycloak node that their authentication session started on. This may already be the case, or perhaps in multi-node Keycloak deployments, there may be some sort of session sharing mechanism so that node affinity is not required. This needs further investigation. I've included this in the HA section as it pertains to multi-node deployments, but there may be a more relevant section.
 
 ### 7.6. Disaster Recovery
 
