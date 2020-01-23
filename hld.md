@@ -222,6 +222,8 @@ As of now, monitoring of these custom authenticators will be handled by log trav
 
 HA of Keycloak deployments is out of scope for us, and up to Alice. HA of Cloud Identity resources is also out of scope of this effort, and up to Cloud Identity itself.
 
+One aspect that needs validation for this scenario: in multi-node keycloak deployments where a custom authenticator could be executed on different servers, is there any kind of statefulness or node affinity established for a given authentication session? As a majority of authentication flows require multiple steps i.e. an initial challenge/prompt, followed by a subsequent validation based on initial data that is stored on the user session, it will be essential that a user is returned to the same keycloak node that their authentication session started on. This may already be the case, or perhaps in multi-node keycloak deployments, there may be some sort of session sharing mechanism so that node affinity is not required. This needs further investigation. I've included this in the HA section as it pertains to multi-node deployments, but there may be a more relevant section.
+
 ### 7.6. Disaster Recovery
 
 DR of Keycloak deployments is out of scope for us, and up to Alice. DR of Cloud Identity resources is also out of scope of this effort, and up to Cloud Identity itself.
