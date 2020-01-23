@@ -244,7 +244,7 @@ As this is a new project, we do not yet have any migration concerns. As we itera
 
 ### 6.13. Future Considerations
 
-TBD
+1. Based on current limitations in the Cloud Identity APIs, these custom authenticators are required to provision a shadow user account in Cloud Identity to associate authentication factor registrations with a user resource. Ideally, we would be able to supply a user identifier that does not correspond to a user in Cloud Identity's user registry, so we could supply the unique user identifier from Keycloak's user registry instead of having to create a user in Cloud Identity. This eliminates some of the complication of managing linked user accounts from one directory to another.
 
 ### 6.14. Discarded Technical Options
 
