@@ -88,9 +88,59 @@ Standard Cloud Identity personas are in play here:
 
 ### 5.2 Scenarios
 
-### 5.2.1 As a keycloak developer (Alice), I want to be able to download Cloud Identity Extensions to drop into my Keycloak Deployment
+#### 5.2.1 As a keycloak developer (Alice), I want to be able to download Cloud Identity Extensions to drop into my Keycloak Deployment
 
-### 5.2.2 ...
+#### 5.2.2 As a keycloak end user (Jessica), I want to be given the option to setup passwordless authentication for my account so I don't have to use my username and password anymore. (IBM Verify - QR Code variant)
+
+During a _normal_ authentication flow, Jessica will be prompted with an option to setup passwordless authentication by installing IBM Verify on her mobile device, and completing the registration process in her current session. See the below sequence diagram for what that flow will look like:
+
+![IBM Verify Inline Registration Sequence Diagram](./images/ibm-verify-inline-registration-sequence-diagram.png)
+
+<!--
+title Keycloak + Cloud Identity Verify IBM Verify Registration Flow
+participant User
+participant Keycloak
+participant CI Authenticator
+participant CI OIDC as OIDC
+participant CI Directory as Directory
+participant CI Authenticators as Authenticators
+User->Keycloak: (1) Access protected application
+Keycloak->Keycloak: (2) Perform normal authentication flow
+Keycloak->CI Authenticator: (3) Delegate control of authentication flow
+CI Authenticator->+OIDC: (4) Get access token\nPOST /v1.0/endpoint/default/token client_id=foo&client_secret=bar&grant_type=client_credentials
+OIDC->-CI Authenticator: Return access token
+CI Authenticator->CI Authenticator: (5) Store access token in session for re-use
+CI Authenticator->CI Authenticator: (6) Get Cloud Identity User ID for authenticated User
+opt
+    CI Authenticator->+Directory: (7) If keycloak user does not have a corresponding Cloud Identity User account, create one\n POST /v2.0/Users
+    Directory->-CI Authenticator: return new User info, including unique ID
+    CI Authenticator->CI Authenticator: (8) Associate Cloud Identity User ID with Keycloak user
+end
+CI Authenticator->+Authenticators: (9) Check if user has registered IBM Verify already\nGET /v1.0/authenticators?search=userid=foo123
+Authenticators->-CI Authenticator: Returns set of registered IBM Verify authenticators for given user
+CI Authenticator->+Authenticators: (10) If no registration exists, get tenant-scoped Verify Registration Profile info\n GET /v1.0/authenticators/clients
+Authenticators->-CI Authenticator: Returns tenant-scoped Verify Registration Profile info
+CI Authenticator->+Authenticators: (11) If no user registrations exist, initiate new registration\nPOST /v1.0/authenticators/initiation?qrcodeInResponse=true {...}
+Authenticators->-CI Authenticator: Returns QR code to display for Jessica to consume to complete registration
+CI Authenticator->CI Authenticator: (12) Save registration QR Code on session
+CI Authenticator->User: (13) Render opt-in Registration page with QR Code available for scanning
+alt Jessica opts in to register
+    User->User: (14) Scans QR code with IBM Verify mobile app
+    loop Poll on interval
+        User->CI Authenticator: (15) Registration form auto-submits on a short interval
+        CI Authenticator->+Authenticators: (16) Poll to check if a new registration has been created for the given user\nGET /v1.0/authenticators?search=userid=foo123
+        Authenticators->-CI Authenticator: Returns set of registrations for Jessica
+        alt Registration completed
+            CI Authenticator->User: (17) Mark authentication as success
+        else Registration not completed
+            CI Authenticator->User: (18) Re-render opt-in Registration page with the same QR Code
+        end
+    end
+else Jessica does not opt in to register
+    User->CI Authenticator: (19) Registration form submitted with "bypass" option
+    CI Authenticator->User: (20) Mark authentication as success
+end
+-->
 
 ## 6. Design Details
 
