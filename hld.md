@@ -42,6 +42,8 @@
     - [7.7. Performance and Stability](#77-performance-and-stability)
     - [7.8. Other](#78-other)
 - [8. CI/CD Pipeline and Testing](#8-cicd-pipeline-and-testing)
+	- [8.1. Version and Release Compatibility](#81-version-and-release-compatibility)
+	- [8.2. Source Code Management](#82-source-code-management)
 - [9. Documentation](#9-documentation)
 
 <!-- /MarkdownTOC -->
@@ -390,6 +392,16 @@ As of this writing (24Jan2020), the current releases are:
 * RedHat SSO: 7.3 (forked from Keycloak 4.8.*)
 
 The tentative plan for Keycloak (community) 9.* release is end of February.
+
+### 8.2. Source Code Management
+
+Given the requirement to support a small amount of Keycloak/RedHat SSO versions concurrently, we need to carefully plan how we intend to manage our source code so as to facilitate making changes for different Keycloak releases.
+
+In general, our development work targeted towards the latest version of Keycloak should map to our repository's `master` branch. As we stabilize `master` in preparation for a release, releases will be tagged in GitHub, and published to maven or wherever we end up publishing our artifacts.
+
+As new versions come out, any subsequent changes needed _for only older versions_ of Keycloak should be handled by forking the master branch at the last known common point, and these changes would be made in a branch divergent from `master`. The branch name should indicate the corresponding Keycloak version.
+
+Branching diagram coming _soon_.
 
 ## 9. Documentation
 
