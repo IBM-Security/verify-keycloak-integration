@@ -45,6 +45,7 @@
 	- [8.1. Version and Release Compatibility](#81-version-and-release-compatibility)
 	- [8.2. Source Code Management](#82-source-code-management)
 - [9. Documentation](#9-documentation)
+- [10. Open Questions](#10-open-questions)
 
 <!-- /MarkdownTOC -->
 </details>
@@ -305,6 +306,8 @@ This whole project is an integration. I won't go into detail here.
 
 This project stores data in Keycloak and CI, so PII/GDPR concerns will be addressed by those products.
 
+We need to handle, or at least address, the need to properly propagate data cleanup upon user deletion from Keycloak. In other words, if a Keycloak user that has registered anything with Cloud Identity is removed from Keycloak, that user's information should be removed from Cloud Identity as well. It is unclear whether custom authenticator extensions can provide such support, or if this will be the responsibility of Alice. If the latter, this needs to be made apparent to Alice.
+
 ### 6.12. Migration
 
 As this is a new project, we do not yet have any migration concerns. As we iteratively release new versions/artifacts, we will address this concern as needed.
@@ -351,6 +354,7 @@ Custom authenticator performance is dependent upon the following factors:
 * Performance of the various Cloud Identity APIs leveraged by a given custom authenticator
 * Optimization of Cloud Identity API requests made by custom authenticators (caching access tokens instead of requesting fresh ones per flow, etc.)
 * Optimization of interaction with Keycloak user directory when user lookups are required, especially based on custom attributes (potential need for custom DB indices based on user lookup approaches)
+* IBM Verify-related APIs (registration, QR login, etc.) all currently require polling from the client to be updated on a state transition (i.e. registration complete, authentication complete, etc.). This could impact performance in a large scale environment. We need to assess whether these APIs can work in a more performant way (long polling, push instead of pull API, etc.), and if this will impact Keycloak user experience in any way.
 
 ### 7.8. Other
 
@@ -405,6 +409,12 @@ As new versions come out, any subsequent changes needed _for only older versions
 
 Branching diagram coming _soon_.
 
+### 8.3. General Testing Technology/Approach
+
+Given that a large amount of the scenarios/stories we are building involve browser-based web flows, we plan to use Selenium WebDriver for automated testing for a number of use cases. However, there will be some challenges there as many of the flows we are building require interaction from an external device, such as an IBM Verify mobile application or a FIDO/WebAuthn hardware key. Investigation needs to be done to figure out how we can integrate such technologies into a WebDriver-driven test suite.
+
+Additionally, we will want to investigate if we can do API-based testing for some of the Keycloak operations we are integrating with. The feasibility of this is still TBD.
+
 ## 9. Documentation
 
 Extension documentation will be housed at the [GitHub repository](https://github.com/IBM-Security/cloud-identity-keycloak-integration) using various `markdown` files.
@@ -416,6 +426,17 @@ Documentation should include but not be limited to:
 * Integration/setup steps, guiding Alice through using the Keycloak admin console to integrate one of more custom authenticators
 * Walkthrough of sample integration(s)
 
+## 10. Open Questions
+
+1. What is the backing Keycloak directory technology? LDAP? Database? This may have implications on how we lookup Keycloak users when matching them up to Cloud Identity resources.
+
+2. When performing the IBM Verify registration flow, is QR Code scanning the only way a user can complete the registration? It is not unforeseeable that a user does not have the camera functionality working on their device, which could hinder their ability to complete the IBM Verify registration process.
+
+> According to the [IBM Verify documentation](https://www.ibm.com/support/pages/ibm-verify-user-guide), there is also support for a manual entry option as an alternative to scanning a QR code. According to the corresponding [Cloud Identity API](https://afbruch-demo.ice.ibmcloud.com/developer/explorer/#!/Authenticators/initiateAuthenticator), this manual entry code is included the response payload to the registration initiation request. So it looks like a manual entry option is also supported.
+
+> However, when trying this out on my iPhone, I am only presented with the "Scan a QR Code" option. I do not get the option to do manual entry. This will have to be verified.
+
+> Whether or not manual entry is included in the initial registration flow is TBD, but we know that it is supposed to be supported by IBM Verify and the corresponding Cloud Identity APIs.
 
 # DOCUMENT PROPERTIES
 
