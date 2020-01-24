@@ -366,6 +366,31 @@ All of this will be orchestrated via the existing Jenkins instance setup within 
 
 Build/test/release pipelines will be setup to support automating development and release builds, which involves testing the produced artifacts. Once a stable, release-ready artifact is produced, the release portion of the pipeline will be executed. As described earlier, the artifacts produced by this project will be bundled JAR files that can be dropped into Alice's Keycloak deployment. The release portion of the pipeline will then be responsible for publishing the artifact(s) to a publicly-accessible artifact repository. Specifics are still TBD, but something like [Maven Central](https://search.maven.org/) is the leading candidate.
 
+### 8.1. Version and Release Compatibility
+
+Keycloak does not support older major versions. As a new major version is released, all users are encouraged to upgrade immediately. Only high severity security issues are fixed in old major versions, and only for a certain period of time.
+
+RedHat SSO provides customers with an extended support window for a locked in version of RedHat SSO, which is a modified version of a specific Keycloak release. As new versions of RedHat SSO are released, there is a window of time where both RedHat SSO releases are supported, while customers are strongly encouraged to upgrade.
+
+Given the above, we should target the following _levels_ of Keycloak and RedHat SSO:
+
+* Latest Keycloak major release (including the most recent minor release of this level)
+* Latest RedHat SSO release
+* N-1 RedHat SSO release for a designated window of time
+
+A few notes:
+* Keycloak does not follow semver, but it is a fair assumption that within each major release, minor/patch releases are typically used for bug and security vulnerability fixes, and _not_ any kind of destructive changes. We _should_ be safe from SPI breaking changes in these sorts of releases, though we should plan to explicitily upgrade our test environments to target the latest (minor) release within the current major release.
+
+* RedHat SSO releases are essentially forks of a specific Keycloak release, with some changes made on top of Keycloak. Therefore, to be thorough and confident in our extension, our test environments needs to test directly against RedHat SSO deployments, not just Keycloak deployments.
+
+We should also plan to setup a test environment that tests against the latest source level of Keycloak, so we can get a preview of the upcoming release at any given time. There is supposed to be a way to configure the docker image, when using a Keycloak docker image, to compile Keycloak from source instead of using the pre-built level of code that the image is spec'd to. This will allow us to gain visibility into upcoming releases _before_ they're made available, so we can prepare any necessary changes to the extensions we produce.
+
+As of this writing (24Jan2020), the current releases are:
+* Keycloak (Community): 8.0.1
+* RedHat SSO: 7.3 (forked from Keycloak 4.8.*)
+
+The tentative plan for Keycloak (community) 9.* release is end of February.
+
 ## 9. Documentation
 
 Extension documentation will be housed at the [GitHub repository](https://github.com/IBM-Security/cloud-identity-keycloak-integration) using various `markdown` files.
