@@ -61,6 +61,8 @@ Keycloak provides a first-class extension mechanism where custom code can be int
 
 [Aha! Epic](https://ibmsecurity.aha.io/features/CIC-986)
 
+[Jenkins folder](https://sec-cloud-identity-jenkins.swg-devops.com/job/keycloak-integration/)
+
 ## 3. Requirements
 
 1. Consumable artifacts (JAR files) must be publicly accessible for Alice to consume
@@ -364,7 +366,7 @@ Integration tests will be performed by setting up testing environments with vari
 
 There will be daily test runs executed against these various test environments, verifying continued support of known features/functions. Additionally, as active development continues, new tests will be written to verify newly developed features. These new features and tests will be executed by the _development_ build/test pipelines.
 
-All of this will be orchestrated via the existing Jenkins instance setup within the Cloud Identity development organization.
+All of this will be orchestrated via the existing Jenkins instance setup within the Cloud Identity development organization. This project has it's own [folder of Jenkins artifacts](https://sec-cloud-identity-jenkins.swg-devops.com/job/keycloak-integration/).
 
 Build/test/release pipelines will be setup to support automating development and release builds, which involves testing the produced artifacts. Once a stable, release-ready artifact is produced, the release portion of the pipeline will be executed. As described earlier, the artifacts produced by this project will be bundled JAR files that can be dropped into Alice's Keycloak deployment. The release portion of the pipeline will then be responsible for publishing the artifact(s) to a publicly-accessible artifact repository. Specifics are still TBD, but something like [Maven Central](https://search.maven.org/) is the leading candidate.
 
