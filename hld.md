@@ -276,6 +276,53 @@ end
 
 #### 5.2.5. As a Keycloak end user (Jessica), I want to be able to sign in to my account using my FIDO/WebAuthn device as passwordless authentication.
 
+![FIDO Authentication](https://www.plantuml.com/plantuml/svg/bLPDSzem4BtxL-nmI0yDcEQOQPXGqcHeqqbAsbwQJaTOQz0W98qamp2P_FUkP6ERG3xA0MnhFzw-tRVct7bcVR6KIUA5bmXVSPD9pHRm7aPI5np671KTRU0NMf5luFi4hlLCABYyrkiaOPdN5duwj4bbrxcrscFcaSFGc0um5twtfzlujVLe3AF2URs4OU7duMd6A6JfHqzKs_9cV36A9-6YVN0PSRXuLbqJji9hLIodQA7pSJhutU_t_tIIWBKx84YdCCmoT0vC3PWP8qD-eLL25jr1C3w52N9XoG8AkWMl6vPoAfurk8DV6NzhKITvoQK-wmxAca_X2XLQvX5a9Dkm6S9Q-3bSZYzkm1N6QEk1AGuvatBAiWLe4uAv94O8eG998HBPbHYyNg2wLxStTpyWNNtezLDKt6YXVCenPuNqQMMIIK7u_Wf-bcjzLDqvp2pwiocpHpFBw87V63oh3kaeJWgJBWc9MxLCq1TMxO1eG5OsTzGot341AjlH7TKKERFO9VeRnwhDPO6HbGdAZL0pkAMHtf0xUIqZmVVgwZDLd6cLYrcwEg72yz8xpGNN9wajFGqv2dH95Ng_X9VJx1V5LlYApvkh72j1vFegNfJWVTN8r-f97wmPyyUKEHhDa3IjHWKUUhtUuolbXiHjRGQaXcreNlanpCIAEaMA-19goDWx1rEhrvLCChqq4WdpAkoEMbZRsXgDV2g4v76QRPdvfQdVaSjMe8fJoiOhgh0v7ysrTXWWbIPDJ8uhaU4nSI-bNjVWQIKiZG-JsDOgqW88NMnvrecsBI-cIr7DOyttWNOUj0lfdcpTC1Djzchr_d_JBJfI-9jwtY2YzuClN4bOfYt5C5hnG4BOXMEUC0evpYkttIaHZbeM5PqNCW7w76ZzjTQBmkompCizEzt4xX4Na5CxMh6UqXj27zYXsxsp3Lr79kbbyr135VyvR4FdT1P5Tm1UfAIIRXEWlVc_CRjuoWchETb1lVUceKdOUIr5wrTUNGbA6lBdcw6qVqD3da6TCo6Hxr6zep-qbiOrweyU9EVqHNyj_W40)
+
+<!--
+@startuml
+
+title Keycloak + Cloud Identity Verify QR Login FLow
+
+actor User
+entity "Protected App" as App
+entity Keycloak
+entity "CI Custom Authenticator" as Authn
+entity "CI OIDC" as OIDC
+entity "CI Factors" as Factors
+
+autonumber "<b>[000]"
+User->App: Access protected application
+App->User: Redirect user to Keycloak for authentication
+User->Keycloak: Access Keycloak for authentication
+Keycloak -> Authn: Generate login page with FIDO support and fallback options
+Authn -> OIDC: Get access token\nPOST /v1.0/endpoint/default/token\nclient_id=foo&client_secret=bar&grant_type=client_credentials
+OIDC -> Authn: Return access token
+Authn -> Authn: Store access token in session for re-use
+Authn -> Factors: Get FIDO Relying Party information\nGET /config/v2.0/factors/fido2/relyingparties
+Factors -> Authn: Return FIDO Relying Party information
+Authn -> Authn: Save FIDO Relying Party information in session for re-use
+Authn -> Factors: Initiate FIDO Login\POST /v2.0/factors/fido2/relyingparties/{rpId}/assertion/options {...}
+Factors -> Authn: Return FIDO Init Authentication payload, given to Jessica's browser to complete verification
+Authn -> Keycloak: Build and return login page with FIDO support
+Keycloak -> User: Render login page
+User -> User: Choose to login with FIDO device, follow browser prompts to authenticate using FIDO device
+User -> Authn: Submit FIDO assertion
+Authn -> Factors: Submit FIDO assertion to Cloud Identity for verification\nPOST /v2.0/factors/fido2/relyingparties/{rpId}/assertion/result {...}
+Factors -> Authn: Return FIDO assertion status with corresponding userId
+alt If FIDO authentication is successful
+    Authn -> Keycloak: Lookup authenticated user by User Id from successful FIDO assertion
+    Keycloak -> Authn: Return authenticted user matching User Id
+    Authn -> Keycloak: Associate authenticated user with session
+    Authn->Keycloak: Mark authentication as success
+    Keycloak->User: Redirect to protected app
+    User->App: Access protected app
+else If FIDO authentication is not successful
+    Authn -> Keycloak: Mark authentication as failed
+    Keycloak -> User: Render error page
+end
+@enduml
+-->
+
 #### 5.2.6. As a Keycloak end user (Jessica), I want to be able to complete a MFA challenge by using my registered IBM Verify mobile app via Push Notification.
 
 #### 5.2.7. As a new Keycloak end user, I want to be given an option to enroll IBM Verify so I can use it for passwordless first factor authentication, and second factor authentication via push notification. (New user Verify registration)
