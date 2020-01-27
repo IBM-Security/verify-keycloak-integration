@@ -107,6 +107,7 @@ During a _normal_ authentication flow, Jessica will be prompted with an option t
 title Keycloak + Cloud Identity Verify IBM Verify Registration Flow
 
 actor User
+entity "Protected App" as App
 entity Keycloak
 entity "CI Custom Authenticator" as Authn
 entity "CI OIDC" as OIDC
@@ -114,17 +115,21 @@ entity "CI Directory" as Directory
 entity "CI Authenticators" as Authenticators
 
 autonumber "<b>[000]"
-User->Keycloak: Access protected application
-Keycloak->Keycloak: Perform normal authentication flow
+User->App: Access protected application
+App->User: Redirect user to Keycloak for authentication
+User->Keycloak: Access Keycloak for authentication
+Keycloak->User: Initiate normal authentication flow (details out of scope)
+User->Keycloak: Finish normal authentication flow (details out of scope)
 Keycloak->Authn: Delegate control of authentication flow
 Authn->OIDC: Get access token\nPOST /v1.0/endpoint/default/token client_id=foo&client_secret=bar&grant_type=client_credentials
 OIDC->Authn: Return access token
 Authn->Authn: Store access token in session for re-use
-Authn->Authn: Get Cloud Identity User ID for authenticated User
+Authn->Keycloak: Get Cloud Identity User ID for authenticated user
+Keycloak->Authn: Return Cloud Identity User ID for authenticated user if exists
 opt
     Authn->Directory: If Keycloak user does not have a corresponding Cloud Identity User account, create one\n POST /v2.0/Users
     Directory->Authn: return new User info, including unique ID
-    Authn->Authn: Associate Cloud Identity User ID with Keycloak user
+    Authn->Keycloak: Associate Cloud Identity User ID with Keycloak user
 end
 Authn->Authenticators: Check if user has registered IBM Verify already\nGET /v1.0/authenticators?search=userid=foo123
 Authenticators->Authn: Returns set of registered IBM Verify authenticators for given user
@@ -141,14 +146,18 @@ alt Jessica opts in to register
         Authn->Authenticators: Poll to check if a new registration has been created for the given user\nGET /v1.0/authenticators?search=userid=foo123
         Authenticators->Authn: Returns set of registrations for Jessica
         alt Registration completed
-            Authn->User: Mark authentication as success
+            Authn->Keycloak: Mark authentication as success
+            Keycloak->User: Redirect to protected app
+            User->App: Access protected app
         else Registration not completed
             Authn->User: Re-render opt-in Registration page with the same QR and manual entry codes
         end
     end
 else Jessica does not opt in to register
     User->Authn: Registration form submitted with "bypass" option
-    Authn->User: Mark authentication as success
+    Authn->Keycloak: Mark authentication as success
+    Keycloak->User: Redirect to protected app
+    User->App: Access protected app
 end
 @enduml
 
