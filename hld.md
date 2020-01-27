@@ -167,7 +167,7 @@ end
 
 Once Jessica has completed IBM Verify enrollment, she can now opt in to authenticate by scanning a QR code with her IBM Verify mobile app. She should be given an option to sign in using traditional methods as well, as there is no way to know whether all users have setup IBM Verify. See the below sequence diagram for what that flow will look like:
 
-![QR Code login flow sequence diagram](./images/qr-login-sequence-diagram.png)
+![QR Code login flow sequence diagram](https://www.plantuml.com/plantuml/svg/ZLRRRXCn47tVhnZr0Lf1s8B4IqMhXcrQhUWbD2ql525dTpQnujYBxMs947mxOtklf1IgjCdQCsVcdBaqnyOoRQkrY2BBhK3uW9jCABQ25v08LUMGvYZfQWEVKFDY0n-luLmjk8JJS_KGHSzlbjm0lHWOBXU48BX4oDHwJNvHn3AhDDmQr56DipFLoc9cCOTnMUu0C-wzkMtYjzP92abbh5h3kB9BTvenWWn-T2BxbbVfIU9lt8V-nS3NjCxTqP_6nC-d7cphpqIdiafMwpbgs7atF_gylx__PIToz4P7nE80nbc6na3PScHbALmChcH45gCZPtm0rvXpJHPGqIDOrGbVa5wioytv1Vp6eWtob4jxDpeAV0xW32LgPgb2ldubMo0ySBjq9KrKZi1a3WKJOiwo5QZIuPWeY44eJb87Oe65y5QjKDx9wTNi1kBxrw_sOvHvgRYqSOu5guIDQvDCS4hjAyyF2wMUrKy6CutsSCxqiuLcT60t9HxMbtJb-uu94xd0FHhNQ2ij1qbqITOsCweM3ao061jw8avUBeqZKdxes7L3u9c-lsYw_XeNt5ZjjGLgu89JftDPg3jvDWdqLSm6676W4XJiZhUPzCBqaVMwRfecnRe93o2Ld9IXGZQps2JnXcfG1Aluc-xdWr7jlHsUGBAc-aAfLLNwy5ubsWwsecvMWgPwqQNIjUBxYelS--e0zqXpEVX1GpOZ87Fg_Sx1ztbtFyjObvt7wYb5PIYNIc94APVkoIoLjfIvHNtF1Ep-Ucls8g2V1hHctUulfx2R6ZKorNpDgL3EUbljAP7ll88Y_o5u_8FdFptaKyeFGNUdaykJzF8ilaal9bUtDt4olamcvvEJ-7ISkhVPRP9CPhD0Z0bgqQ93qMXevjmkhisyrO1KLxVpKEb-nddOHVDDa2obPQ1fxPhAZr5HTIgqm8zicMOy6-0MbzevMr8NDUXFPJSsHcM-nHz9qBT2FSj3aFwEl61wzSTIT9kyPhF5O6ilqqeUB77OnU_SkWafzrhlVon-RuV2u5_g99NzdrgDXooS5_r_BGLQVEaMcGw3r0QOkbbwh4I3kTisf_F8_HxJ7_fAy1i0)
 <!--
 @startuml
 
@@ -175,11 +175,8 @@ title Keycloak + Cloud Identity Verify QR Login FLow
 
 'This is a single line comment
 
-/'
-This is a multi-
-line comment
-'/
 actor User
+entity "Protected App" as App
 entity Keycloak
 entity "CI Custom Authenticator" as Authn
 entity "CI OIDC" as OIDC
@@ -187,7 +184,9 @@ entity "CI Authenticators" as Authenticators
 entity "CI Authn Factors" as Factors
 
 autonumber "<b>[000]"
-User -> Keycloak: Request protected application
+User->App: Access protected application
+App->User: Redirect user to Keycloak for authentication
+User->Keycloak: Access Keycloak for authentication
 Keycloak -> Authn: Generate login page with QR Code and fallback options
 Authn -> OIDC: Get access token\nPOST /v1.0/endpoint/default/token\nclient_id=foo&client_secret=bar&grant_type=client_credentials
 OIDC -> Authn: Return access token
@@ -207,7 +206,9 @@ loop on short interval (~5s)
         Authn -> Keycloak: Lookup authenticated user by User Id from successful QR Login
         Keycloak -> Authn: Return authenticted user matching User Id
         Authn -> Keycloak: Associate authenticated user with session
-        Keycloak -> User: Allow access to protected application (exit loop)
+        Authn->Keycloak: Mark authentication as success
+        Keycloak->User: Redirect to protected app (exit loop)
+        User->App: Access protected app
     else If QR Login result is not SUCCESS
         Authn -> Keycloak: Authentication not complete, re-render QR Login Page
         Keycloak -> User: Render QR Login Page
