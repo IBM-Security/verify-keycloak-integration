@@ -173,8 +173,6 @@ Once Jessica has completed IBM Verify enrollment, she can now opt in to authenti
 
 title Keycloak + Cloud Identity Verify QR Login FLow
 
-'This is a single line comment
-
 actor User
 entity "Protected App" as App
 entity Keycloak
@@ -218,6 +216,63 @@ end
 -->
 
 #### 5.2.4. As a Keycloak end user (Jessica), I want to be given the option to setup passwordless authentication for my account so I don't have to use my username and password anymore. (FIDO/WebAuthn Device) (Inline FIDO registration)
+
+![Inline FIDO Registration](https://www.plantuml.com/plantuml/svg/pLPBR-Cs4BxhLmnyMBHeR6NJcz6a6zZDGYsA14btzz0K1IsER28KgPAKKsEn_xqprCEoOk_sSMaEYcJEwvjl7dpZWt2XBdMI11Kqma-uoxKLJ_0DBBIj9MGI3Htju3qwLUmWCrePX9jiUPj-mDLr7JO6xd6jV70YA6lWHjld915vi0xUUNH9Qs1ovsp0FA24wwgQWF3ylplj7FVIYmmMjG-s1FR1l-Q2J3Pwx7KeUPij5_64NuO7I-MG8zd5q_vhA78JG_LHe7sdyEjWJLskqC7akzNLh-VdvxzD4eOplQAevt2Tv-WzL3qcKLMQGwGK92GnlMBXEQL6HgTGqoS4kyzmGVaHUsYirzZl97eddrFfpZf_cL51YO1Wh2k57eb3GUJ0LnA3KDg3hGFO0dnkA_pwXVSRPPJV_0j3-vWYKNDOeiOr1vLR4vpLB7l4NXB5frTCuXpUOW3H923O9pIFvkxsuHT8jwzdvoaQMLbbGYgn4BKEQHI1N2ko-RkIbuMrhzelZxd3SBaIxjNQ2VeXx2gyR0_fA5Quq3vXlttCznXgPmuYwE9h9HweLF1009G1JryH477bS4gqTshxp3AqKNjnyY5RZYccmkB2UPdIDhn_P0LK0VWdTQfFR1KIeBysjBung82AVRr59MdHKn44s8WjmIKEdKDVMIELMHyDW59YQnFEW9BBh5k3ZmPQzYw8FPRoqN_lk0Vc6c06dnjZoXJsZ9wvhgF3sgW_QYIGm_W7BUEzpMC3d4ZDimgRGuGq36J7KJi0vh3OOFx42OivsD1iS778eUDUZ_CF96vLJYdH15Fk7itR7pg0HMCcBPIq5waRZ4V_lKVXyiqbsstgzFN5jqdhTqIlfsgAZJNmFV3i8y_4CgpLbgelWXa38JwDXM48RGsSmPgC1pJK4jFOkQtnUzGxplGThGP5JfW1uY-YemOkrFeuoAXLDKed0VrDVqTRhP6-YmAVRxKH-iZX0GjD3hYkkd59zHRj3yNwaVCbkEb7LsNoKof2G5gfh9jIYqLF7sUpsQUJ-TWAfspj6zyyl46A87XHKD0CybqMyVt8MFDuG1pukiJcjQmqKlZ3gBiaT0l8I49FqKpLQ5DNOerDFo1jEYdtX0o4E9n4wD17G9QO8tRVbMLinMPz76uX_pAdPmH7qx3ti7BqfD1eXvPiSmXjWyf5tOksrcS37tqA1s5IZahmzQfKeNKwuA81CPWNVNqyH8sN2ZJXQAly9_uR4otzxFju2G3BOzo8U-NZi-rduPx6UvC6aw_Z2eewu-j0V_sWv1xSLORfF7MVIL1J3NQyztk02k0q_r_WXYt7YfkiTfNmTEjgskJ_0fWsmHjwq8tuBm00)
+
+<!--
+@startuml
+
+title Keycloak + Cloud Identity Verify Inline FIDO/WebAuthn Registration Flow
+
+actor User
+entity "Protected App" as App
+entity Keycloak
+entity "CI Custom Authenticator" as Authn
+entity "CI OIDC" as OIDC
+entity "CI Directory" as Directory
+entity "CI Factors" as Factors
+
+autonumber "<b>[000]"
+User->App: Access protected application
+App->User: Redirect user to Keycloak for authentication
+User->Keycloak: Access Keycloak for authentication
+Keycloak->User: Initiate normal authentication flow (details out of scope)
+User->Keycloak: Finish normal authentication flow (details out of scope)
+Keycloak->Authn: Delegate control of authentication flow
+Authn->OIDC: Get access token\nPOST /v1.0/endpoint/default/token client_id=foo&client_secret=bar&grant_type=client_credentials
+OIDC->Authn: Return access token
+Authn->Authn: Store access token in session for re-use
+Authn->Keycloak: Get Cloud Identity User ID for authenticated user
+Keycloak->Authn: Return Cloud Identity User ID for authenticated user if exists
+opt
+    Authn->Directory: If Keycloak user does not have a corresponding Cloud Identity User account, create one\n POST /v2.0/Users
+    Directory->Authn: return new User info, including unique ID
+    Authn->Keycloak: Associate Cloud Identity User ID with Keycloak user
+end
+Authn->Factors: Check if user has registered a FIDO device already\nGET /v2.0/factors/fido2/registrations?search=userid=foo123
+Factors->Authn: Returns set of registered FIDO devices for the given user
+Authn->Factors: If no registration exists, get tenant-scoped FIDO Relying Parties info\n GET /config/v2.0/factors/fido2/relyingparties
+Factors->Authn: Returns tenant-scoped FIDO Relying Parties info
+Authn->Authn: Store FIDO RP info in session for re-use
+Authn->Factors: If no user registrations exist, initiate new FIDO registration\nPOST /v2.0/factors/fido2/relyingparties/{rpId}/attestation/options {...}
+Factors->Authn: Returns various FIDO Init data to use in UI for Jessica to consume to complete registration
+Authn->User: Render opt-in Registration page with embedded FIDO Registration data
+alt Jessica opts in to register
+    User->User: Initiates FIDO registration, follows browser prompts to consume their FIDO2 device.
+    User->Authn: Registration form submits FIDO attestation data
+    Authn->Factors: Submit FIDO attestation result\nPOST /v2.0/factors/fido2/relyingparties/{rpId}/attestation/result {...}
+    Factors->Authn: Return state of attestation
+    Authn->Keycloak: Mark authentication as success
+    Keycloak->User: Redirect to protected app
+    User->App: Access protected app
+else Jessica does not opt in to register
+    User->Authn: Registration form submitted with "bypass" option
+    Authn->Keycloak: Mark authentication as success
+    Keycloak->User: Redirect to protected app
+    User->App: Access protected app
+end
+@enduml
+-->
 
 #### 5.2.5. As a Keycloak end user (Jessica), I want to be able to sign in to my account using my FIDO/WebAuthn device as passwordless authentication.
 
