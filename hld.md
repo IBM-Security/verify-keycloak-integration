@@ -95,7 +95,7 @@ Standard Cloud Identity personas are in play here:
 
 #### 5.2.1. As a Keycloak developer (Alice), I want to be able to download Cloud Identity Extensions to drop into my Keycloak Deployment.
 
-#### 5.2.2. As a Keycloak end user (Jessica), I want to be given the option to setup passwordless authentication for my account so I don't have to use my username and password anymore. (IBM Verify - QR Code variant)
+#### 5.2.2. As a Keycloak end user (Jessica), I want to be given the option to setup passwordless authentication for my account so I don't have to use my username and password anymore. (IBM Verify - QR Code variant) (Inline Verify registration)
 
 During a _normal_ authentication flow, Jessica will be prompted with an option to setup passwordless authentication by installing IBM Verify on her mobile device, and completing the registration process in her current session. See the below sequence diagram for what that flow will look like:
 
@@ -217,15 +217,27 @@ end
 @enduml
 -->
 
-#### 5.2.4. As a Keycloak end user (Jessica), I want to be given the option to setup passwordless authentication for my account so I don't have to use my username and password anymore. (FIDO/WebAuthn Device)
+#### 5.2.4. As a Keycloak end user (Jessica), I want to be given the option to setup passwordless authentication for my account so I don't have to use my username and password anymore. (FIDO/WebAuthn Device) (Inline FIDO registration)
 
-#### 5.2.5. As a Keycloak end user (Jessica), I want to be able to sign in to my account using my FIDO/WebAuthn device as passwordless authentication
+#### 5.2.5. As a Keycloak end user (Jessica), I want to be able to sign in to my account using my FIDO/WebAuthn device as passwordless authentication.
 
 #### 5.2.6. As a Keycloak end user (Jessica), I want to be able to complete a MFA challenge by using my registered IBM Verify mobile app via Push Notification.
 
-#### 5.2.7. As a new Keycloak end user, I want to be given an option to enroll IBM Verify so I can use it for passwordless first factor authentication, and second factor authentication via push notification
+#### 5.2.7. As a new Keycloak end user, I want to be given an option to enroll IBM Verify so I can use it for passwordless first factor authentication, and second factor authentication via push notification. (New user Verify registration)
 
-#### 5.2.8. As a new Keycloak end user, I want to be given an option to set my FIDO/WebAuthn device so I can use it for passwordless authentication.
+#### 5.2.8. As a new Keycloak end user, I want to be given an option to setup my FIDO/WebAuthn device so I can use it for passwordless authentication. (New user FIDO registration)
+
+#### 5.2.9. As a Keycloak end user (Jessica), I want to be given the option to specify a phone number to receive OTPs via SMS as a second factor of authentication. (Inline SMS registration)
+
+#### 5.2.10. As a Keycloak end user (Jessica), I want to be given the option to specify an email address to receive OTPs via email as a second factor of authentication. (Inline email registration)
+
+#### 5.2.11. As a new Keycloak end user, I want to be given an option to specify a phone number to receive OTPs via SMS as a second factor of authentication. (New user SMS registration)
+
+#### 5.2.12. As a new Keycloak end user, I want to be given an option to specify an email address to receive OTPs via email as a second factor of authentication. (New user email registration)
+
+#### 5.2.13. As a Keycloak end user (Jessica), I want to be able to complete a MFA challenge by using my registered phone number to receive an OTP via SMS. (SMS OTP)
+
+#### 5.2.14. As a Keycloak end user (Jessica), I want to be able to complete a MFA challenge by using my registered email address to receive an OTP via email. (Email OTP)
 
 ## 6. Design Details
 
