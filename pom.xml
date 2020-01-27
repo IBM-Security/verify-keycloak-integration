@@ -6,9 +6,9 @@
   <version>0.0.1</version>
   <packaging>pom</packaging>
 
-  <properties>
+  <!--properties>
 	<docker.registry.host>${env.DOCKER_REGISTRY}</docker.registry.host>
-  </properties>
+  </properties-->
   
   <modules>
     <module>samples/CloudIdentityAuthenticators</module>
@@ -67,7 +67,7 @@
 				  <arguments>
 					<argument>build</argument>
 					<argument>-t</argument>
-					<argument>${docker.registry.host}/${project.name}:${project.version}</argument>
+					<argument>${project.name}:${project.version}</argument>
 					<argument>.</argument>
 				  </arguments>
 				</configuration>
@@ -83,8 +83,8 @@
 				  <workingDirectory>${project.build.directory}</workingDirectory>
 				  <arguments>
 					<argument>tag</argument>
-					<argument>${docker.registry.host}/${project.name}:${project.version}</argument>
-					<argument>${docker.registry.host}/${project.name}:latest</argument>
+					<argument>${project.name}:${project.version}</argument>
+					<argument>${project.name}:latest</argument>
 				  </arguments>
 				</configuration>
 			  </execution>
@@ -99,7 +99,7 @@
 				  <workingDirectory>${project.build.directory}</workingDirectory>
 				  <arguments>
 					<argument>push</argument>
-					<argument>${docker.registry.host}/${project.name}</argument>
+					<argument>${project.name}</argument>
 				  </arguments>
 				</configuration>
 			  </execution>
