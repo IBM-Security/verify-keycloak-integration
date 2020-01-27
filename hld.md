@@ -325,7 +325,65 @@ end
 
 #### 5.2.6. As a Keycloak end user (Jessica), I want to be able to complete a MFA challenge by using my registered IBM Verify mobile app via Push Notification.
 
+![Push Notification MFA](https://www.plantuml.com/plantuml/svg/fLRRRkCs47tNLmpyi4XGEquV-X8qwRgs4gXTEuOl2nJT8g2baKs49WMISZO8qc_lK99riQruWGP9R8bpPiwS6GxvsLYcRReLdcUv5GX_ucie57k6ds0eL1f14A6afLVuYfh7hp2-7y2ECvYcPWCJPNdCGsQvad0lr8ldiT0g3Kk3sYk0dQbM5aEB4GoIf0FCkC_zwZvWQJqCO9WQgxOmIEt6lIN_IkSuUYFhbe_1Q9Yjk2_rXGRMbE3gLOknIsICTgEY2YIB5uSGIZdBDhSilfC2gLKotQvGG-VNrTtVrzVN_tGyfqZlZXA_WK4OeZ6GbBAm9155S8yiUdVE-0Pc675D5f3I8rXL5IScYLc3TE5_Rr46-GXIhlNk88yOI6uvimWnryP2d1Up2VicBrHgGSLWGfLWvjXkkA57b4npTPbnSKuhDaErJGJ-RyTrnba5Rc240jUESjEPaolCsuZLw_vDFg14xG2kavS196oDNbxE1kN7bMLS7kw2BBLWT2Wd5T4LwHJ16TfKj_cf0hi6le47jC3oobdrZAJ9z76-WFxkvwlhFieeKLpQVeGnIuNj5oQXuEJrYKUtiLAVYYU3eKPxksBwqrepUc5V4xmj5caf8yA4yLpWOxfr4XN9mcPEGcB314WfGqzEUIUDnXxfqGHMUo_FK-EQ6ulQRO36Sb5vp2IbWlbx0PfclnbaEjpSgXSgw6tdpLa7qNl7QmOxaPiGFnYy9VCsCAaGgzDImCM1PNHvuBmOCaKF44N3rv8HOJGqNemAUTPcBznkMiMHszn9ly9-gD8-w5cDQbpQzQaNk9man-U4Sv1DD9DWI4SAbsjWEyO5Mz41L4Lgz7wpIFstnZFbqz-vuwa8OU3jwkhg_MmZr37xJKq7earfE2iXY5XB0nm23qhUvgCQBWK1DuBS_Cchca_xZB_pyeVp6B8JOtf6au3qswFBUPkl3i9dgLv4XD7wbFpq6-6EXwubpQiCBpsXLE9UcutIbdAXak-OW8j_Vp6N7j3Ftd-XWOjB1BF9gdecNMsvTNCWIxX8FiErTiVK6HvJow7jE_vSsVjlF7el8tzK-VRO5rD_CWec3zr5CFOVbulkS30P-b_yKNSvzsTF8tyIxB_VpmRBqVABFrbqVmyUn_vYzjVJ_I1mjb_zMN1_-3HV3eV-V9vhoeI583v1X3gVPZlGkLVOP-QbdFKpVipqy-6vHpSHasQJkSJj0KVt2bUo-YK4Bl0xj-3wuR94dxcuP7OepAbMgrAHoXwbymCA5BKe8OscgjrrcXAuO65nuUYw-QiFzalTtOUxQrgtFfjaJ3CCetDaMufs0jnA3RMc-U1IkQhOoHpiFjtVP_f7z_h_0000)
 
+<!--
+@startuml
+
+title Keycloak + Cloud Identity Verify MFA via Push Notification Flow
+
+actor User
+entity "Protected App" as App
+entity Keycloak
+entity "CI Custom Authenticator" as Authn
+entity "CI OIDC" as OIDC
+entity "CI Authenticators" as Authenticators
+entity "CI Authentication Methods" as AuthnMethods
+entity "CI Authn Factors" as Factors
+
+autonumber "<b>[000]"
+User->App: Access protected application
+App->User: Redirect user to Keycloak for authentication
+User->Keycloak: Access Keycloak for authentication
+Keycloak -> User: Initiate first factor authentication\n(out of scope for this scenario)
+User -> Keycloak: Complete first factor authentication\n(out of scope for this scenario)
+Keycloak -> Authn: Delegate authentication to custom authenticator\nGenerate MFA UI page
+Authn -> Keycloak: Obtain Cloud Identity User ID for authenticated user
+Keycloak -> Authn: Return Cloud Identity User ID
+Authn -> OIDC: Get access token\nPOST /v1.0/endpoint/default/token\nclient_id=foo&client_secret=bar&grant_type=client_credentials
+OIDC -> Authn: Return access token
+Authn -> Authn: Store access token in session for re-use
+Authn -> Authenticators: Get registered authenticators for the user\nGET /v1.0/authenticators?search=owner="{userId}"
+Authenticators -> Authn: Return all registered authenticators for the user
+Authn -> Authn: Store registered authenticator info in session for re-use (authenticator id)
+Authn -> AuthnMethods: Get all signatures associated with the user\nGET /v1.0/authnmethods/signatures?search=owner="{userId}"
+AuthnMethods -> Authn: Return all registered signatures for the user
+Authn -> Authenticators: Initiate Push Notification for user specifying available signatures\nPOST /v1.0/authenticators/{authenticatorId}/verifications {...}
+Authenticators -> Authn: Return verification ID for status polling
+Authn -> Authn: Store verification ID in session for status polling
+Authn -> Keycloak: Return MFA page with directions for Jessica
+Keycloak -> User: Render MFA page
+User -> User: Acknowldedge Push Notification on device (async)
+loop on short interval (~5s)
+    User -> Authn: MFA form auto-submits to poll status
+    Authn -> Authenticators: Poll Push Notification status\nGET /v1.0/authenticators/{authenticatorId}/verifications/{id}
+    Authenticators -> Authn: Return Push Notification status\n(PENDING,TIMEOUT,CANCELED,USER_DENIED,USER_FRAUDULENT,BIOMETRY_FAILED,VERIFY_FAILED,VERIFY_SUCCESS)
+    alt If Push Notification result is SUCCESS
+        Authn->Keycloak: Mark authentication as success
+        Keycloak->User: Redirect to protected app (exit loop)
+        User->App: Access protected app
+    else Push Notification result is not SUCCESS
+        alt If Push Notification result is PENDING
+            Authn -> Keycloak: Authentication not complete, re-render MFA page
+            Keycloak -> User: Render MFA Page
+        else Push Notification result is failed
+            Authn -> Keycloak: Mark authentication as failed
+            Keycloak -> User: Render error page.
+        end
+    end
+end
+@enduml
+-->
 
 #### 5.2.7. As a new Keycloak end user, I want to be given an option to enroll IBM Verify so I can use it for passwordless first factor authentication, and second factor authentication via push notification. (New user Verify registration)
 
