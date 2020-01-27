@@ -1,0 +1,27 @@
+KeyCloak Dev Cheat Sheet
+========================
+
+Build Image with JAR
+--------------------
+(from root) mvn clean install
+
+Run Dev Image
+-------------
+docker-compose -f ci-keycloak.yml up
+
+Stop Dev Image
+--------------
+docker stop $(docker ps | grep cloud-identity-keycloak-integration_keycloak_1 | cut -d' ' -f1) &&
+docker stop $(docker ps | grep cloud-identity-keycloak-integration_postgres_1 | cut -d' ' -f1)
+
+Keycloak Console
+----------------
+http://localhost:8080/auth/
+
+Remove Dev Image
+----------------
+docker rmi -f $(docker image ls  private-reg:5000/ci-keycloak -q)
+
+Hot Swap Jar
+------------
+docker cp <mycontainer_id>:/cloud-identity-keycloak-integration-0.0.1.jar /opt/jboss/keycloak/standalone/deployments
