@@ -131,11 +131,11 @@ Authenticators->Authn: Returns set of registered IBM Verify authenticators for g
 Authn->Authenticators: If no registration exists, get tenant-scoped Verify Registration Profile info\n GET /v1.0/authenticators/clients
 Authenticators->Authn: Returns tenant-scoped Verify Registration Profile info
 Authn->Authenticators: If no user registrations exist, initiate new registration\nPOST /v1.0/authenticators/initiation?qrcodeInResponse=true {...}
-Authenticators->Authn: Returns QR code to display for Jessica to consume to complete registration
-Authn->Authn: Save registration QR Code on session
-Authn->User: Render opt-in Registration page with QR Code available for scanning
+Authenticators->Authn: Returns QR and manual entry codes to display for Jessica to consume to complete registration
+Authn->Authn: Save registration QR and manual entry codes on session
+Authn->User: Render opt-in Registration page with QR and manual entry codes available for scanning/manual entry
 alt Jessica opts in to register
-    User->User: Scans QR code with IBM Verify mobile app
+    User->User: Scans QR code with IBM Verify mobile app (or uses manual entry code)
     loop Poll on interval
         User->Authn: Registration form auto-submits on a short interval
         Authn->Authenticators: Poll to check if a new registration has been created for the given user\nGET /v1.0/authenticators?search=userid=foo123
@@ -143,7 +143,7 @@ alt Jessica opts in to register
         alt Registration completed
             Authn->User: Mark authentication as success
         else Registration not completed
-            Authn->User: Re-render opt-in Registration page with the same QR Code
+            Authn->User: Re-render opt-in Registration page with the same QR and manual entry codes
         end
     end
 else Jessica does not opt in to register
