@@ -593,7 +593,7 @@ Given the above, we should target the following _levels_ of Keycloak and RedHat 
 
 * Latest Keycloak major release (including the most recent minor release of this level)
 * Latest RedHat SSO release
-* N-1 RedHat SSO release for a designated window of time
+* N-1 RedHat SSO release for a designated window of time, as requested by customers
 
 A few notes:
 * Keycloak does not follow semver, but it is a fair assumption that within each major release, minor/patch releases are typically used for bug and security vulnerability fixes, and _not_ any kind of destructive changes. We _should_ be safe from SPI breaking changes in these sorts of releases, though we should plan to explicitily upgrade our test environments to target the latest (minor) release within the current major release.
@@ -606,7 +606,9 @@ As of this writing (24Jan2020), the current releases are:
 * Keycloak (Community): 8.0.1
 * RedHat SSO: 7.3 (forked from Keycloak 4.8.*)
 
-The tentative plan for Keycloak (community) 9.* release is end of February.
+The tentative plan for Keycloak (community) 9.* release is end of February. By the time we are producing consumable artifacts, 9.* will likely be the latest released Keycloak version, and will replace 8.0.1 as our primary Keycloak target.
+
+No release schedule information is currently available for the next major release of RedHat SSO.
 
 ### 8.2. Source Code Management
 
