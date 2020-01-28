@@ -1,3 +1,0 @@
-FROM jboss/keycloak
-COPY target/jars/*.jar /opt/jboss/keycloak/standalone/deployment
-
