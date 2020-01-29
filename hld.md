@@ -603,8 +603,9 @@ A few notes:
 We should also plan to setup a test environment that tests against the latest source level of Keycloak, so we can get a preview of the upcoming release at any given time. There is supposed to be a way to configure the docker image, when using a Keycloak docker image, to compile Keycloak from source instead of using the pre-built level of code that the image is spec'd to. This will allow us to gain visibility into upcoming releases _before_ they're made available, so we can prepare any necessary changes to the extensions we produce.
 
 As of this writing (24Jan2020), the current releases are:
-* Keycloak (Community): 8.0.1
-* RedHat SSO: 7.3 (forked from Keycloak 4.8.*)
+
+- Keycloak (Community): 8.0.1
+- RedHat SSO: 7.3 (forked from Keycloak 4.8.*)
 
 The tentative plan for Keycloak (community) 9.* release is end of February. By the time we are producing consumable artifacts, 9.* will likely be the latest released Keycloak version, and will replace 8.0.1 as our primary Keycloak target.
 
@@ -625,6 +626,62 @@ Branching diagram coming _soon_.
 Given that a large amount of the scenarios/stories we are building involve browser-based web flows, we plan to use Selenium WebDriver for automated testing for a number of use cases. However, there will be some challenges there as many of the flows we are building require interaction from an external device, such as an IBM Verify mobile application or a FIDO/WebAuthn hardware key. Investigation needs to be done to figure out how we can integrate such technologies into a WebDriver-driven test suite.
 
 Additionally, we will want to investigate if we can do API-based testing for some of the Keycloak operations we are integrating with. The feasibility of this is still TBD.
+
+### 8.4. Test environment infrastructure, architecture, and topology
+
+There are several combinations of Keycloak, RedHat-SSO, and Cloud Identity that we need to test. There is also a need to test with new Keycloak/RH-SSO deployments versus existing deployments. The sets of inputs are as defined as follows.
+
+> Note: this document ultimately describes a generic test plan where explicit versions of Keycloak and RH-SSO are "Latest" (n) and "Second latest" (n-1). However, I will use concrete versions for more clear examples. Based on [the above versioning discussion](#81-version-and-release-compatibility), we will start with only targeting the latest versions. In the examples below, the mappings are as follows:
+
+|Concrete|Generic|
+|-|-|
+|Keycloak 9|Keycloak n-1|
+|Keycloak source|Keycloak n|
+|RH-SSO 7.3|RH-SSO n|
+
+<!-- |Keycloak 8|Keycloak n-1| -->
+<!-- |RH-SSO 74|RH-SSO n| -->
+
+**Keycloak:**
+
+- Keycloak 9
+- Keycloak build from source (to handle upcoming release) denoted as `src`
+
+**RH-SSO:**
+
+- RH-SSO 7.3
+
+**Cloud Identity:**
+
+- PROD
+- PREP
+- Rel-ITE
+- Dev-ITE
+
+> Note: Primary testing should utilize Cloud Idenity's PROD environment. Down the road, we should also integrate Cloud Identity's non-production environments, so we can be aware of any breaking changes coming up from the Cloud Identity side of this integration, before they get to production. However, given that we will only consume public, documented APIs from Cloud Identity, this risk should be pretty low, so integrating with these environments should be a lower priority than other aspects of the test infrastruture buildout. If we build this right, it should be pretty painless to substitute a Cloud Identity tenant from a non-production environment.
+
+**Combinations to be tested:**
+|Keycloak/RH-SSO Version|Dynamic or Persistent Keycloak Deployment|Cloud Identity Env|Cloud Identity Tenant|Targeted Phase|
+|-|-|-|-|-|
+|kc-9|dynamic|prod|keycloak-test-kc-n1-dyn-fra|1|
+|kc-src|dynamic|prod|keycloak-test-kc-n-dyn-fra|1|
+|rh-73|dynamic|prod|keycloak-test-rh-n-dyn-fra|1|
+|kc-9|persistent|prod|keycloak-test-kc-n1-per-fra|2|
+|kc-src|persistent|prod|keycloak-test-kc-n-per-fra|2|
+|rh-73|persistent|prod|keycloak-test-rh-n-per-fra|2|
+
+The tenant name structure is as follows:
+
+```keycloak-test-{kc|rh}-{n|n1}-{dyn|per}-{fra|ams|wdc|dal}```
+
+where
+
+- `kc|rh`: Keycloak or RedHat SSO, respectively
+- `n|n1`: `n` or `n-1` version, i.e. latest or second latest version
+- `dyn|per`: dynamic or persistent Keycloak/RedHat SSO deployment
+- `fra|ams|wdc|dal`: Cloud Identity production environment where the tenant lives. This is not too critical, but adding it for visibiility if it ever becomes useful.
+
+![Test Infrastructure Architecture/Topology](https://www.plantuml.com/plantuml/svg/ZPHDRnen48Rl-oj6N58ELfJcKBL2A558Fz938aXFAGSN3-m8hxsoPochgl-zOuVb8m9KBgkPUVq-CsEBcyWwS5FPec1YY_0TsvdrUWdtQqONoRi8pnWPRiEi9COPDm6BuY8koTKww0eiEUIsHgYzRLDG7AdvmAKlYfS7T5ACKr1g2AProVhUhJx1kwl-f2O7JPtIkgBPhXNj38o_gidayQT3jwBWNOME8mneM6E0NmrPCxYa8VmcBdF8y70xZczuejtntlVXHsqq8-2Q8fDR_0Sm-mlLoZdPIIPbSAQzmIq26G5Tzs4KQ8MW6_QL73IG3elSUOFGwwYN7N6qcN-4jVLj0iloKVT0nxsLmPy2vFSIIlNXMab--XelP-hZQ_Zt9E49GvIPa_Cno6vFXn39xqDoA13nRWpqxlBdcn4huXOcQD5HKy4NMKEsJVle33zJmBbVGsemRaplok0hx58dZP_6ZwDUvxFSZARIIfMqwTBiQXxqz9X0-Zulo0uos7c7hK2Qp5CDbCKv7ppfhX1eKVB1uvDtihqa4KZjR9TxDtnKVJZqxcfEMs_RtxlNqzPRTN63piXVnJy0)
 
 ## 9. Documentation
 
@@ -649,7 +706,7 @@ Documentation should include but not be limited to:
 
 > Whether or not manual entry is included in the initial registration flow is TBD, but we know that it is supposed to be supported by IBM Verify and the corresponding Cloud Identity APIs.
 
-# DOCUMENT PROPERTIES
+## DOCUMENT PROPERTIES
 
 **Authors**: Austin Bruch (afbruch@us.ibm.com)
 
