@@ -663,6 +663,7 @@ There are several combinations of Keycloak, RedHat-SSO, and Cloud Identity that 
 > Note: Primary testing should utilize Cloud Idenity's PROD environment. Down the road, we should also integrate Cloud Identity's non-production environments, so we can be aware of any breaking changes coming up from the Cloud Identity side of this integration, before they get to production. However, given that we will only consume public, documented APIs from Cloud Identity, this risk should be pretty low, so integrating with these environments should be a lower priority than other aspects of the test infrastruture buildout. If we build this right, it should be pretty painless to substitute a Cloud Identity tenant from a non-production environment.
 
 **Combinations to be tested:**
+
 |Keycloak/RH-SSO Version|Dynamic or Persistent Keycloak Deployment|Cloud Identity Env|Cloud Identity Tenant|Targeted Phase|
 |-|-|-|-|-|
 |kc-9|dynamic|prod|keycloak-test-kc-n1-dyn-fra|1|
