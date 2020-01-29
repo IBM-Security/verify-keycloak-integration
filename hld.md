@@ -44,6 +44,8 @@
 - [8. CI/CD Pipeline and Testing](#8-cicd-pipeline-and-testing)
 	- [8.1. Version and Release Compatibility](#81-version-and-release-compatibility)
 	- [8.2. Source Code Management](#82-source-code-management)
+	- [8.3. General Testing Technology/Approach](#83-general-testing-technologyapproach)
+	- [8.4. Test environment infrastructure, architecture, and topology](#84-test-environment-infrastructure-architecture-and-topology)
 - [9. Documentation](#9-documentation)
 - [10. Open Questions](#10-open-questions)
 
