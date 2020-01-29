@@ -682,7 +682,7 @@ where
 - `kc|rh`: Keycloak or RedHat SSO, respectively
 - `n|n1`: `n` or `n-1` version, i.e. latest or second latest version
 - `dyn|per`: dynamic or persistent Keycloak/RedHat SSO deployment
-- `fra|ams|wdc|dal`: Cloud Identity production environment where the tenant lives. This is not too critical, but adding it for visibiility if it ever becomes useful.
+- `fra|ams|wdc|dal`: Cloud Identity environment where the tenant lives. This is not too critical, but adding it for visibiility if it ever becomes useful.
 
 ![Test Infrastructure Architecture/Topology](https://www.plantuml.com/plantuml/svg/ZPHDRnen48Rl-oj6N58ELfJcKBL2A558Fz938aXFAGSN3-m8hxsoPochgl-zOuVb8m9KBgkPUVq-CsEBcyWwS5FPec1YY_0TsvdrUWdtQqONoRi8pnWPRiEi9COPDm6BuY8koTKww0eiEUIsHgYzRLDG7AdvmAKlYfS7T5ACKr1g2AProVhUhJx1kwl-f2O7JPtIkgBPhXNj38o_gidayQT3jwBWNOME8mneM6E0NmrPCxYa8VmcBdF8y70xZczuejtntlVXHsqq8-2Q8fDR_0Sm-mlLoZdPIIPbSAQzmIq26G5Tzs4KQ8MW6_QL73IG3elSUOFGwwYN7N6qcN-4jVLj0iloKVT0nxsLmPy2vFSIIlNXMab--XelP-hZQ_Zt9E49GvIPa_Cno6vFXn39xqDoA13nRWpqxlBdcn4huXOcQD5HKy4NMKEsJVle33zJmBbVGsemRaplok0hx58dZP_6ZwDUvxFSZARIIfMqwTBiQXxqz9X0-Zulo0uos7c7hK2Qp5CDbCKv7ppfhX1eKVB1uvDtihqa4KZjR9TxDtnKVJZqxcfEMs_RtxlNqzPRTN63piXVnJy0)
 
