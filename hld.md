@@ -421,6 +421,14 @@ _coming soon_
 
 _coming soon_
 
+#### 5.2.15 As a Keycloak end user (Jessica), I want to be able to modify my device registration and MFA enrollment in the case of getting another device, phone number, and/or email (IBM Verify)
+
+_coming soon_
+
+#### 5.2.16 As a Keycloak end user (Jessica), I want to be able to delete my devices/disassociate email and phone number after enrolling to the various authenticators (IBM Verify). 
+
+_coming soon_
+
 ## 6. Design Details
 
 ### 6.1. Architecture
