@@ -12,6 +12,7 @@
   
   <modules>
     <module>samples/CloudIdentityAuthenticators</module>
+    <module>CloudIdentityAuthenticators</module>
     <module>ci-keycloak</module>
   </modules>
     
