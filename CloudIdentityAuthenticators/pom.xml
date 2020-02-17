@@ -8,21 +8,21 @@
     <relativePath>../..</relativePath>
   </parent>
   <groupId>com.ibm.security.access.authenticator</groupId>
-  <artifactId>CloudIdentityAuthenticators-samples</artifactId>
-  <name>CloudIdentityAuthenticators-samples</name>
+  <artifactId>CloudIdentityAuthenticators</artifactId>
+  <name>CloudIdentityAuthenticators</name>
   <packaging>jar</packaging>
     
   <dependencies>
   	<dependency>
   		<groupId>org.keycloak</groupId>
   		<artifactId>keycloak-core</artifactId>
-  		<version>6.0.1</version>
+  		<version>8.0.1</version>
   		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.keycloak</groupId>
   		<artifactId>keycloak-server-spi-private</artifactId>
-  		<version>6.0.1</version>
+  		<version>8.0.1</version>
   		<scope>provided</scope>
   	</dependency>
   	<dependency>
@@ -34,7 +34,7 @@
   	<dependency>
   		<groupId>org.keycloak</groupId>
   		<artifactId>keycloak-server-spi</artifactId>
-  		<version>6.0.1</version>
+  		<version>8.0.1</version>
   		<scope>provided</scope>
   	</dependency>
   	<dependency>
