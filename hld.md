@@ -421,13 +421,19 @@ _coming soon_
 
 _coming soon_
 
-#### 5.2.15 As a Keycloak end user (Jessica), I want to be able to modify my device registration and MFA enrollment in the case of getting another device, phone number, and/or email (IBM Verify)
+#### 5.2.15 As a Keycloak end user (Jessica), I want to be able to modify my device registration and MFA enrollment in the case of getting another device for IBM Verify Registration (QRCode and Mobile Push)
 
 _coming soon_
 
-#### 5.2.16 As a Keycloak end user (Jessica), I want to be able to delete my devices/disassociate email and phone number after enrolling to the various authenticators (IBM Verify). 
+#### 5.2.16 As a Keycloak end user (Jessica), I want to be able to modify my device registration and MFA enrollment in the case of getting another device for FIDO registation
 
 _coming soon_
+
+#### 5.2.17 As a Keycloak end user (Jessica), I want to be able to modify my email for TOTP in case of wanting to change where my TOTP code gets delivered to
+
+_coming soon_
+
+#### 5.2.18 As a Keycloak end user (Jessica), I want to be able to modify my phone number for TOTP in case of wanting to change where my TOTP code gets delivered to
 
 ## 6. Design Details
 
