@@ -429,11 +429,11 @@ _coming soon_
 
 _coming soon_
 
-#### 5.2.17 As a Keycloak end user (Jessica), I want to be able to modify my email for TOTP in case of wanting to change where my TOTP code gets delivered to
+#### 5.2.17 As a Keycloak end user (Jessica), I want to be able to modify my email for OTP in case of wanting to change where my OTP code gets delivered to
 
 _coming soon_
 
-#### 5.2.18 As a Keycloak end user (Jessica), I want to be able to modify my phone number for TOTP in case of wanting to change where my TOTP code gets delivered to
+#### 5.2.18 As a Keycloak end user (Jessica), I want to be able to modify my phone number for OTP in case of wanting to change where my OTP code gets delivered to
 
 ## 6. Design Details
 
