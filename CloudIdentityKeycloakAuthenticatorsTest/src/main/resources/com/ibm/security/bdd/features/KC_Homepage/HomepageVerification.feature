@@ -1,6 +1,6 @@
 @Jason
 Feature: Keycloak Homepage Verification
-	This feature verifies the elements appearing on the Keycloak Homepag
+	This feature verifies the elements appearing on the Keycloak Homepage
 
 Scenario: Verify the main elements on Keycloak Homepage are displayed
 Given Customer navigate to the Keycloak Homepage
