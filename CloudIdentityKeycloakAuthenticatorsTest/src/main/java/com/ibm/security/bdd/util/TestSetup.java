@@ -67,7 +67,7 @@ public class TestSetup {
 			switch (activeServer) {
 				default:
             	case "localhost":
-            		return "https://<dev-env-tenant>.ice.ibmcloud.com";
+            		return "http://keycloak.rtp.raleigh.ibm.com:8080/auth";
 			}
 		}
 		return baseURL;
