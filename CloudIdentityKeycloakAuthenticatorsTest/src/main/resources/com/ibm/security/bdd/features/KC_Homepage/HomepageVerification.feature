@@ -19,4 +19,3 @@ Then Customer verifies the homepage displays Report an issue hyperlink
 
 
 
-
