@@ -16,6 +16,7 @@ import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
 
 import com.ibm.security.bdd.containers.CommonContainer;
+import com.ibm.security.bdd.containers.LoginContainer;
 import com.ibm.security.bdd.util.TestSetup;
 import com.ibm.security.bdd.util.TestUtils;
 import com.ibm.security.bdd.util.WebDriverFactory;
@@ -31,7 +32,35 @@ public class CommonSteps {
 
 	private WebDriver driver = WebDriverFactory.getDriver();
 	private CommonContainer commonContainer = new CommonContainer();
+	private LoginContainer loginContainer = new LoginContainer();
 
+	//destination can be Admmin Console or User Console
+	@Given("^Customer logs into the \"(.*?)\" with username \"(.*?)\"$")
+	public void customer_logs_in_with_username(String destination, String username) throws Throwable {
+		String baseUrl = TestSetup.getServerBaseURL();
+		String loadUrl;
+
+		if (destination.equals("Admin Console")) {
+			loadUrl = baseUrl + "admin";
+		} else {
+			loadUrl = baseUrl + "realms/test-realm/account";
+		}
+
+		driver.get(loadUrl);
+
+		String userName = TestSetup.getUserNameForPerson(username);
+		String password = TestSetup.getPasswordForPerson(username);
+
+		TestUtils.assertElementAppears(loginContainer.UsernameText);
+		TestUtils.verifiedSendKeys(loginContainer.UsernameText, userName);
+		TestUtils.assertElementAppears(loginContainer.PasswordText);
+		TestUtils.verifiedSendKeys(loginContainer.PasswordText, password);
+		Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
+		loginContainer.LoginButton.click();
+		Thread.sleep(2000);
+		
+	}
+	
 	@Given("^\"(.*?)\" logs into the \"(.*?)\" using \"(.*?)\"$")
 	public void commonLogin(String person, String destination, String logInType) throws Throwable {
 		String baseUrl = TestSetup.getServerBaseURL();

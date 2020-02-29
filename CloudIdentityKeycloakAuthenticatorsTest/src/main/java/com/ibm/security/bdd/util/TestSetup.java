@@ -67,7 +67,8 @@ public class TestSetup {
 			switch (activeServer) {
 				default:
             	case "localhost":
-            		return "http://keycloak.rtp.raleigh.ibm.com:8080/auth";
+            		return "http://vbauto2.rtp.raleigh.ibm.com:8080/";
+            		
 			}
 		}
 		return baseURL;

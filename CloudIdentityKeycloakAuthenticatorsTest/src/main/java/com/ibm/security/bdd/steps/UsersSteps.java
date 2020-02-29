@@ -78,12 +78,12 @@ public class UsersSteps {
 		System.out.println(UsersContainer.Save);
 		TestUtils.assertElementAppears(UsersContainer.Cancel);
 		System.out.println(UsersContainer.Cancel);
-		//Thread.sleep(1000);
+		Thread.sleep(1000);
 		TestUtils.assertElementAppears(UsersContainer.UserEnabledON);
 		System.out.println(UsersContainer.UserEnabledON);
-		//Thread.sleep(1000);
-		//TestUtils.assertElementAppears(UsersContainer.EmailVerifiedOFF);
-		//System.out.println(UsersContainer.EmailVerifiedOFF);
+		Thread.sleep(1000);
+		TestUtils.assertElementAppears(UsersContainer.EmailVerifiedOFF);
+		System.out.println(UsersContainer.EmailVerifiedOFF);
 		
 		driver.findElement(By.cssSelector("#s2id_reqActions")).click();
 		Thread.sleep(2000);

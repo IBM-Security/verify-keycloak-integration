@@ -95,7 +95,7 @@ public class UsersContainer {
 	@FindBy(how = How.CSS, using = "label[for*='emailVerified']")
 	public WebElement EmailVerifiedLabel;
 	
-	@FindBy(how = How.XPATH, using = "//div[@class='col-md-6']//span//span[@class='onoffswitch-inactive ng-binding'][contains(text(),'OFF')]")
+	@FindBy(how = How.XPATH, using = "//label[@for='emailVerified']//span[contains(@class,'onoffswitch-inactive')][contains(text(),'OFF')]")
 	public WebElement EmailVerifiedOFF;
 	
 	//Email Verified ON

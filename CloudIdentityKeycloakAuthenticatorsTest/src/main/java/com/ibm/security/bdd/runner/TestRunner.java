@@ -7,7 +7,8 @@ import io.cucumber.junit.Cucumber;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-	tags = { "@TEST" }
+	tags = { "@Victoria" },
+	strict=true
 )
 
 public class TestRunner extends BaseTestOptions {
