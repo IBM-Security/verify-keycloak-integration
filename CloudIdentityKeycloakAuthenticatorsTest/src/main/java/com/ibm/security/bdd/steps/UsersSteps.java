@@ -78,6 +78,7 @@ public class UsersSteps {
 		System.out.println(UsersContainer.Save);
 		TestUtils.assertElementAppears(UsersContainer.Cancel);
 		System.out.println(UsersContainer.Cancel);
+		
 		Thread.sleep(1000);
 		TestUtils.assertElementAppears(UsersContainer.UserEnabledON);
 		System.out.println(UsersContainer.UserEnabledON);
