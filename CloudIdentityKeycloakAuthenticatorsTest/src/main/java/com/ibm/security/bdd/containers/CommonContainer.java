@@ -27,5 +27,11 @@ public class CommonContainer {
 	
 	@FindBy(how = How.CSS, using = "#login-button")
 	public WebElement loginButton;
+	
+	//Users Navigation
+	@FindBy(how = How.LINK_TEXT , using = "Users")
+	public WebElement UsersLink;
+	//xpath=//a[contains(text(),'Users')]
+	//.nav-category+ .nav-category li:nth-child(2) .ng-binding
 
 }
