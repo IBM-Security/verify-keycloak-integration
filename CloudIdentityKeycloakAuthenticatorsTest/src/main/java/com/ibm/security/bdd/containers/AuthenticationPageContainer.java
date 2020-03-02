@@ -11,9 +11,11 @@ public class AuthenticationPageContainer {
 	public AuthenticationPageContainer() {
 		PageFactory.initElements(WebDriverFactory.getDriver(), this);
 	}
+	    //Drop down 
 		@FindBy(how = How.CSS, using = "select.form-control")
 		public WebElement AuthDropDown;
 		
+		//Drop-down entries
 		@FindBy(how = How.CSS, using = "select.form-control option[label='Browser'")
 		public WebElement DropDown_Browser;
 		
@@ -44,6 +46,8 @@ public class AuthenticationPageContainer {
 		@FindBy(how = How.CSS, using = "i.fa'")
 		public WebElement DropDownInfoButton;
 		
+		//Tabs:
+		//Tab Flows
 		@FindBy(how = How.CSS, using = "ul.nav-tabs li[ng-class*='flows']")
 		public WebElement TabFlows;
 		
@@ -53,16 +57,28 @@ public class AuthenticationPageContainer {
 		@FindBy(how = How.CSS, using = "td.kc-sorter']")
 		public WebElement FlowsFirstCell;
 		
+		//Tab Bindings
 		@FindBy(how = How.CSS, using = "ul.nav-tabs li[ng-class*='bindings']")
 		public WebElement TabBindings;
 		
+		//Tab Required Actions
 		@FindBy(how = How.CSS, using = "ul.nav-tabs li[ng-class*='required']")
 		public WebElement TabRequired;
 		
+		//Tab OTP Policy
 		@FindBy(how = How.CSS, using = "ul.nav-tabs li[ng-class*='otp']")
 		public WebElement TabOTP;
 		
+		//Tab WebAuthn Policy
 		@FindBy(how = How.CSS, using = "ul.nav-tabs li[ng-class*='webauth']")
 		public WebElement TabWebAuth;	
+		
+		//Buttons
+		@FindBy(how = How.CSS, using = "button[data-ng-click*='createFlow()']")
+		public WebElement NewButton;
+		
+		@FindBy(how = How.CSS, using = "button[data-ng-click*='createFlow()']")
+		public WebElement CopyButton;
+		
 		
 	}
