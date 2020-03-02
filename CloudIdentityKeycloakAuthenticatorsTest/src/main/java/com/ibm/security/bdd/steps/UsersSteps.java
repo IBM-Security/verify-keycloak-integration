@@ -24,6 +24,7 @@ public class UsersSteps {
 		driver.findElement(By.linkText("Users")).click();
 	}
 
+	
 	@Then("^Customer verifies Users page elements$")
 	public void customer_verifies_users_page_elements() throws Throwable {
 		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
