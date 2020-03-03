@@ -3,4 +3,5 @@
 .classpath
 
 # Ignore Gradle build output directory
+bin
 build
