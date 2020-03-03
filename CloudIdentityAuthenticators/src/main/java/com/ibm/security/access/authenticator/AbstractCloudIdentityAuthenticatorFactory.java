@@ -12,7 +12,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
 
-import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilites;
+import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 
 abstract public class AbstractCloudIdentityAuthenticatorFactory implements AuthenticatorFactory {
@@ -50,17 +50,17 @@ abstract public class AbstractCloudIdentityAuthenticatorFactory implements Authe
 	public void close() {
 		// no-op
 		final String methodName = "close";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 	
 	abstract public Authenticator create(KeycloakSession session);
 	
 	public List<ProviderConfigProperty> getConfigProperties() {
 		final String methodName = "getConfigProperties";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, CONFIG_PROPERTIES);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, CONFIG_PROPERTIES);
 		return CONFIG_PROPERTIES;
 	}
 	
@@ -72,11 +72,11 @@ abstract public class AbstractCloudIdentityAuthenticatorFactory implements Authe
 	
 	public String getReferenceCategory() {
 		final String methodName = "getReferenceCategory";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
 		String referenceCategory = null;
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, referenceCategory);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, referenceCategory);
 		return referenceCategory;
 	}
 	
@@ -85,35 +85,35 @@ abstract public class AbstractCloudIdentityAuthenticatorFactory implements Authe
 	public void init(Scope config) {
 		// no-op
 		final String methodName = "init";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, config);
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, config);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 	
 	public boolean isConfigurable() {
 		final String methodName = "isConfigurable";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
 		boolean isConfigurable = true;
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, isConfigurable);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, isConfigurable);
 		return isConfigurable;
 	}
 
 	public boolean isUserSetupAllowed() {
 		final String methodName = "isUserSetupAllowed";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
 		boolean isUserSetupAllowed = false;
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, isUserSetupAllowed);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, isUserSetupAllowed);
 		return isUserSetupAllowed;
 	}
 
 	public void postInit(KeycloakSessionFactory factory) {
 		// no-op
 		final String methodName = "postInit";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, factory);
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, factory);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 }

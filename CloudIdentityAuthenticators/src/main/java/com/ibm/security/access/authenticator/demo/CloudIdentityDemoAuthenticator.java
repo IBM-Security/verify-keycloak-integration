@@ -10,7 +10,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 
-import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilites;
+import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 import com.ibm.security.access.authenticator.rest.FidoUtilities;
 import com.ibm.security.access.authenticator.rest.QrUtilities;
@@ -40,7 +40,7 @@ public class CloudIdentityDemoAuthenticator implements Authenticator {
 
 	public void action(AuthenticationFlowContext context) {
 		final String methodName = "action";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		MultivaluedMap<String, String> formParams = context.getHttpRequest().getDecodedFormParameters();
 		String actionType = formParams.getFirst(ACTION_TYPE);
@@ -81,12 +81,12 @@ public class CloudIdentityDemoAuthenticator implements Authenticator {
 			context.attempted();
 		}
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	public void authenticate(AuthenticationFlowContext context) {
 		final String methodName = "authenticate";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		/**
 		 * 0) Check session cache if the FIDO and QR authn has already been initiated. Only initiate on first access
 		 * 1) Initiate QR login flow
@@ -121,43 +121,43 @@ public class CloudIdentityDemoAuthenticator implements Authenticator {
 				.createForm(INITIAL_LOGIN_PAGE_TEMPLATE);
 		context.forceChallenge(challenge);
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	public void close() {
 		final String methodName = "close";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		// No-op
 		// Token(s) could be revoked here for better cleanup
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
 		final String methodName = "configuredFor";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, session, realm, user);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, session, realm, user);
 		
 		// Hardcode to true for the time being
 		boolean configuredFor = true;
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, configuredFor);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, configuredFor);
 		return configuredFor;
 	}
 
 	public boolean requiresUser() {
 		final String methodName = "requiresUser";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
 		boolean requiresUser = false;
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, requiresUser);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, requiresUser);
 		return requiresUser;
 	}
 
 	public void setRequiredActions(KeycloakSession session, RealmModel realm, UserModel user) {
 		final String methodName = "setRequiredActions";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, session, realm, user);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, session, realm, user);
 		// No-op for the time being
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 }

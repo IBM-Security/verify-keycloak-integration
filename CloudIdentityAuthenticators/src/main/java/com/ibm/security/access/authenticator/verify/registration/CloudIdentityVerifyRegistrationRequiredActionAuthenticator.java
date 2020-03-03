@@ -10,7 +10,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 
-import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilites;
+import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 import com.ibm.security.access.authenticator.rest.QrUtilities;
 
@@ -24,7 +24,7 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implemen
 	
 	public void action(AuthenticationFlowContext context) {
 		final String methodName = "action";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		MultivaluedMap<String, String> formParams = context.getHttpRequest().getDecodedFormParameters();
 		String action= formParams.getFirst(ACTION_PARAM);
@@ -36,29 +36,29 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implemen
 			context.success();
 		}
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	public void authenticate(AuthenticationFlowContext context) {
 		final String methodName = "authenticate";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		boolean hasPromptedRegistration = CloudIdentityUtilities.hasPromptedPasswordlessRegistration(context);
 		if (hasPromptedRegistration) {
 			context.success();
 			
-			CloudIdentityLoggingUtilites.exit(logger, methodName);
+			CloudIdentityLoggingUtilities.exit(logger, methodName);
 			return;
 		}
 		initiateAndPoll(context);
 		CloudIdentityUtilities.setPromptedPasswordlessRegistration(context);
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 	
 	private void initiateAndPoll(AuthenticationFlowContext context) {
 		final String methodName = "initiateAndPoll";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		UserModel user = context.getUser();
 		if (user != null) {
@@ -88,48 +88,48 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implemen
 							.createForm("verify-registration.ftl");
 					context.challenge(challenge);
 					
-					CloudIdentityLoggingUtilites.exit(logger, methodName);
+					CloudIdentityLoggingUtilities.exit(logger, methodName);
 					return;
 				}
 			}
 		}
 		context.success();
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	public void close() {
 		final String methodName = "close";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		// no-op
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
 		final String methodName = "configuredFor";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, session, realm, user);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, session, realm, user);
 		
 		boolean configuredFor = true;
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, configuredFor);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, configuredFor);
 		return configuredFor;
 	}
 
 	public boolean requiresUser() {
 		final String methodName = "requiresUser";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
 		boolean requiresUser = true;
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, requiresUser);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, requiresUser);
 		return requiresUser;
 	}
 
 	public void setRequiredActions(KeycloakSession session, RealmModel realm, UserModel user) {
 		final String methodName = "setRequiredActions";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, session, realm, user);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, session, realm, user);
 		// no-op
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 }

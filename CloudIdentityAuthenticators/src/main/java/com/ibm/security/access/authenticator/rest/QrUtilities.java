@@ -18,7 +18,7 @@ import org.apache.http.util.EntityUtils;
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
 
-import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilites;
+import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 
 public class QrUtilities {
 	
@@ -26,7 +26,7 @@ public class QrUtilities {
 	
 	public static String getVerifyProfileId(AuthenticationFlowContext context) {
 		final String methodName = "getVerifyProfileId";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -69,13 +69,13 @@ public class QrUtilities {
 			}
 		}
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, verifyProfileId);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, verifyProfileId);
 		return verifyProfileId;
 	}
 	
 	public static String initiateVerifyAuthenticatorRegistration(AuthenticationFlowContext context, String userId, String friendlyName) {
 		final String methodName = "initiateVerifyAuthenticatorRegistration";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, userId, friendlyName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, userId, friendlyName);
 		
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -122,13 +122,13 @@ public class QrUtilities {
 			}
 		}
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, qrCode);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, qrCode);
 		return qrCode;
 	}
 	
 	public static QrLoginInitiationResponse initiateQrLogin(AuthenticationFlowContext context) {
 		final String methodName = "initiateQrLogin";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -187,7 +187,7 @@ public class QrUtilities {
 			}
 		}
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, qrResponse);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, qrResponse);
 		return qrResponse;
 	}
 	
@@ -209,7 +209,7 @@ public class QrUtilities {
 	
 	public static QrLoginResponse pollQrLoginStatus(AuthenticationFlowContext context, String qrLoginId, String qrLoginDsi) {
 		final String methodName = "pollQrLoginStatus";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, qrLoginId, qrLoginDsi);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, qrLoginId, qrLoginDsi);
 		
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -261,7 +261,7 @@ public class QrUtilities {
 			}
 		}
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, qrResponse);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, qrResponse);
 		return qrResponse;
 	}
 	
@@ -277,7 +277,7 @@ public class QrUtilities {
 	
 	public static boolean doesUserHaveVerifyRegistered(AuthenticationFlowContext context, String userId) {
 		final String methodName = "doesUserHaveVerifyRegistered";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, userId);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, userId);
 		
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -321,84 +321,84 @@ public class QrUtilities {
 			}
 		}
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 	
 	public static String getQrLoginId(AuthenticationFlowContext context) {
 		final String methodName = "getQrLoginId";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		String result = context.getAuthenticationSession().getUserSessionNotes().get("qr.login.id");
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 	
 	public static void setQrLoginId(AuthenticationFlowContext context, String qrLoginId) {
 		final String methodName = "setQrLoginId";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, qrLoginId);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, qrLoginId);
 		
 		context.getAuthenticationSession().setUserSessionNote("qr.login.id", qrLoginId);
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 	
 	public static String getQrLoginDsi(AuthenticationFlowContext context) {
 		final String methodName = "getQrLoginDsi";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		String result = context.getAuthenticationSession().getUserSessionNotes().get("qr.login.dsi");
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 	
 	public static void setQrLoginDsi(AuthenticationFlowContext context, String qrLoginDsi) {
 		final String methodName = "setQrLoginDsi";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, qrLoginDsi);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, qrLoginDsi);
 		
 		context.getAuthenticationSession().setUserSessionNote("qr.login.dsi", qrLoginDsi);
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 	
 	public static String getQrLoginImage(AuthenticationFlowContext context) {
 		final String methodName = "getQrLoginImage";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		String result = context.getAuthenticationSession().getUserSessionNotes().get("qr.login.image");
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 	
 	public static void setQrLoginImage(AuthenticationFlowContext context, String qrLoginImage) {
 		final String methodName = "setQrLoginImage";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, qrLoginImage);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, qrLoginImage);
 		
 		context.getAuthenticationSession().setUserSessionNote("qr.login.image", qrLoginImage);
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 	
 	public static String getVerifyRegistrationQrCode(AuthenticationFlowContext context) {
 		final String methodName = "getVerifyRegistrationQrCode";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		String result = context.getAuthenticationSession().getUserSessionNotes().get("verify.registration.qr");
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 	
 	public static void setVerifyRegistrationQrCode(AuthenticationFlowContext context, String qrCode) {
 		final String methodName = "setVerifyRegistrationQrCode";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, qrCode);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, qrCode);
 		
 		context.getAuthenticationSession().setUserSessionNote("verify.registration.qr", qrCode);
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 }

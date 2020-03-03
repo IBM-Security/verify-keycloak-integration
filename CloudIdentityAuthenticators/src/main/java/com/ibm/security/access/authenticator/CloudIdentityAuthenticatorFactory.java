@@ -13,7 +13,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
 
-import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilites;
+import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 
 public class CloudIdentityAuthenticatorFactory implements AuthenticatorFactory {
@@ -57,105 +57,105 @@ public class CloudIdentityAuthenticatorFactory implements AuthenticatorFactory {
 
 	public void close() {
 		final String methodName = "close";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	public Authenticator create(KeycloakSession session) {
 		final String methodName = "create";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, session);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, session);
 		
 		CloudIdentityAuthenticator instance = new CloudIdentityAuthenticator();
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, instance);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, instance);
 		return instance;
 	}
 	
 	public List<ProviderConfigProperty> getConfigProperties() {
 		final String methodName = "getConfigProperties";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, CONFIG_PROPERTIES);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, CONFIG_PROPERTIES);
 		return CONFIG_PROPERTIES;
 	}
 	
 	public String getDisplayType() {
 		final String methodName = "getDisplayType";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		logger.tracef("%s entry", methodName);
 		
 		String displayType = "Cloud Identity Authenticator";
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, displayType);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, displayType);
 		return displayType;
 	}
 	
 	public String getHelpText() {
 		final String methodName = "getHelpText";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
 		String helpText = "Cloud Identity Authenticator help text";
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, helpText);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, helpText);
 		return helpText;
 	}
 
 	public String getId() {
 		final String methodName = "getId";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, ID);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, ID);
 		return ID;
 	}
 
 	public String getReferenceCategory() {
 		final String methodName = "getReferenceCategory";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 
 		String referenceCategory = null;
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, referenceCategory);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, referenceCategory);
 		return referenceCategory;
 	}
 
 	public Requirement[] getRequirementChoices() {
 		final String methodName = "getRequirementChoices";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, REQUIREMENT_CHOICES);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, REQUIREMENT_CHOICES);
 		return REQUIREMENT_CHOICES;
 	}
 	
 	public void init(Scope scope) {
 		final String methodName = "init";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, scope);
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, scope);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	public boolean isConfigurable() {
 		final String methodName = "isConfigurable";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
 		boolean isConfigurable = true;
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, isConfigurable);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, isConfigurable);
 		return isConfigurable;
 	}
 
 	public boolean isUserSetupAllowed() {
 		final String methodName = "isUserSetupAllowed";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
 		boolean isUserSetupAllowed = false;
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, isUserSetupAllowed);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, isUserSetupAllowed);
 		return isUserSetupAllowed;
 	}
 
 	public void postInit(KeycloakSessionFactory keycloakSessionFactory) {
 		final String methodName = "postInit";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, keycloakSessionFactory);
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, keycloakSessionFactory);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 }

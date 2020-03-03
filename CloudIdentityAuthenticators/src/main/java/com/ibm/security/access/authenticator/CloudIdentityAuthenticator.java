@@ -26,7 +26,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 
-import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilites;
+import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 
 public class CloudIdentityAuthenticator implements Authenticator {
@@ -63,7 +63,7 @@ public class CloudIdentityAuthenticator implements Authenticator {
 
 	public void action(AuthenticationFlowContext context) {
 		final String methodName = "action";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 
 		String incomingOtpType = getOtpType(context);
 		MultivaluedMap<String, String> formParams = context.getHttpRequest().getDecodedFormParameters();
@@ -130,12 +130,12 @@ public class CloudIdentityAuthenticator implements Authenticator {
 			}
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	public void authenticate(AuthenticationFlowContext context) {
 		final String methodName = "authenticate";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 
 		String email = context.getUser().getEmail();
 		List<String> phoneValues = context.getUser().getAttribute("phone");
@@ -179,19 +179,19 @@ public class CloudIdentityAuthenticator implements Authenticator {
 			context.success();
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	public void close() {
 		final String methodName = "close";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 
 	public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
 		final String methodName = "configuredFor";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, session, realm, user);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, session, realm, user);
 
 		boolean result = false;
 		// Only run this authenticator for our test realm and for users with an email configured
@@ -200,31 +200,31 @@ public class CloudIdentityAuthenticator implements Authenticator {
 			result = true;
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 
 	public boolean requiresUser() {
 		final String methodName = "requiresUser";
-		CloudIdentityLoggingUtilites.entry(logger, methodName);
+		CloudIdentityLoggingUtilities.entry(logger, methodName);
 
 		// Return true because this authenticator is used for a 2FA scenario
 		boolean result = true;
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 
 	public void setRequiredActions(KeycloakSession session, RealmModel realm, UserModel user) {
 		final String methodName = "setRequiredActions";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, session, realm, user);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, session, realm, user);
 		// no-op if we don't want to add any required actions to the login flow
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	private TransientOtpResponse sendEmailOtp(AuthenticationFlowContext context, String emailAddress) {
 		final String methodName = "sendEmailOtp";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, emailAddress);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, emailAddress);
 
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -279,13 +279,13 @@ public class CloudIdentityAuthenticator implements Authenticator {
 			}
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, transientOtpResponse);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, transientOtpResponse);
 		return transientOtpResponse;
 	}
 
 	private TransientOtpResponse sendSmsOtp(AuthenticationFlowContext context, String phoneNumber) {
 		final String methodName = "sendSmsOtp";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, phoneNumber);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, phoneNumber);
 
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -341,7 +341,7 @@ public class CloudIdentityAuthenticator implements Authenticator {
 			}
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, transientOtpResponse);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, transientOtpResponse);
 		return transientOtpResponse;
 	}
 
@@ -357,7 +357,7 @@ public class CloudIdentityAuthenticator implements Authenticator {
 
 	private boolean validateEmailOtp(AuthenticationFlowContext context, String transactionId, String otp) {
 		final String methodName = "validateEmailOtp";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, transactionId, otp);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, transactionId, otp);
 
 		boolean result = false;
 
@@ -399,13 +399,13 @@ public class CloudIdentityAuthenticator implements Authenticator {
 			}
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 
 	private boolean validateSmsOtp(AuthenticationFlowContext context, String transactionId, String otp) {
 		final String methodName = "validateSmsOtp";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, transactionId, otp);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, transactionId, otp);
 
 		boolean result = false;
 
@@ -447,65 +447,65 @@ public class CloudIdentityAuthenticator implements Authenticator {
 			}
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 
 	private String getOtpTransactionId(AuthenticationFlowContext context) {
 		final String methodName = "getOtpTransactionId";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 
 		String trxnId = context.getAuthenticationSession().getUserSessionNotes().get(OTP_TRANSACTION_ID_KEY);
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, trxnId);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, trxnId);
 		return trxnId;
 	}
 
 	private void setOtpTransactionId(AuthenticationFlowContext context, String transactionId) {
 		final String methodName = "setOtpTransactionId";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, transactionId);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, transactionId);
 
 		context.getAuthenticationSession().setUserSessionNote(OTP_TRANSACTION_ID_KEY, transactionId);
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	private String getOtpCorrelation(AuthenticationFlowContext context) {
 		final String methodName = "getOtpCorrelation";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 
 		String otpCorrelation = context.getAuthenticationSession().getUserSessionNotes().get(OTP_CORRELATION_KEY);
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, otpCorrelation);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, otpCorrelation);
 		return otpCorrelation;
 	}
 
 	private void setOtpCorrelation(AuthenticationFlowContext context, String correlation) {
 		final String methodName = "setOtpCorrelation";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, correlation);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, correlation);
 
 		context.getAuthenticationSession().setUserSessionNote(OTP_CORRELATION_KEY, correlation);
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 	private String getOtpType(AuthenticationFlowContext context) {
 		final String methodName = "getOtpType";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 
 		String otpType = context.getAuthenticationSession().getUserSessionNotes().get(OTP_TYPE_KEY);
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, otpType);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, otpType);
 		return otpType;
 	}
 
 	private void setOtpType(AuthenticationFlowContext context, String type) {
 		final String methodName = "setOtpType";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, type);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, type);
 
 		context.getAuthenticationSession().setUserSessionNote(OTP_TYPE_KEY, type.toString());
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 }

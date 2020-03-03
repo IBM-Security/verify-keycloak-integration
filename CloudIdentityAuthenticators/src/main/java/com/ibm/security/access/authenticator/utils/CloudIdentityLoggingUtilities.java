@@ -2,9 +2,13 @@ package com.ibm.security.access.authenticator.utils;
 
 import org.jboss.logging.Logger;
 
-public class CloudIdentityLoggingUtilites {
+public class CloudIdentityLoggingUtilities {
 	
-	public static void entry(Logger logger, String methodName, Object... arguments) {
+    public static void print(Logger logger, String msg) {
+        logger.info(msg);
+    }
+
+    public static void entry(Logger logger, String methodName, Object... arguments) {
 		if (logger.isTraceEnabled()) {
 			logger.tracef("%s entry", methodName, arguments);
 		}

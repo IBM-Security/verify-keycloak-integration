@@ -20,7 +20,7 @@ import org.apache.http.util.EntityUtils;
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
 
-import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilites;
+import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 
 public class FidoUtilities {
 
@@ -36,7 +36,7 @@ public class FidoUtilities {
 
 	public static String initiateFidoRegistration(AuthenticationFlowContext context, String userId) {
 		final String methodName = "initiateFidoRegistration";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, userId);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, userId);
 
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -78,13 +78,13 @@ public class FidoUtilities {
 			}
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, fidoInitResponse);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, fidoInitResponse);
 		return fidoInitResponse;
 	}
 
 	public static boolean completeFidoRegistration(AuthenticationFlowContext context, String type, String id, String clientDataJSON, String attestationObject, String nickname) {
 		final String methodName = "completeFidoRegistration";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, type, id, clientDataJSON, attestationObject, nickname);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, type, id, clientDataJSON, attestationObject, nickname);
 
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -113,9 +113,11 @@ public class FidoUtilities {
 				new StringEntity(completeRegistrationPayload
 						)
 			);
+            CloudIdentityLoggingUtilities.print(logger, EntityUtils.toString(postRequest.getEntity()));
 			CloseableHttpResponse response = httpClient.execute(postRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+            CloudIdentityLoggingUtilities.print(logger, responseBody);
 			if (statusCode == 200) {
 				result = true;
 			}
@@ -136,13 +138,13 @@ public class FidoUtilities {
 			}
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 
 	public static boolean completeFidoRegistration(AuthenticationFlowContext context) {
 		final String methodName = "completeFidoRegistration";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 
 		MultivaluedMap<String, String> formParams = context.getHttpRequest().getDecodedFormParameters();
 		String type = formParams.getFirst("type");
@@ -153,7 +155,7 @@ public class FidoUtilities {
 
 		boolean result = completeFidoRegistration(context, type, id, clientDataJSON, attestationObject, nickname);
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 
@@ -165,7 +167,7 @@ public class FidoUtilities {
 	 */
 	public static String initiateFidoAuthn(AuthenticationFlowContext context, String userId) {
 		final String methodName = "initiateFidoAuthn";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, userId);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, userId);
 
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -215,7 +217,7 @@ public class FidoUtilities {
 			}
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, fidoInitResponse);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, fidoInitResponse);
 		return fidoInitResponse;
 	}
 
@@ -229,7 +231,7 @@ public class FidoUtilities {
 		String signature
 	) {
 		final String methodName = "completeFidoAuthentication";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, type, id, clientDataJSON, authenticatorData, userHandle, signature);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, type, id, clientDataJSON, authenticatorData, userHandle, signature);
 
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -283,13 +285,13 @@ public class FidoUtilities {
 			}
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 
 	public static String completeFidoAuthentication(AuthenticationFlowContext context) {
 		final String methodName = "completeFidoAuthentication";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 
 		MultivaluedMap<String, String> formParams = context.getHttpRequest().getDecodedFormParameters();
 		String type = formParams.getFirst(AUTHN_TYPE_PARAM);
@@ -301,13 +303,13 @@ public class FidoUtilities {
 
 		String result = completeFidoAuthentication(context, type, id, clientDataJSON, authenticatorData, userHandle, signature);
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 
 	public static String getFidoRelyingPartyId(AuthenticationFlowContext context) {
 		final String methodName = "getFidoRelyingPartyId";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -350,13 +352,13 @@ public class FidoUtilities {
 			}
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, rpId);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, rpId);
 		return rpId;
 	}
 
 	public static boolean doesUserHaveFidoRegistered(AuthenticationFlowContext context, String userId) {
 		final String methodName = "doesUserHaveFidoRegistered";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, userId);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, userId);
 
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
@@ -400,27 +402,27 @@ public class FidoUtilities {
 			}
 		}
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 
 	public static String getFidoInitAuthnPayload(AuthenticationFlowContext context) {
 		final String methodName = "getFidoInitAuthnPayload";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 
 		String initPayload = context.getAuthenticationSession().getUserSessionNotes().get("fido.init.authn");
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName, initPayload);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, initPayload);
 		return initPayload;
 	}
 
 	public static void setFidoInitAuthnPayload(AuthenticationFlowContext context, String initPayload) {
 		final String methodName = "setFidoInitAuthnPayload";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, initPayload);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, initPayload);
 
 		context.getAuthenticationSession().setUserSessionNote("fido.init.authn", initPayload);
 
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
 }

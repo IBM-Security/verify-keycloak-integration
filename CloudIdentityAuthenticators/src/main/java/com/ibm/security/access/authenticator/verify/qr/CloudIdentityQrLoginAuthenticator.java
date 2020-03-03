@@ -2,6 +2,7 @@ package com.ibm.security.access.authenticator.verify.qr;
 
 import java.util.List;
 
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.keycloak.authentication.AuthenticationFlowContext;
@@ -16,20 +17,39 @@ import com.ibm.security.access.authenticator.rest.QrUtilities.QrLoginResponse;
 
 public class CloudIdentityQrLoginAuthenticator implements Authenticator {
 
+    private static final String ACTION_PARAM = "action";
+    private static final String AUTHENTICATE_PARAM = "authenticate";
+    private static final String REGISTER_ACTION = "register";
+
 	public void action(AuthenticationFlowContext context) {
+		MultivaluedMap<String, String> formParams = context.
+		        getHttpRequest().getDecodedFormParameters();
+        String action= formParams.getFirst(ACTION_PARAM);
+
+		if (REGISTER_ACTION.equals(action)) {
+            // Redirect user to IBM Verify Registration (or next flow)
+            context.attempted();
+            return;
+		}
+		
 		// Poll for the QR login
-		String qrLoginId = QrUtilities.getQrLoginId(context);
-		String qrLoginDsi = QrUtilities.getQrLoginDsi(context);
-		String qrLoginImage = QrUtilities.getQrLoginImage(context);
-		QrLoginResponse qrResponse = QrUtilities.pollQrLoginStatus(context, qrLoginId, qrLoginDsi);
-		if ("SUCCESS".equals(qrResponse.state) && qrResponse.userId != null) {
-			List<UserModel> users = context.getSession().users().getUsers(context.getRealm());
+        String qrLoginId = QrUtilities.getQrLoginId(context);
+        String qrLoginDsi = QrUtilities.getQrLoginDsi(context);
+        String qrLoginImage = QrUtilities.getQrLoginImage(context);
+		QrLoginResponse qrResponse = QrUtilities.
+		        pollQrLoginStatus(context, qrLoginId, qrLoginDsi);
+
+		if (AUTHENTICATE_PARAM.equals(action) && 
+		        "SUCCESS".equals(qrResponse.state) && qrResponse.userId != null) {
+			List<UserModel> users = 
+			        context.getSession().users().getUsers(context.getRealm());
 			UserModel matchingUser = null;
 			for (int i = 0; i < users.size(); i++) {
 				UserModel iterUser = users.get(i);
-				List<String> cloudIdentityUserIdValues = iterUser.getAttribute("cloudIdentity.userId");
+				List<String> cloudIdentityUserIdValues = 
+				        iterUser.getAttribute("cloudIdentity.userId");
 				if (!cloudIdentityUserIdValues.isEmpty()) {
-					if (qrResponse.userId.equals(cloudIdentityUserIdValues.get(0))){
+					if (qrResponse.userId.equals(cloudIdentityUserIdValues.get(0))) {
 						matchingUser = iterUser;
 						i = users.size();
 					}
@@ -37,6 +57,13 @@ public class CloudIdentityQrLoginAuthenticator implements Authenticator {
 			}
 			context.setUser(matchingUser);
 			context.success();
+		} else if (AUTHENTICATE_PARAM.equals(action) && "FAILED".equals(qrResponse.state)) {
+		    // Attempted but authentication failed (not registered with IBM Verify)
+		    Response challenge = context.form()
+                    .setAttribute("qrCode", qrLoginImage)
+                    .setError("QR Code Authentication Unsuccessful. Please register with IBM Verify to enable passwordless authentication.")
+                    .createForm("qr-login.ftl");
+            context.challenge(challenge);
 		} else {
 			Response challenge = context.form()
 					.setAttribute("qrCode", qrLoginImage)

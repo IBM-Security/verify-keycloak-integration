@@ -12,7 +12,6 @@
             </div>
 			<input type="hidden" name="action" id="action-input" value="register"/>
         </form>
-		<button id="skip-registration">Skip registering with IBM Verify for future passwordless authentication.</button>
         <script type="text/javascript">
 			// Form and action input to specify the operation on page submit.
         	var form = document.getElementById('kc-qr-login-form');
@@ -22,13 +21,6 @@
         	qrCodeImg.src = 'data:image/png;base64,' + qrSrc;
         	form.appendChild(qrCodeImg);
 
-			var skipRegBtn = document.getElementById('skip-registration');
-			if (skipRegBtn) {
-				skipRegBtn.addEventListener('click', (event) => {
-					actionInput.value = 'bypass';
-					form.submit();
-				});
-			}
 			// Poll every 5 seconds to see if registration has been completed.
         	setTimeout(function() {
 	        	form.submit();

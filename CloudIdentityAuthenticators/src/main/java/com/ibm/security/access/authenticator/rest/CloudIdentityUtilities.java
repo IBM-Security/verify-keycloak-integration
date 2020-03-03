@@ -26,7 +26,7 @@ import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.UserModel;
 
-import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilites;
+import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 
 public class CloudIdentityUtilities {
 	
@@ -38,7 +38,7 @@ public class CloudIdentityUtilities {
 	
 	public static String getAccessToken(AuthenticationFlowContext context) {
 		final String methodName = "getAccessToken";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		String accessToken = null;
 		
 		String tenantHostname = getTenantHostname(context);
@@ -94,13 +94,13 @@ public class CloudIdentityUtilities {
 			}
 		}
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, accessToken);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, accessToken);
 		return accessToken;
 	}
 	
 	public static String getTenantHostname(AuthenticationFlowContext context) {
 		final String methodName = "getTenantHostname";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		String tenantHostname = null;
 		AuthenticatorConfigModel authenticatorConfigModel = context.getAuthenticatorConfig();
@@ -112,13 +112,13 @@ public class CloudIdentityUtilities {
 			}
 		}
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, tenantHostname);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, tenantHostname);
 		return tenantHostname;
 	}
 	
 	public static UserModel matchCIUserIdToUserModel(AuthenticationFlowContext context, String userId) {
 		final String methodName = "matchCIUserIdToUserModel";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, userId);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, userId);
 		
 		List<UserModel> users = context.getSession().users().getUsers(context.getRealm());
 		UserModel matchingUser = null;
@@ -133,13 +133,13 @@ public class CloudIdentityUtilities {
 			}
 		}
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, matchingUser);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, matchingUser);
 		return matchingUser;
 	}
 	
 	public static String getCIUserId(UserModel user) {
 		final String methodName = "getCIUserId";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, user);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, user);
 		
 		String userId = null;
 		List<String> cloudIdentityUserIdValues = user.getAttribute("cloudIdentity.userId");
@@ -147,22 +147,22 @@ public class CloudIdentityUtilities {
 			userId = cloudIdentityUserIdValues.get(0);
 		}
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, userId);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, userId);
 		return userId;
 	}
 	
 	public static void setCIUserId(UserModel user, String ciUserId) {
 		final String methodName = "setCIUserId";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, user, ciUserId);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, user, ciUserId);
 		
 		user.setSingleAttribute("cloudIdentity.userId", ciUserId);
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 	
 	public static boolean createCIShadowUser(AuthenticationFlowContext context, UserModel user) {
 		final String methodName = "createCIShadowUser";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context, user);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context, user);
 		
 		boolean result = false;
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
@@ -219,36 +219,36 @@ public class CloudIdentityUtilities {
 			}
 		}
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, result);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
 	
 	public static void setPromptedPasswordlessRegistration(AuthenticationFlowContext context) {
 		final String methodName = "setPromptedPasswordlessRegistration";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		context.getAuthenticationSession().setAuthNote("prompt.passwordless.registration", Boolean.TRUE.toString());
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 	
 	public static void clearPromptedPasswordlessRegistration(AuthenticationFlowContext context) {
 		final String methodName = "clearPromptedPasswordlessRegistration";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		context.getAuthenticationSession().setAuthNote("prompt.passwordless.registration", Boolean.FALSE.toString());
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName);
+		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 	
 	public static boolean hasPromptedPasswordlessRegistration(AuthenticationFlowContext context) {
 		final String methodName = "hasPromptedPasswordlessRegistration";
-		CloudIdentityLoggingUtilites.entry(logger, methodName, context);
+		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		String authNote = context.getAuthenticationSession().getAuthNote("prompt.passwordless.registration");
 		boolean hasPrompted = authNote == null ? false : Boolean.valueOf(authNote);
 		
-		CloudIdentityLoggingUtilites.exit(logger, methodName, hasPrompted);
+		CloudIdentityLoggingUtilities.exit(logger, methodName, hasPrompted);
 		return hasPrompted;
 	}
 }
