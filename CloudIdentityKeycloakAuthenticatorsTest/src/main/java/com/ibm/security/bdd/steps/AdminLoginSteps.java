@@ -1,10 +1,8 @@
 package com.ibm.security.bdd.steps;
 
-import static org.junit.Assert.fail;
-
+import com.ibm.security.bdd.containers.DashboardContainer;
 import com.ibm.security.bdd.containers.HomepageContainer;
 import com.ibm.security.bdd.containers.LoginContainer;
-import com.ibm.security.bdd.containers.AuthenticationContainer;
 import com.ibm.security.bdd.util.TestUtils;
 
 import io.cucumber.java.en.Given;
@@ -12,11 +10,11 @@ import io.cucumber.java.en.Then;
 
 public class AdminLoginSteps {
 
-	private HomepageContainer HomepageContainer = new HomepageContainer();
 	private HomepageSteps HomepageSteps = new HomepageSteps();
+	private HomepageContainer HomepageContainer = new HomepageContainer();
 	private LoginContainer LoginContainer = new LoginContainer();
-	private AuthenticationContainer AuthenticationContainer = new AuthenticationContainer();
-
+	private DashboardContainer DashboardContainer = new DashboardContainer();
+	
 	@Given("^Customer navigates to the Admin Console Login page$")
 	public void customer_navigates_to_the_Admin_Console_Login_page() throws Throwable {
 		HomepageSteps.customer_navigate_to_the_Keycloak_Homepage();
@@ -81,8 +79,8 @@ public class AdminLoginSteps {
 
 	@Then("Customer verifies Admin Console login is successful")
 	public void customer_verifies_Admin_Console_login_is_successful() throws Throwable {
-		TestUtils.assertElementAppears(AuthenticationContainer.AdminDropDown);
-		TestUtils.assertElementAppears(AuthenticationContainer.KeycloakIcon);
+		TestUtils.assertElementAppears(DashboardContainer.AdminDropDown);
+		TestUtils.assertElementAppears(DashboardContainer.KeycloakIcon);
 	}
 
 }
