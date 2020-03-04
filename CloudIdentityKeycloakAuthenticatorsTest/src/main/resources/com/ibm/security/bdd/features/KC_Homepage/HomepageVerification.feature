@@ -1,4 +1,4 @@
-
+@Publish
 Feature: Keycloak Homepage Verification
 	This feature verifies the elements appearing on the Keycloak Homepag
 
