@@ -1,4 +1,4 @@
-@vPublish
+@Publish
 Feature: This feature will Add user
 
 Scenario: [0] If user vberengu exists - delete it
