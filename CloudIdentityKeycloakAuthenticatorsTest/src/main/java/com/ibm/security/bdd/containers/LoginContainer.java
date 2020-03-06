@@ -25,10 +25,10 @@ public class LoginContainer {
 	@FindBy(how = How.CSS, using = ".kc-logo-text")
 	public WebElement KeycloakIcon;
 	
-	@FindBy(how = How.CSS, using = ".form-group:nth-child(1) .control-label")
+	@FindBy(how = How.CSS, using = "label[for*='username'")
 	public WebElement UsernameLabel;
 	
-	@FindBy(how = How.CSS, using = ".form-group+ .form-group .control-label")
+	@FindBy(how = How.CSS, using = "label[for*='password'")
 	public WebElement PasswordLabel;
 	
 	@FindBy(how = How.CSS, using = ".pficon-error-circle-o")

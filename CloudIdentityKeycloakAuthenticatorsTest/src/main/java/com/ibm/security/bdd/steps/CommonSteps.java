@@ -47,6 +47,7 @@ public class CommonSteps {
 		}
 
 		driver.get(loadUrl);
+		driver.manage().window().maximize();
 
 		String userName = TestSetup.getUserNameForPerson(username);
 		String password = TestSetup.getPasswordForPerson(username);
