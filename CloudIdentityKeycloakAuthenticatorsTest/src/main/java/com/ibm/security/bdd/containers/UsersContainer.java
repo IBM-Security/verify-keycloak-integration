@@ -134,6 +134,39 @@ public class UsersContainer {
 	@FindBy(how = How.CSS, using = "button[data-ng-click*='cancel()']")
 	public WebElement Cancel;
 	
+	//User name - vberengu@us.ibm.com
+	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu@us.ibm.com')]")
+	public WebElement Uservberengu;
 	
+	// Delete user vberengu@us.ibm.com
+	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu@us.ibm.com')]/../td[contains(text(),'Delete')]")
+	public WebElement Deletevberengu;
+	
+	//ID for vberengu@us.ibm.com
+	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu@us.ibm.com')]/../td/a]")
+	public WebElement IDvberengu;
+	
+	@FindBy(how = How.CSS, using = "div.alert-dismissable")
+	public WebElement ErrorPopup;
+	
+	
+	//////Delete Confirmation dialog/////
+	
+	@FindBy(how = How.CSS, using = "h4.modal-title")
+	public WebElement DeleteUserTitle;
+	
+	@FindBy(how = How.CSS, using = "h4.modal-title")
+	public WebElement Xbutton;
+	
+	@FindBy(how = How.CSS, using = "div.modal-body")
+	public WebElement DeleteMessage;
+	
+	@FindBy(how = How.CSS, using = "button[data-ng-class*='btns.cancel.cssClass']")
+	public WebElement CancelButton;
+	
+	@FindBy(how = How.CSS, using = "button[data-ng-class*='btns.ok.cssClass']")
+	public WebElement DeleteButton;
+	
+
 	
 }
