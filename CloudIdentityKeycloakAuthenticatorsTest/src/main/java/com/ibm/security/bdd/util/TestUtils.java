@@ -5,9 +5,11 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -19,6 +21,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 
 public class TestUtils {
 
@@ -405,6 +408,66 @@ public class TestUtils {
 			fail("Element appeared on the screen " + error.getMessage());
 		}
 	}
+	
+	
+	/**
+	 * Assert the expected text has been found in the dropdown element using the default
+	 * maximum time for the UI from @link #getMaxTimeOutValue()
+	 * getMaxTimeOutValue}
+	 * 
+	 * @param webElement
+	 *            The @WebElement to check.
+	 * @param expectedText
+	 *            The expected text to check for in the dropdown.
+	 * 
+	 * @throws Throwable
+	 *             Throws the error that the test case fails with.
+	 */
+	public static void assertTextAppearsInDropDown(WebElement elements, String expectedText) throws Throwable {
+		assertTextAppearsInDropDown(elements, expectedText, getMaxTimeOutValue());
+	}
+	
+	/**
+	 * Assert the expected text has been found in the dropdown element.
+	 * 
+	 * @param webElement
+	 *            The @WebElement to check.
+	 * @param expectedText
+	 *            The expected text to check for in the downdown.
+	 * @param timeToWaitInSeconds
+	 *            The time to wait for the element to appear in seconds.
+	 * 
+	 * @throws Throwable
+	 *             Throws the error that the test case fails with.
+	 */
+	public static void assertTextAppearsInDropDown(WebElement elements, String expectedText, int timeToWaitInSeconds)
+			throws Throwable {
+		
+		for (int second = 0;; second++) {
+			try {
+				
+				Select select = new Select(elements);
+				List<WebElement> listOfElements = select.getOptions();
+				boolean found = false;
+				
+				for (WebElement ele:listOfElements) {
+					if (expectedText.equals(ele.getText())) {
+						found = true;
+						break;
+					}
+				}
+	
+				assertTrue(found);
+				break;
+				
+			} catch (Error error) {
+				if (second >= timeToWaitInSeconds)
+					fail("A timeout occured after " + timeToWaitInSeconds + " second(s): " + error.getMessage());
+			}
+			Thread.sleep(ONE_SECOND_IN_MS);
+		}
+	}
+	
 
 	/**
 	 * Retrieve the unique identifier from the element ID for custom attributes
