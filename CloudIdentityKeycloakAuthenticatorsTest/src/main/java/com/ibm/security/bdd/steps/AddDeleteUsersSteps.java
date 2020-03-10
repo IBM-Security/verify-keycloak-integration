@@ -34,7 +34,6 @@ public class AddDeleteUsersSteps {
 	private WebDriver driver = WebDriverFactory.getDriver();
 	private UsersContainer UsersContainer = new UsersContainer();
 	private CommonContainer CommonContainer = new CommonContainer();
-	private AuthenticationSteps AuthenticationSteps = new AuthenticationSteps();
 
 	@Then("^delete \"(.*?)\" if exists$")
 	public void delete_if_exists(String username) throws Throwable {
