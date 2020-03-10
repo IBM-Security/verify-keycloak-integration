@@ -85,7 +85,7 @@ public class UsersContainer {
 	public WebElement UserEnabledLabel;
 	
 	@FindBy(how = How.XPATH, using = "//span[@class='ng-isolate-scope ng-not-empty ng-valid']//span[@class='onoffswitch-active ng-binding'][contains(text(),'ON')]")
-	public WebElement UserEnabledON;
+	public static WebElement UserEnabledON;
 	
 	//User Enabled OFF
 	@FindBy(how = How.XPATH, using = "//span[@class='ng-isolate-scope ng-not-empty ng-valid']//span[@class='onoffswitch-inactive ng-binding'][contains(text(),'OFF')]")
@@ -96,7 +96,7 @@ public class UsersContainer {
 	public WebElement EmailVerifiedLabel;
 	
 	@FindBy(how = How.XPATH, using = "//label[@for='emailVerified']//span[contains(@class,'onoffswitch-inactive')][contains(text(),'OFF')]")
-	public WebElement EmailVerifiedOFF;
+	public static WebElement EmailVerifiedOFF;
 	
 	//Email Verified ON
 	@FindBy(how = How.XPATH, using = "//span[@class='ng-isolate-scope ng-valid ng-dirty ng-not-empty']//span[@class='onoffswitch-active ng-binding'][contains(text(),'ON')]")
@@ -141,6 +141,9 @@ public class UsersContainer {
 	// Delete user vberengu@us.ibm.com
 	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu@us.ibm.com')]/../td[contains(text(),'Delete')]")
 	public WebElement Deletevberengu;
+	
+	@FindBy(how = How.CSS, using = "td[data-ng-click*='removeUser(user)']")
+	public WebElement Delete;
 	
 	//ID for vberengu@us.ibm.com
 	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu@us.ibm.com')]/../td/a]")

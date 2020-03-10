@@ -1,4 +1,4 @@
-@vb2
+@Publish
 Feature: Users page elements verification
 
 Scenario: [1] Verify elemends on Users page
