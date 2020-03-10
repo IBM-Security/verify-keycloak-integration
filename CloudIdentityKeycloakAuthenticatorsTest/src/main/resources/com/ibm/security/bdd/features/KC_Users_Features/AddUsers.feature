@@ -1,11 +1,11 @@
 @vb
-Feature: This feature will Add user
+Feature: This feature will Add new user, verifies user creation, delete user and verifies popup messages
 
 Scenario: [0] If user vberengu exists - delete it
 Given Customer logs into the "Admin Console" with username "Admin"
 Given Customer clicks on Users Link
 Then Customer deletes user if exists
-	
+
 Scenario: [1] Add user using parameters
 Given Customer logs into the "Admin Console" with username "Admin"
 Given Customer clicks on Users Link
@@ -19,15 +19,16 @@ Then Customer verifies Email Verified switch is OFF
 Then Customer clicks Save button to save new user
 Then Customer sets the password for new user
 
-
 Scenario: [2] Verify user created successfully
 Given Customer logs into the "Admin Console" with username "Admin"
 Given Customer clicks on Users Link
 Then Customer verifies that user added successfully
+
 
 Scenario: [3] Delete user
 Given Customer logs into the "Admin Console" with username "Admin"
 Given Customer clicks on Users Link
 Then Customer deletes user
 Then Customer verifies user deleted successfully
+
 
