@@ -17,6 +17,7 @@ import org.openqa.selenium.logging.LogType;
 
 import com.ibm.security.bdd.containers.CommonContainer;
 import com.ibm.security.bdd.containers.LoginContainer;
+import com.ibm.security.bdd.containers.DashboardContainer;
 import com.ibm.security.bdd.util.TestSetup;
 import com.ibm.security.bdd.util.TestUtils;
 import com.ibm.security.bdd.util.WebDriverFactory;
@@ -33,6 +34,7 @@ public class CommonSteps {
 	private WebDriver driver = WebDriverFactory.getDriver();
 	private CommonContainer commonContainer = new CommonContainer();
 	private LoginContainer loginContainer = new LoginContainer();
+	private DashboardContainer dashboardContainer = new DashboardContainer();
 
 	//destination can be Admmin Console or User Console
 	@Given("^Customer logs into the \"(.*?)\" with username \"(.*?)\"$")
@@ -76,6 +78,38 @@ public class CommonSteps {
 		TestUtils.verifiedSendKeys(commonContainer.passwordInput, password);
 		Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
 		commonContainer.loginButton.click();
+	}
+	
+	@Then("^Admin navigates to \"(.*?)\" on the Admin Console$")
+	public void Admin_Navigates_To_On_The_Admin_Console(String navLink) throws Throwable {
+		if (navLink.equals("Realm Settings")) {
+			dashboardContainer.RealmSettings.click();;
+		} else if (navLink.equals("Clients")) {
+			dashboardContainer.Clients.click();
+		} else if (navLink.equals("Client Scopes")) {
+			dashboardContainer.ClientScopes.click();
+		} else if (navLink.equals("Roles")) {
+			dashboardContainer.Roles.click();
+		} else if (navLink.equals("Identity Providers")) {
+			dashboardContainer.IdentityProviders.click();
+		} else if (navLink.equals("User Federation")) {
+			dashboardContainer.UserFederation.click();
+		} else if (navLink.equals("Authentication")) {
+			dashboardContainer.Authentication.click();
+		} else if (navLink.equals("Groups")) {
+			dashboardContainer.Groups.click();
+		} else if (navLink.equals("Users")) {
+			dashboardContainer.Users.click();
+		} else if (navLink.equals("Sessions")) {
+			dashboardContainer.Sessions.click();
+		} else if (navLink.equals("Events")) {
+			dashboardContainer.Events.click();
+		} else if (navLink.equals("Import")) {
+			dashboardContainer.Import.click();
+		} else if (navLink.equals("Export")) {
+			dashboardContainer.Export.click();
+		}
+		Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
 	}
 	
 	@Then("^Customer navigates to path \"(.*?)\" on current tenant in browser session$")
