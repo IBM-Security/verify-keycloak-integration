@@ -36,6 +36,12 @@ public class CommonSteps {
 	private LoginContainer loginContainer = new LoginContainer();
 	private DashboardContainer dashboardContainer = new DashboardContainer();
 
+	@Given("^\"(.*?)\" logs into the \"(.*?)\" and navigate to \"(.*?)\"$")
+	public void logs_into_the_and_navigate_to(String username, String destination, String navigationLink) throws Throwable {
+		customer_logs_in_with_username(destination, username);
+		Admin_Navigates_To_On_The_Admin_Console(navigationLink);
+	}
+	
 	//destination can be Admmin Console or User Console
 	@Given("^Customer logs into the \"(.*?)\" with username \"(.*?)\"$")
 	public void customer_logs_in_with_username(String destination, String username) throws Throwable {
@@ -60,7 +66,7 @@ public class CommonSteps {
 		TestUtils.verifiedSendKeys(loginContainer.PasswordText, password);
 		Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
 		loginContainer.LoginButton.click();
-		Thread.sleep(2000);
+		Thread.sleep(3000);
 		
 	}
 	
