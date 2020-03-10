@@ -35,8 +35,9 @@ public class UsersSteps {
 	
 	@Then ("^Customer clicks Add new user button$")
 	public void customer_clicks_Add_new_user_button() throws Throwable {
-		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		UsersContainer.viewAllUsersButton.click();
+		TestUtils.assertElementAppears(UsersContainer.AddUserButton);
 		UsersContainer.AddUserButton.click();
 		//driver.findElement(By.cssSelector("#createUser")).click();
 	}

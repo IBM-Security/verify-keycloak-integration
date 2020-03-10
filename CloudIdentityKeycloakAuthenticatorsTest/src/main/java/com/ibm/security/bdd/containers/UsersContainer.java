@@ -33,7 +33,7 @@ public class UsersContainer {
 	@FindBy(how = How.CSS, using = "button[data-ng-click*='unlockUsers']")
 	public WebElement UnlockUsersButton;		
 			
-	@FindBy(how = How.CSS, using = "#createUser")
+	@FindBy(how = How.CSS, using = "a#createUser")
 	public WebElement AddUserButton;
 	
 	//Add user page
@@ -147,7 +147,11 @@ public class UsersContainer {
 	public WebElement IDvberengu;
 	
 	@FindBy(how = How.CSS, using = "div.alert-dismissable")
+	public WebElement SuccessPopup;
+	
+	@FindBy(how = How.CSS, using = "div.alert-danger")
 	public WebElement ErrorPopup;
+	
 	
 	
 	//////Delete Confirmation dialog/////
