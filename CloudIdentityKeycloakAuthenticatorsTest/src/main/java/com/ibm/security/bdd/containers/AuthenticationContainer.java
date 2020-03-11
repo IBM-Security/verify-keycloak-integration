@@ -4,6 +4,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
+
+import com.ibm.security.bdd.util.TestUtils;
 import com.ibm.security.bdd.util.WebDriverFactory;
 
 public class AuthenticationContainer {
@@ -29,6 +31,18 @@ public class AuthenticationContainer {
 	
 	@FindBy(how = How.LINK_TEXT , using = "WebAuthn Policy")		
 	public WebElement WebAuthnPolicyTab;
+	
+	@FindBy(how = How.CSS, using = "button[type*='submit']")
+	public WebElement SaveButton;
+	
+	@FindBy(how = How.CSS, using = "button[ng-click*='cancel()']")
+	public WebElement CancelButton;
+	
+	@FindBy(how = How.CSS, using = ".alert-success")
+	public WebElement SuccessMessage;
+	
+	@FindBy(how = How.CSS, using = ".pficon-ok")
+	public WebElement SuccessIcon;
 	
 	// Flows tab
 	
@@ -62,13 +76,6 @@ public class AuthenticationContainer {
 	@FindBy(how = How.CSS, using = "button[ng-click*='cancel()']")
 	public WebElement CancelFlowButton;
 	
-	@FindBy(how = How.CSS, using = ".alert-success")
-	public WebElement DeleteFlowSuccessMessage;
-	
-	@FindBy(how = How.CSS, using = ".pficon-ok")
-	public WebElement DeleteFlowSuccessIcon;
-	
-	
 	// Create Top Level Form
 	
 	@FindBy(how = How.CSS, using = "#alias")
@@ -80,10 +87,17 @@ public class AuthenticationContainer {
 	@FindBy(how = How.CSS, using = "#flowType")
 	public WebElement FlowTypeDropDown;
 	
+	
+	
+	// Add Execution
+	
+	@FindBy(how = How.CSS, using = "#provider")
+	public WebElement ProviderDropDown;
+	
 	@FindBy(how = How.CSS, using = "button[type*='submit']")
-	public WebElement SaveButton;
+	public WebElement AddExecSaveButton;
 	
 	@FindBy(how = How.CSS, using = "button[ng-click*='cancel()']")
-	public WebElement CancelButton;
+	public WebElement AddExecCancelButton;
 
 }

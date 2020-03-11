@@ -25,12 +25,6 @@ public class AuthenticationSteps {
 	private AuthenticationContainer AuthenticationContainer = new AuthenticationContainer();
 	private WebDriver driver = WebDriverFactory.getDriver();
 	
-	@Given("^\"(.*?)\" logs into the \"(.*?)\" and navigate to \"(.*?)\"$")
-	public void logs_into_the_and_navigate_to(String username, String destination, String navigationLink) throws Throwable {
-		CommonSteps.customer_logs_in_with_username(destination, username);
-		CommonSteps.Admin_Navigates_To_On_The_Admin_Console(navigationLink);
-	}
-
 	@Then("^Admin creates new Top Level Form with the following parameters$")
 	public void admin_creates_new_Top_Level_Form_with_the_following_parameters(DataTable dt) throws Throwable {
 		AuthenticationContainer.FlowsTab.click();
@@ -73,9 +67,24 @@ public class AuthenticationSteps {
 	    AuthenticationContainer.DeleteFlowButton.click();
 	    Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
 	    
-	    TestUtils.assertElementAppears(AuthenticationContainer.DeleteFlowSuccessIcon);
-	    TestUtils.assertTextAppears(AuthenticationContainer.DeleteFlowSuccessMessage, "Success! Flow removed");
+	    TestUtils.assertElementAppears(AuthenticationContainer.SuccessIcon);
+	    TestUtils.assertTextAppears(AuthenticationContainer.SuccessMessage, "Success! Flow removed");
 	    TestUtils.assertTextNotAppearsInDropDown(AuthenticationContainer.FlowsDropDown, alias);
 	}
+	
+	@Then("^Admin add execution \"(.*?)\" to flow$")
+	public void admin_add_execution_to_flow(String execution) throws Throwable {
+	    TestUtils.assertElementAppears(AuthenticationContainer.AddExecutionButton);
+		AuthenticationContainer.AddExecutionButton.click();
+	    
+	    Select providerDropdown = new Select(AuthenticationContainer.ProviderDropDown);
+	    providerDropdown.selectByVisibleText(execution);
+	    AuthenticationContainer.SaveButton.click();
+	    
+	    TestUtils.assertElementAppears(AuthenticationContainer.SuccessIcon);
+	    TestUtils.assertTextAppears(AuthenticationContainer.SuccessMessage, "Success! Execution Created.");
+	}
+	
+
 
 }
