@@ -11,7 +11,7 @@ public class UsersContainer {
 	public UsersContainer() {
 		PageFactory.initElements(WebDriverFactory.getDriver(), this);
 }
-	
+	//User Page //
 	@FindBy(how = How.CSS, using = "h1.ng-binding")
 	public WebElement UsersTitle;
 	
@@ -36,7 +36,27 @@ public class UsersContainer {
 	@FindBy(how = How.CSS, using = "a#createUser")
 	public WebElement AddUserButton;
 	
-	//Add user page
+	// Impersonate button on Users user page
+	@FindBy(how = How.CSS, using = "td[data-ng-click*='impersonate(user.id)']")
+	public WebElement ImpersonateUser;
+		
+	//Edit button on Users page
+	@FindBy(how = How.CSS, using = "td[kc-open*=realms]")
+	public WebElement EditUser;
+	
+	//If you want to click Edit, Impersonate and Delete buttons for specific username - use following identifiers, just substitute "vberengu"
+	//with '+username+' in the test case.
+	
+	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu')]/../td[contains(text(),'Edit')]")
+	public WebElement Editusername;
+		
+	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu')]/../td[contains(text(),'Impersonate')]")
+	public WebElement Impersonateusername;
+	
+	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu')]/../td[contains(text(),'Delete')]")
+	public WebElement Deleteusername;
+	
+	//Add user page//
 	
 	@FindBy(how = How.CSS, using = "h1[data-ng-show*='create']")
 	public WebElement AdduserTitle;
@@ -47,7 +67,6 @@ public class UsersContainer {
 	
 	@FindBy(how = How.XPATH, using = "//label[contains(text(),'ID')]")
 	public WebElement IDLabel;
-	
 	
 	@FindBy(how = How.XPATH, using = "//label[contains(text(),'Created At')]")
 	public WebElement CreatedAtLabel;
@@ -103,7 +122,6 @@ public class UsersContainer {
 	public WebElement EmailVerifiedON;
 	
 	//Required User Actions
-	
 	@FindBy(how = How.CSS, using = "label[for*='reqActions']")
 	public WebElement ReqUserActionLabel;
 	
@@ -134,6 +152,10 @@ public class UsersContainer {
 	@FindBy(how = How.CSS, using = "button[data-ng-click*='cancel()']")
 	public WebElement Cancel;
 	
+	//Impersonate button on Add user page
+	@FindBy(how = How.CSS, using = "#impersonate")
+	public WebElement ImpersonateButton;
+		
 	//User name - vberengu@us.ibm.com
 	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu@us.ibm.com')]")
 	public WebElement Uservberengu;
@@ -155,10 +177,7 @@ public class UsersContainer {
 	@FindBy(how = How.CSS, using = "div.alert-danger")
 	public WebElement ErrorPopup;
 	
-	
-	
 	//////Delete Confirmation dialog/////
-	
 	@FindBy(how = How.CSS, using = "h4.modal-title")
 	public WebElement DeleteUserTitle;
 	
@@ -174,6 +193,7 @@ public class UsersContainer {
 	@FindBy(how = How.CSS, using = "button[data-ng-class*='btns.ok.cssClass']")
 	public WebElement DeleteButton;
 	
-
+	
+	
 	
 }
