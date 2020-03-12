@@ -5,18 +5,22 @@
     <#elseif section = "header">
         ${msg("loginTitleHtml",realm.name)}
     <#elseif section = "form">
-        <form id="kc-fido-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
-			<input type="hidden" name="action" id="action-input"/>
-			<input type="hidden" name="type" id="type-input" />
-			<input type="hidden" name="id" id="id-input" />
-			<input type="hidden" name="rawId" id="raw-id-input" />
-			<input type="hidden" name="clientDataJSON" id="client-data-json-input" />
-			<input type="hidden" name="attestationObject" id="attestation-object-input" />
-			<label for="fidoDevicenickname">FIDO2 device nickname</label>
-			<input type="text" name="fidoDeviceNickname" id="fidoDevicenickname" />
-        </form>
-		<button id="start-registration">Register your FIDO2 device</button>
-		<button id="skip-registration">Skip registering a FIDO2 device for future passwordless authentication</button>
+        <div align="center">
+            <form id="kc-fido-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+			    <input type="hidden" name="action" id="action-input"/>
+			    <input type="hidden" name="type" id="type-input" />
+			    <input type="hidden" name="id" id="id-input" />
+			    <input type="hidden" name="rawId" id="raw-id-input" />
+			    <input type="hidden" name="clientDataJSON" id="client-data-json-input" />
+			    <input type="hidden" name="attestationObject" id="attestation-object-input" />
+                <label for="fidoDevicenickname" class="control-label" align="left">FIDO2 device nickname</label>
+                <input type="text" name="fidoDeviceNickname" id="fidoDevicenickname" class="form-control">
+            </form>
+            <br><br>
+		    <button id="registration-required" class="btn btn-primary btn-block btn-lg">
+                ${msg("fidoRegister")}
+            </button>
+		</div>
         <script type="text/javascript">
 			// Various Base 64 utilities
 			var Base64Binary = {
@@ -233,20 +237,10 @@
 			var form = document.getElementById('kc-fido-login-form');
 			var actionInput = document.getElementById('action-input');
 
-			// Button to choose to skip FIDO registration
-			var skipRegistrationButton = document.getElementById('skip-registration');
-			if (skipRegistrationButton) {
-				skipRegistrationButton.addEventListener('click', (event) => {
-					event.preventDefault();
-					actionInput.value = 'bypass';
-					form.submit();
-				});
-			}
-
 			// Button to initiate FIDO registration
-			var registerButton = document.getElementById("start-registration");
-			if (registerButton) {
-				registerButton.addEventListener('click', (event) => {
+			var regButton = document.getElementById("registration-required");
+			if (regButton) {
+				regButton.addEventListener('click', (event) => {
 					event.preventDefault();
 					actionInput.value = 'register';
 					var parser = new DOMParser();
@@ -267,6 +261,7 @@
 							document.getElementById('raw-id-input').value = cred.id;
 							document.getElementById('client-data-json-input').value = hextob64u(BAtoHex(new Uint8Array(cred.response.clientDataJSON)));
 							document.getElementById('attestation-object-input').value = hextob64u(BAtoHex(new Uint8Array(cred.response.attestationObject)));
+							actionInput.value = 'register';
 							form.submit();
 						}
 					)
@@ -277,8 +272,5 @@
 				});
 			}
         </script>
-        <#if client?? && client.baseUrl?has_content>
-            <p><a id="backToApplication" href="${client.baseUrl}">${msg("backToApplication")}</a></p>
-        </#if>
     </#if>
 </@layout.registrationLayout>

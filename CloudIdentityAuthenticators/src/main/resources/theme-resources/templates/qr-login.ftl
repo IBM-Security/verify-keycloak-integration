@@ -14,7 +14,7 @@
                 <input type="hidden" name="action" id="action-input" value="authenticate"/>
             </form>
             <button id="registration-required" class="btn btn-primary btn-block btn-lg">
-                Not registered? Register with IBM Verify
+                ${msg("ibmVerifyRegister")}
             </button>
         </div>
         <script type="text/javascript">

@@ -9,6 +9,7 @@ import org.keycloak.authentication.Authenticator;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.models.utils.FormMessage;
 
 import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
@@ -45,12 +46,15 @@ public class CloudIdentityFidoRegistrationRequiredActionAuthenticator implements
 		final String methodName = "authenticate";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
+		/*
 		boolean hasPromptedRegistration = CloudIdentityUtilities.hasPromptedPasswordlessRegistration(context);
 		if (hasPromptedRegistration) {
 			context.success();
 			CloudIdentityLoggingUtilities.exit(logger, methodName);
 			return;
 		}
+		*/
+
 		UserModel user = context.getUser();
 		if (user != null) {
 			// User is associated with the context
@@ -76,10 +80,17 @@ public class CloudIdentityFidoRegistrationRequiredActionAuthenticator implements
 					CloudIdentityUtilities.setPromptedPasswordlessRegistration(context);
 					CloudIdentityLoggingUtilities.exit(logger, methodName);
 					return;
+				} else {
+				    context.form().addSuccess(new FormMessage("fidoRegistrationVerified"));
+                    context.resetFlow();
+                    return;
 				}
 			}
+			context.success();
+		} else {
+		    // User must be configured
+		    context.failure(null);
 		}
-		context.success();
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}

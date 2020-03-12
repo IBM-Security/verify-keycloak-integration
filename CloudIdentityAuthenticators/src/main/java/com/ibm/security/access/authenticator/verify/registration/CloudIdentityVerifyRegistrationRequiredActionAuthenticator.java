@@ -9,6 +9,7 @@ import org.keycloak.authentication.Authenticator;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.models.utils.FormMessage;
 
 import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
@@ -18,7 +19,6 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implemen
 
 	private static final String ACTION_PARAM = "action";
 	private static final String REGISTER_ACTION = "register";
-	private static final String BYPASS_ACTION = "bypass";
 	
 	private Logger logger = Logger.getLogger(CloudIdentityVerifyRegistrationRequiredActionAuthenticator.class);
 	
@@ -43,13 +43,13 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implemen
 		final String methodName = "authenticate";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
-		boolean hasPromptedRegistration = CloudIdentityUtilities.hasPromptedPasswordlessRegistration(context);
-		if (hasPromptedRegistration) {
-			context.success();
-			
-			CloudIdentityLoggingUtilities.exit(logger, methodName);
-			return;
-		}
+//		boolean hasPromptedRegistration = CloudIdentityUtilities.hasPromptedPasswordlessRegistration(context);
+//		if (hasPromptedRegistration) {
+//			context.success();
+//			
+//			CloudIdentityLoggingUtilities.exit(logger, methodName);
+//			return;
+//		}
 		initiateAndPoll(context);
 		CloudIdentityUtilities.setPromptedPasswordlessRegistration(context);
 		
@@ -90,11 +90,14 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implemen
 					
 					CloudIdentityLoggingUtilities.exit(logger, methodName);
 					return;
+				} else {
+				    context.form().addSuccess(new FormMessage("ibmVerifyRegistrationVerified"));
+				    context.resetFlow();
+				    return;
 				}
 			}
 		}
 		context.success();
-		
 		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
