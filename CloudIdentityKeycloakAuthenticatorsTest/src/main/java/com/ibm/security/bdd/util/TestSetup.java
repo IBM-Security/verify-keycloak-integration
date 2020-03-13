@@ -19,6 +19,7 @@ public class TestSetup {
 	private static final String PASSWORD_FOR_PROPERTY = "password.for";
 	private static final String USERNAME_DEFAULT = "admin";
 	private static final String PASSWORD_DEFAULT = "admin";
+	private static final String PASSWORD_ACCOUNT_DEFAULT = "g0vmware";
 
 	private static final String SELENIUM_HUB_URL_PROPERTY = "selenium.hub.url";
 	private static final String SYSTEM_PROPERTY_SELENIUM_HUB = "seleniumHub";
@@ -67,7 +68,7 @@ public class TestSetup {
 			switch (activeServer) {
 				default:
             	case "localhost":
-            		return "http://vbauto2.rtp.raleigh.ibm.com:8080/";
+            		return "http://vmmanagernodetest.rtp.raleigh.ibm.com:8080/auth/";
             		
 			}
 		}
@@ -99,7 +100,11 @@ public class TestSetup {
 				+ USERNAME_FOR_PROPERTY + SEPARATOR + person);
 
 		if (userName == null) {
-			userName = USERNAME_DEFAULT;
+			// userName = USERNAME_DEFAULT;
+			if (person.equals("kcuser".toLowerCase())) {
+				return "kcuser@keycloak.com";
+			}
+			userName = person;		
 		}
 		return userName;
 	}
@@ -120,6 +125,26 @@ public class TestSetup {
 
 		if (passwordForUser == null) {
 			passwordForUser = PASSWORD_DEFAULT;
+		}
+		return passwordForUser;
+	}	
+	
+	/**
+	 * Gets the password for the specified person on the active server.
+	 *
+	 * @param person
+	 *            The person name that the request is for.
+	 * @return Returns the password for the person on the active server, and
+	 *         returns the default if it isn't set.
+	 */
+	public static String getPasswordForUser(String person) {
+		Properties props = loadTestDataProperties();
+
+		String passwordForUser = props.getProperty(getActiveServer() + SEPARATOR
+				+ PASSWORD_FOR_PROPERTY + SEPARATOR + person);
+
+		if (passwordForUser == null) {
+			passwordForUser = PASSWORD_ACCOUNT_DEFAULT;
 		}
 		return passwordForUser;
 	}	

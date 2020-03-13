@@ -23,6 +23,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
+import io.cucumber.datatable.DataTable;
+
 public class TestUtils {
 
 	public static final String PATH_SEPARATOR = "/";
@@ -525,7 +527,6 @@ public class TestUtils {
 			Thread.sleep(ONE_SECOND_IN_MS);
 		}
 	}
-	
 
 	/**
 	 * Retrieve the unique identifier from the element ID for custom attributes

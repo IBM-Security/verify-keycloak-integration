@@ -47,18 +47,20 @@ public class CommonSteps {
 	public void customer_logs_in_with_username(String destination, String username) throws Throwable {
 		String baseUrl = TestSetup.getServerBaseURL();
 		String loadUrl;
+		String password = null;
 
 		if (destination.equals("Admin Console")) {
 			loadUrl = baseUrl + "admin";
+			password = TestSetup.getPasswordForPerson(username);
 		} else {
 			loadUrl = baseUrl + "realms/test-realm/account";
+			password = TestSetup.getPasswordForUser(username);
 		}
+		
+		String userName = TestSetup.getUserNameForPerson(username);
 
 		driver.get(loadUrl);
 		driver.manage().window().maximize();
-
-		String userName = TestSetup.getUserNameForPerson(username);
-		String password = TestSetup.getPasswordForPerson(username);
 
 		TestUtils.assertElementAppears(loginContainer.UsernameText);
 		TestUtils.verifiedSendKeys(loginContainer.UsernameText, userName);
@@ -67,7 +69,6 @@ public class CommonSteps {
 		Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
 		loginContainer.LoginButton.click();
 		Thread.sleep(3000);
-		
 	}
 	
 	@Given("^\"(.*?)\" logs into the \"(.*?)\" using \"(.*?)\"$")
