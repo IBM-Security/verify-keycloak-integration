@@ -44,6 +44,18 @@ public class AuthenticationContainer {
 	@FindBy(how = How.CSS, using = ".pficon-ok")
 	public WebElement SuccessIcon;
 	
+	@FindBy(how = How.CSS, using = "button[ng-click*='ok()']")
+	public WebElement DeleteConfirmButton;
+	
+	@FindBy(how = How.CSS, using = "button[ng-click*='cancel()']")
+	public WebElement CancelConfirmButton;
+	
+	@FindBy(how = How.CSS, using = ".modal-title")
+	public WebElement DeleteConfirmHeader;
+	
+	@FindBy(how = How.CSS, using = ".modal-body")
+	public WebElement DeleteConfirmDescription;
+	
 	// Flows tab
 	
 	@FindBy(how = How.CSS, using = "button[data-ng-click*='createFlow()']")
@@ -64,17 +76,12 @@ public class AuthenticationContainer {
 	@FindBy(how = How.CSS, using = ".form-control")
 	public WebElement FlowsDropDown;
 	
-	@FindBy(how = How.CSS, using = ".table.table-striped.table-bordered")
+	@FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']")
 	public WebElement AuthenticationTable;
 	
 	@FindBy(how = How.CSS, using = ".fa-question-circle")
 	public WebElement QuestionToolip;
 	
-	@FindBy(how = How.CSS, using = "button[ng-click*='ok()']")
-	public WebElement DeleteFlowButton;
-	
-	@FindBy(how = How.CSS, using = "button[ng-click*='cancel()']")
-	public WebElement CancelFlowButton;
 	
 	// Create Top Level Form
 	
@@ -86,8 +93,6 @@ public class AuthenticationContainer {
 	
 	@FindBy(how = How.CSS, using = "#flowType")
 	public WebElement FlowTypeDropDown;
-	
-	
 	
 	// Add Execution
 	

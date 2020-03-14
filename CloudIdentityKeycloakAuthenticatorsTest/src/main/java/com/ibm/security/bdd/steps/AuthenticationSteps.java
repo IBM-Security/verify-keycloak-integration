@@ -5,7 +5,9 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.ibm.security.bdd.containers.AuthenticationContainer;
@@ -64,7 +66,8 @@ public class AuthenticationSteps {
 	    
 	    AuthenticationContainer.DeleteButton.click();
 	    Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
-	    AuthenticationContainer.DeleteFlowButton.click();
+	    TestUtils.assertTextAppears(AuthenticationContainer.DeleteConfirmHeader, "Delete Flow");
+	    AuthenticationContainer.DeleteConfirmButton.click();
 	    Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
 	    
 	    TestUtils.assertElementAppears(AuthenticationContainer.SuccessIcon);
@@ -85,6 +88,79 @@ public class AuthenticationSteps {
 	    TestUtils.assertTextAppears(AuthenticationContainer.SuccessMessage, "Success! Execution Created.");
 	}
 	
-
-
+	@Then("^Admin deletes Auth Type \"(.*?)\" from flow$")
+	public void admin_deletes_execution_from_flow(String execution) throws Throwable {
+		
+		List<WebElement> Rows = null;
+		List<WebElement> Cols = null;
+		WebElement table = AuthenticationContainer.AuthenticationTable;
+		String Col = null;
+		
+		Rows = table.findElements(By.xpath("./tbody/tr"));		
+		boolean found = false;
+		
+		for (int i=1; i<Rows.size(); i++) {
+		
+			Cols = table.findElements(By.xpath("./tbody/tr["+i+"]/td"));
+			Col = table.findElement(By.xpath(".//tr["+i+"]/td[1]/span[contains(@class,'ng-binding')]")).getText();
+			
+			if (execution.equals(Col)) {		
+				WebElement Cell = table.findElement(By.xpath("./tbody/tr["+i+"]/td["+Cols.size()+"]"));
+				
+				Cell.findElement(By.xpath("./div/a/b[@class='caret']")).click();
+				Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
+				Cell.findElement(By.xpath("./div/ul/li/a[contains(text(),'Delete')]")).click();
+				Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
+				
+				TestUtils.assertElementAppears(AuthenticationContainer.DeleteConfirmHeader);
+				TestUtils.assertTextAppears(AuthenticationContainer.DeleteConfirmHeader, "Delete Execution");
+				AuthenticationContainer.DeleteConfirmButton.click();
+				Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
+				found = true;
+				break;
+			}
+		}
+		assertTrue("Auth Type is not found", found);
+		Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
+	}
+		
+	@Then("^Admin sees Auth Type \"(.*?)\" on the table$")
+	public void admin_sees_Auth_Type_on_the_table(String authType) throws Throwable {
+		
+		WebElement table = AuthenticationContainer.AuthenticationTable;
+		List<WebElement> Rows = table.findElements(By.xpath(".//tbody/tr"));
+		
+		String Col = null;
+		boolean found = false;
+		
+		for (int i=1; i<Rows.size(); i++) {
+			Col = table.findElement(By.xpath(".//tr["+i+"]/td[1]/span[contains(@class,'ng-binding')]")).getText();
+			if (authType.equals(Col)) {
+				found = true;
+				break;
+			}
+		}
+		assertTrue("Auth Type is not found", found);
+	}
+	
+	@Then("^Admin sees Auth Type \"(.*?)\" deleted from the table$")
+	public void admin_sees_Auth_Type_deleted_from_the_table(String authType) throws Throwable {
+	    
+		WebElement table = AuthenticationContainer.AuthenticationTable;
+		List<WebElement> Rows = table.findElements(By.xpath(".//tbody/tr"));
+		
+		String Col = null;
+		boolean found = false;
+		
+		for (int i=1; i<Rows.size(); i++) {
+			Col = table.findElement(By.xpath(".//tr["+i+"]/td[1]/span[contains(@class,'ng-binding')]")).getText();
+			if (authType.equals(Col)) {
+				found = true;
+				break;
+			}
+		}
+		assertFalse("Auth Type appears on the table", found);
+	}
+		
+	
 }
