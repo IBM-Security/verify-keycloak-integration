@@ -22,6 +22,8 @@ public class UserAccountContainer {
 	public WebElement UserPassword;
 	@FindBy(how = How.LINK_TEXT , using = "Authenticator")		
 	public WebElement UserAuthenticator;
+	@FindBy(how = How.LINK_TEXT , using = "Sessions")		
+	public WebElement UserSessions;
 	@FindBy(how = How.LINK_TEXT , using = "Applications")		
 	public WebElement UserApplications;
 	
@@ -50,13 +52,13 @@ public class UserAccountContainer {
 	@FindBy(how = How.CSS, using = "input#username")
 	public WebElement Username;
 	
-	@FindBy(how = How.CSS, using = "input#email]")
+	@FindBy(how = How.CSS, using = "input#email")
 	public WebElement Email;
 	
-	@FindBy(how = How.CSS, using = "input#firstName']")
+	@FindBy(how = How.CSS, using = "input#firstName")
 	public WebElement Firstname;
 	
-	@FindBy(how = How.CSS, using = "input#lastName']")
+	@FindBy(how = How.CSS, using = "input#lastName")
 	public WebElement Lastname;
 	
 	//Account Buttons
@@ -98,7 +100,12 @@ public class UserAccountContainer {
 	
 	//Password Save button
 	@FindBy(how = How.CSS, using = "button[value*='Save']")
-	public WebElement PasswordSavee;
+	public WebElement PasswordSave;
+	
+	
+	
+	@FindBy(how = How.CSS, using = "span.kc-feedback-text")
+	public WebElement PasswordUpdated;
 	
 	//Popup Alerts
 	//Your password has been updated.
@@ -118,7 +125,7 @@ public class UserAccountContainer {
 	public WebElement Authenticatorlabel;
 	
 	@FindBy(how = How.XPATH, using ="//p[contains(.,'Install one of the following applications on your mobile')]")
-	public WebElement Item1text;
+	public WebElement P1text;
 	
 	@FindBy(how = How.XPATH, using ="//li[contains(text(),'FreeOTP')]")
 	public WebElement FreeOTPtext;
@@ -127,22 +134,47 @@ public class UserAccountContainer {
 	public WebElement GoogleAuthtext;
 	
 	@FindBy(how = How.XPATH, using ="//p[contains(.,'Open the application and scan the barcode')]")
-	public WebElement Item2text;
+	public WebElement P2text;
+	
+	@FindBy(how = How.CSS, using = "img")
+	public WebElement Img;
 	
 	//Unable to scan? link
 	@FindBy(how = How.CSS, using = "#mode-manual")
 	public WebElement Unabletoscanlink;
 	
-	//Open the application and enter the key field
-	@FindBy(how = How.CSS, using = "span[id=kc-totp-secret-key']")
-	public WebElement EnterKey;
+	
+	@FindBy(how = How.XPATH, using ="//p[contains(.,'Enter the one-time code provided by the application and click Save to finish the setup.')]")
+	public WebElement P3text;
 	
 	//Scan barcode? link
 	@FindBy(how = How.CSS, using = "#mode-barcode")
 	public WebElement ScanBarcodelink;
 	
-	@FindBy(how = How.XPATH, using ="//p[contains(.,'Enter the one-time code provided by the application and click Save to finish the setup.')]")
-	public WebElement Item3text;
+	@FindBy(how = How.XPATH, using ="//p[contains(text(),'Open the application and enter the key')]")
+	public WebElement P22text;
+		
+	//Open the application and enter the key field
+	@FindBy(how = How.CSS, using = "span[id='kc-totp-secret-key']")
+	public WebElement EnterKey;
+		
+	@FindBy(how = How.XPATH, using ="//p[contains(text(),'Use the following configuration values if the appl')]")
+	public WebElement P33text;	
+		
+	@FindBy(how = How.CSS, using = "li#kc-totp-type")
+	public WebElement Type;
+	
+	@FindBy(how = How.CSS, using = "li#kc-totp-algorithm")
+	public WebElement Algorithm;
+	
+	@FindBy(how = How.CSS, using = "li#kc-totp-digits")
+	public WebElement Digits;
+	
+	@FindBy(how = How.CSS, using = "li#kc-totp-period")
+	public WebElement Interval;
+	
+	@FindBy(how = How.XPATH, using ="//p[contains(text(),'Enter the one-time code provided by the applicatio')]")
+	public WebElement P4text;
 	
 	//One-time code label
 	@FindBy(how = How.CSS, using = "label[for='totp']")

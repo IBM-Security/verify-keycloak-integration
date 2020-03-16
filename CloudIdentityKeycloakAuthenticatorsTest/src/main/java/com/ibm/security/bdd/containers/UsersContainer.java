@@ -47,14 +47,14 @@ public class UsersContainer {
 	//If you want to click Edit, Impersonate and Delete buttons for specific username - use following identifiers, just substitute "vberengu"
 	//with '+username+' in the test case.
 	
-	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu')]/../td[contains(text(),'Edit')]")
-	public WebElement Editusername;
-		
-	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu')]/../td[contains(text(),'Impersonate')]")
-	public WebElement Impersonateusername;
-	
-	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu')]/../td[contains(text(),'Delete')]")
-	public WebElement Deleteusername;
+//	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu')]/../td[contains(text(),'Edit')]")
+//	public WebElement Editusername;
+//		
+//	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu')]/../td[contains(text(),'Impersonate')]")
+//	public WebElement Impersonateusername;
+//	
+//	@FindBy(how = How.XPATH, using = "//td[contains(text(),'vberengu')]/../td[contains(text(),'Delete')]")
+//	public WebElement Deleteusername;
 	
 	//Add user page//
 	

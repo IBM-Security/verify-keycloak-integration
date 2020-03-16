@@ -11,7 +11,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 
 import org.openqa.selenium.By;
@@ -642,5 +644,37 @@ public class TestUtils {
 		DateFormat dateformat = new SimpleDateFormat(dateFormatting);
 		dateformat.setTimeZone(TimeZone.getTimeZone(EASTERN_TIMEZONE));
 		return dateformat.format(new Date());
+	}
+	
+	/**
+	 * This method is switching tab from parent to child'
+	 * @return the parent tab
+	 * This method can be used by itself just to switch tab from parent (first/main tab) to child (second tab).
+	 */
+	public static String switchToChildTab(WebDriver driver){
+		String parentTab=driver.getWindowHandle();
+		Set<String>s1=driver.getWindowHandles();
+		Iterator<String> I1= s1.iterator();
+		while(I1.hasNext())
+		{
+		  String child_window=I1.next();
+		  if(!parentTab.equals(child_window))
+		  {
+		    driver.switchTo().window(child_window);
+		    System.out.println(driver.switchTo().window(child_window).getTitle());
+		  }
+		}
+		return parentTab;
+	}
+	
+	/**
+	 * This method is switching tab from child back to parent.
+	 * Should be used in the same test case along with "switchToChildTab" method above.
+	 * Otherwise it wont know what parentTab is
+	 */
+	
+	public static void switchToParentTab(WebDriver driver, String parentTab){
+		driver.switchTo().window(parentTab);
+		System.out.println(driver.switchTo().window(parentTab).getTitle());
 	}
 }
