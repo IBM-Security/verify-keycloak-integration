@@ -66,7 +66,7 @@ public class AuthenticationSteps {
 	    
 	    AuthenticationContainer.DeleteButton.click();
 	    Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
-	    TestUtils.assertTextAppears(AuthenticationContainer.DeleteConfirmHeader, "Delete Flow");
+	    TestUtils.assertTextAppears(AuthenticationContainer.WindowHeader, "Delete Flow");
 	    AuthenticationContainer.DeleteConfirmButton.click();
 	    Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
 	    
@@ -112,8 +112,8 @@ public class AuthenticationSteps {
 				Cell.findElement(By.xpath("./div/ul/li/a[contains(text(),'Delete')]")).click();
 				Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
 				
-				TestUtils.assertElementAppears(AuthenticationContainer.DeleteConfirmHeader);
-				TestUtils.assertTextAppears(AuthenticationContainer.DeleteConfirmHeader, "Delete Execution");
+				TestUtils.assertElementAppears(AuthenticationContainer.WindowHeader);
+				TestUtils.assertTextAppears(AuthenticationContainer.WindowHeader, "Delete Execution");
 				AuthenticationContainer.DeleteConfirmButton.click();
 				Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
 				found = true;
@@ -217,5 +217,18 @@ public class AuthenticationSteps {
 		assertTrue("Auth Type is not found", found);
 		Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
 	} */
+	
+	@Then("^Admin copies the flow using a new name \"(.*?)\"")
+	public void admin_copies_the_flow_using_a_new_name(String newFlowName) throws Throwable {
+		AuthenticationContainer.CopyButton.click();
+		TestUtils.assertElementAppears(AuthenticationContainer.WindowHeader);
+		TestUtils.assertTextAppears(AuthenticationContainer.WindowHeader, "Copy Authentication Flow");
+		TestUtils.verifiedSendKeys(AuthenticationContainer.NewNameText, newFlowName);
+		AuthenticationContainer.OkButton.click();
+		TestUtils.assertElementAppears(AuthenticationContainer.SuccessIcon);
+		TestUtils.assertTextAppears(AuthenticationContainer.SuccessMessage, "Success! Flow copied.");
+		Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
+		TestUtils.assertTextAppearsInDropDown(AuthenticationContainer.FlowsDropDown, newFlowName);
+	}
 	
 }

@@ -38,6 +38,9 @@ public class AuthenticationContainer {
 	@FindBy(how = How.CSS, using = "button[ng-click*='cancel()']")
 	public WebElement CancelButton;
 	
+	@FindBy(how = How.CSS, using = "button[ng-click*='ok()']")
+	public WebElement OkButton;
+	
 	@FindBy(how = How.CSS, using = ".alert-success")
 	public WebElement SuccessMessage;
 	
@@ -47,14 +50,14 @@ public class AuthenticationContainer {
 	@FindBy(how = How.CSS, using = "button[ng-click*='ok()']")
 	public WebElement DeleteConfirmButton;
 	
-	@FindBy(how = How.CSS, using = "button[ng-click*='cancel()']")
-	public WebElement CancelConfirmButton;
-	
 	@FindBy(how = How.CSS, using = ".modal-title")
-	public WebElement DeleteConfirmHeader;
+	public WebElement WindowHeader;
 	
 	@FindBy(how = How.CSS, using = ".modal-body")
 	public WebElement DeleteConfirmDescription;
+	
+	@FindBy(how = How.CSS, using = "#name")
+	public WebElement NewNameText;
 	
 	// Flows tab
 	
