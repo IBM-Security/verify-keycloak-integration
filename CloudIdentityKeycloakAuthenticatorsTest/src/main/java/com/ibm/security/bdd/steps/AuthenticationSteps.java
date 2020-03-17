@@ -162,5 +162,60 @@ public class AuthenticationSteps {
 		assertFalse("Auth Type appears on the table", found);
 	}
 		
+	@Then("^Admin selects Requirement \"(.*?)\" checkbox for \"(.*?)\" Auth Type$")
+	public void admin_selects_Requirement_checkbox_for_Auth_Type(String requirement, String authType) throws Throwable {
+	   
+		List<WebElement> Rows = null;
+		WebElement table = AuthenticationContainer.AuthenticationTable;
+		String Col = null;
+		
+		Rows = table.findElements(By.xpath("./tbody/tr"));		
+		boolean found = false;
+		
+		for (int i=1; i<Rows.size(); i++) {
+		
+			Col = table.findElement(By.xpath(".//tr["+i+"]/td[1]/span[contains(@class,'ng-binding')]")).getText();
+			
+			if (authType.equals(Col)) {		
+				
+				WebElement Cell = table.findElement(By.xpath("./tbody/tr["+i+"]"));  
+				Cell.findElement(By.xpath("./td/label/input[@value='"+requirement+"']")).click();
+				Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
+				
+				found = true;
+				break;
+			}
+		}
+		assertTrue("Auth Type is not found", found);
+		Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
+	}
+	
+	/*@Then("^Admin sees Requirement \"(.*?)\" checkbox is selected for \"(.*?)\" Auth Type$")
+	public void admin_sees_Requirement_checkbox_is_selected_for_Auth_Type(String requirement, String authType) throws Throwable {
+	   
+		List<WebElement> Rows = null;
+		WebElement table = AuthenticationContainer.AuthenticationTable;
+		String Col = null;
+		
+		Rows = table.findElements(By.xpath("./tbody/tr"));		
+		boolean found = false;
+		
+		for (int i=1; i<Rows.size(); i++) {
+		
+			Col = table.findElement(By.xpath(".//tr["+i+"]/td[1]/span[contains(@class,'ng-binding')]")).getText();
+			
+			if (authType.equals(Col)) {		
+				
+				WebElement Cell = table.findElement(By.xpath("./tbody/tr["+i+"]"));  
+				Cell.findElement(By.xpath("./td/label/input[@value='"+requirement+"']")).isSelected();
+				Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
+				
+				found = true;
+				break;
+			}
+		}
+		assertTrue("Auth Type is not found", found);
+		Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
+	} */
 	
 }
