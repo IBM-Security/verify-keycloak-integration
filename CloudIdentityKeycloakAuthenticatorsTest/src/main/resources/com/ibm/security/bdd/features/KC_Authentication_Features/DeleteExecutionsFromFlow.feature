@@ -1,4 +1,4 @@
-@Publish
+@Publish @JT
 Feature: Delete Executions from the Flow
 This feature add several executions to the flow, find and delete the executions from the table, verify successful, and delete the flow
 

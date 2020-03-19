@@ -1,4 +1,4 @@
-@test
+@Publish @JT
 Feature: Copy Authentication Flow
 This feature creates a new authentication flow, copy the flow, and verify the flow is accurately copied. 
 

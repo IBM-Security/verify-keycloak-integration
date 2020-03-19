@@ -107,5 +107,28 @@ public class AuthenticationContainer {
 	
 	@FindBy(how = How.CSS, using = "button[ng-click*='cancel()']")
 	public WebElement AddExecCancelButton;
+	
+	// Authenticator Config
+	
+	@FindBy(how = How.CSS, using = "#name")
+	public WebElement ConfigAliasText;
+	
+	@FindBy(how = How.CSS, using = ".ng-scope:nth-child(1) > .col-md-6 > .form-control")
+	public WebElement TenantNameText;
+	
+	@FindBy(how = How.CSS, using = ".ng-scope:nth-child(2) > .col-md-6 > .form-control")
+	public WebElement APIClientIDText;
+	
+	@FindBy(how = How.CSS, using = ".form-group:nth-child(3) .form-control")
+	public WebElement APIClientSecretText;
+	
+	@FindBy(how = How.CSS, using = "#configId")
+	public WebElement IDText;
+	
+	@FindBy(how = How.CSS, using = ".pficon-delete")
+	public WebElement ConfigDeleteIcon;
+	
+	@FindBy(how = How.CSS, using = "span[data-ng-show*='config.alias']")
+	public WebElement ConfigHeader;
 
 }

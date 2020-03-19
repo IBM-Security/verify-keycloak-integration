@@ -1,4 +1,4 @@
-@Publish
+@Publish @testrun
 Feature: Select Requirements for Executions (Auth) Types
 This feature add several executions to the flow, find and set the requirement for each execution on the table, 
 verify successful, and delete the flow

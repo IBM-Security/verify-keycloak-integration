@@ -1,4 +1,4 @@
-@Publish
+@Publish @JT
 Feature: Verify Administrator Console Login Successful
 This feature navigates from Keycloak homepage to Admin Console Login page, verifies the elements on the Login page, 
 and logs in as the Admin user.
