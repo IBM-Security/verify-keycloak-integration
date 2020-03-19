@@ -173,12 +173,14 @@ public class AuthenticationSteps {
 		
 			for (int i=1; i<Rows.size(); i++) {
 				Col = table.findElement(By.xpath(".//tr["+i+"]/td[1]/span[contains(@class,'ng-binding')]")).getText();
+				Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
 				if (authType.equals(Col)) {
 					found = true;
 					break;
 				}
 			}
 			assertFalse("Auth Type appears on the table", found);
+			Thread.sleep(TestUtils.ONE_SECOND_IN_MS);
 		
 		} catch (StaleElementReferenceException e) {
 		}
@@ -340,26 +342,31 @@ public class AuthenticationSteps {
 	
 	@Then("^Admin verifies the Config has the following parameters$")
 	public void admin_verifies_the_Config_has_the_following_parameters(DataTable cucumberTable) throws Throwable {
-	    TestUtils.assertElementAppears(AuthenticationContainer.ConfigDeleteIcon);
+		try {
+		
+			TestUtils.assertElementAppears(AuthenticationContainer.ConfigDeleteIcon);
 	    
-	    boolean idtext = AuthenticationContainer.IDText.isEnabled();
+			boolean idtext = AuthenticationContainer.IDText.isEnabled();
 	    
-	    if (idtext) {
-	    	System.out.println("it's enabled");
-	    } else {
-	    	System.out.println("it's disabled");
-	    }
+			if (idtext) {
+				System.out.println("it's enabled");
+			} else {
+				System.out.println("it's disabled");
+			}
 	    
-	    AuthenticationContainer.SaveButton.isEnabled();
-	    String myele = AuthenticationContainer.TenantNameText.getAttribute("readonly");
-	    System.out.println("element value is " + myele);
+			AuthenticationContainer.SaveButton.isEnabled();
+			String myele = AuthenticationContainer.TenantNameText.getAttribute("readonly");
+			System.out.println("element value is " + myele);
 	    
-	    List<Map<String, String>> list = cucumberTable.asMaps(String.class, String.class);
-	    TestUtils.assertTextAppears(AuthenticationContainer.ConfigHeader, list.get(0).get("Alias"));
-	    TestUtils.assertTextAppearsInTextfield(AuthenticationContainer.TenantNameText, list.get(0).get("Tenant Name"));
-	    TestUtils.assertTextAppearsInTextfield(AuthenticationContainer.APIClientIDText, list.get(0).get("API Client ID"));
-	    TestUtils.assertTextAppearsInTextfield(AuthenticationContainer.APIClientSecretText, list.get(0).get("API Client Secret"));
+			List<Map<String, String>> list = cucumberTable.asMaps(String.class, String.class);
+			TestUtils.assertTextAppears(AuthenticationContainer.ConfigHeader, list.get(0).get("Alias"));
+			TestUtils.assertTextAppearsInTextfield(AuthenticationContainer.TenantNameText, list.get(0).get("Tenant Name"));
+			TestUtils.assertTextAppearsInTextfield(AuthenticationContainer.APIClientIDText, list.get(0).get("API Client ID"));
+			TestUtils.assertTextAppearsInTextfield(AuthenticationContainer.APIClientSecretText, list.get(0).get("API Client Secret"));
 	   
+		} catch (StaleElementReferenceException e) {
+		}
 	}
+		
 	
 }
