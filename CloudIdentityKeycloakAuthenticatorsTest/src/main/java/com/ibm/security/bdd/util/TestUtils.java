@@ -529,7 +529,54 @@ public class TestUtils {
 			Thread.sleep(ONE_SECOND_IN_MS);
 		}
 	}
-
+	
+	/**
+	 * Assert the expected text has been found in the text field element using the default
+	 * maximum time for the UI from @link #getMaxTimeOutValue()
+	 * getMaxTimeOutValue}
+	 * 
+	 * @param webElement
+	 *            The @WebElement to check.
+	 * @param expectedText
+	 *            The expected text to check for in the text field.
+	 * 
+	 * @throws Throwable
+	 *             Throws the error that the test case fails with.
+	 */
+	public static void assertTextAppearsInTextfield(WebElement element, String expectedText) throws Throwable {
+		assertTextAppearsInTextfield(element, expectedText, getMaxTimeOutValue());
+	}
+	
+	/**
+	 * Assert the expected text has been found in the text field element.
+	 * 
+	 * @param webElement
+	 *            The @WebElement to check.
+	 * @param expectedText
+	 *            The expected text to check for in the text field.
+	 * @param timeToWaitInSeconds
+	 *            The time to wait for the element to appear in seconds.
+	 * 
+	 * @throws Throwable
+	 *             Throws the error that the test case fails with.
+	 */
+	public static void assertTextAppearsInTextfield(WebElement element, String expectedText, int timeToWaitInSeconds)
+			throws Throwable {
+		
+		for (int second = 0;; second++) {
+			try {
+				
+				assertEquals(expectedText, element.getAttribute("value"));
+				break;
+				
+			} catch (Error error) {
+				if (second >= timeToWaitInSeconds)
+					fail("A timeout occured after " + timeToWaitInSeconds + " second(s): " + error.getMessage());
+			}
+			Thread.sleep(ONE_SECOND_IN_MS);
+		}
+	}
+	
 	/**
 	 * Retrieve the unique identifier from the element ID for custom attributes
 	 * 
