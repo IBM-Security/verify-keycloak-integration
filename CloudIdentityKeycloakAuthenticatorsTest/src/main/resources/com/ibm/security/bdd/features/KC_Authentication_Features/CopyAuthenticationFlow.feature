@@ -6,6 +6,8 @@ Background: Login as Admin to the Admin console and navigate to Authentication
 Given "admin" logs into the "Admin Console" and navigate to "Authentication"
 
 Scenario: [1] Admin creates a new flow, add several executions to the flow, and set the requirement on each execution
+Then Admin deletes the flow "Cloud Identity Copy1" if it exists
+Then Admin deletes the flow "Cloud Identity Copy2" if it exists
 Then Admin creates new Top Level Form with the following parameters
 | Alias                | Description       | Flow Type |
 | Cloud Identity Copy1 | Testing flow copy | generic  |

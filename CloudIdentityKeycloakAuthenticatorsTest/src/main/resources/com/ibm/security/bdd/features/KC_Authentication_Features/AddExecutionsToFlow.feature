@@ -1,4 +1,4 @@
-@Publish @JT 
+@Publish @JT
 Feature: Add Executions to the Flow
 This feature add several executions to the flow, verify from the table, and delete the flow
 
@@ -6,6 +6,7 @@ Background: Login as Admin to the Admin console and navigate to Authentication
 Given "admin" logs into the "Admin Console" and navigate to "Authentication"
 
 Scenario: [1] Admin creates a new flow, add several executions to the flow
+Then Admin deletes the flow "Cloud Identity AE Test" if it exists
 Then Admin creates new Top Level Form with the following parameters
 | Alias               | Description                   | Flow Type |
 | Cloud Identity AE Test | Test adding execution to flow | generic  |

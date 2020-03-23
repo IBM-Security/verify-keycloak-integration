@@ -6,6 +6,7 @@ Background: Login as Admin to the Admin console and navigate to Authentication
 Given "admin" logs into the "Admin Console" and navigate to "Authentication"
   
 Scenario: [1] Login, navigate to Authentication, click New button to Create Top Level Form 
+Then Admin deletes the flow "New Flow Test" if it exists
 Then Admin creates new Top Level Form with the following parameters
 | Alias         | Description              | Flow Type |
 | New Flow Test | Verify New Flow Creation | generic  |

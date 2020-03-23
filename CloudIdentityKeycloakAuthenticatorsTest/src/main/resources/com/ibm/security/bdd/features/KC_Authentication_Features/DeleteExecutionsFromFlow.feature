@@ -6,6 +6,7 @@ Background: Login as Admin to the Admin console and navigate to Authentication
 Given "admin" logs into the "Admin Console" and navigate to "Authentication"
 
 Scenario: [1] Admin creates a new flow, add several executions to the flow
+Then Admin deletes the flow "Cloud Identity DE Test" if it exists
 Then Admin creates new Top Level Form with the following parameters
 | Alias                  | Description                       | Flow Type |
 | Cloud Identity DE Test | Test deleting execution from flow | generic  |

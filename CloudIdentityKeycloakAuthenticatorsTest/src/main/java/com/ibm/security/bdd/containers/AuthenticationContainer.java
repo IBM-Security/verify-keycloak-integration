@@ -125,10 +125,19 @@ public class AuthenticationContainer {
 	@FindBy(how = How.CSS, using = "#configId")
 	public WebElement IDText;
 	
+	@FindBy(how = How.CSS, using = ".form-group:nth-child(3) .btn-primary")
+	public WebElement ConfigSaveButton;
+	
+	@FindBy(how = How.CSS, using = ".form-group:nth-child(2) .btn-default")
+	public WebElement ConfigCancelButton;
+	
 	@FindBy(how = How.CSS, using = ".pficon-delete")
 	public WebElement ConfigDeleteIcon;
 	
 	@FindBy(how = How.CSS, using = "span[data-ng-show*='config.alias']")
 	public WebElement ConfigHeader;
+	
+	@FindBy(how = How.CSS, using = ".col-sm-9 > .ng-binding")
+	public WebElement CreateConfigHeader;
 
 }

@@ -14,6 +14,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.ibm.security.bdd.containers.CommonContainer;
 import com.ibm.security.bdd.containers.LoginContainer;
@@ -32,6 +34,7 @@ public class CommonSteps {
 	public static final String UI_CONTEXT_ROOT = "ui";
 
 	private WebDriver driver = WebDriverFactory.getDriver();
+	private WebDriverWait wait = new WebDriverWait(driver, 5);
 	private CommonContainer commonContainer = new CommonContainer();
 	private LoginContainer loginContainer = new LoginContainer();
 	private DashboardContainer dashboardContainer = new DashboardContainer();
@@ -102,6 +105,7 @@ public class CommonSteps {
 		} else if (navLink.equals("User Federation")) {
 			dashboardContainer.UserFederation.click();
 		} else if (navLink.equals("Authentication")) {
+			wait.until(ExpectedConditions.visibilityOf(dashboardContainer.Authentication));
 			dashboardContainer.Authentication.click();
 		} else if (navLink.equals("Groups")) {
 			dashboardContainer.Groups.click();
