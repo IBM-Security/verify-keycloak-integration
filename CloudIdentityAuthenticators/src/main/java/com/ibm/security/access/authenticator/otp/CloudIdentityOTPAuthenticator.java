@@ -1,4 +1,4 @@
-package com.ibm.security.access.authenticator;
+package com.ibm.security.access.authenticator.otp;
 
 import java.io.IOException;
 import java.net.URI;
@@ -29,7 +29,7 @@ import org.keycloak.models.UserModel;
 import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 
-public class CloudIdentityAuthenticator implements Authenticator {
+public class CloudIdentityOTPAuthenticator implements Authenticator {
 
 	/**
 	 * Constants used for the OTP submission template
@@ -59,7 +59,7 @@ public class CloudIdentityAuthenticator implements Authenticator {
 	private static final String OTP_TYPE_EMAIL = "email";
 	private static final String OTP_TYPE_SMS = "sms";
 
-	private Logger logger = Logger.getLogger(CloudIdentityAuthenticator.class);
+	private Logger logger = Logger.getLogger(CloudIdentityOTPAuthenticator.class);
 
 	public void action(AuthenticationFlowContext context) {
 		final String methodName = "action";

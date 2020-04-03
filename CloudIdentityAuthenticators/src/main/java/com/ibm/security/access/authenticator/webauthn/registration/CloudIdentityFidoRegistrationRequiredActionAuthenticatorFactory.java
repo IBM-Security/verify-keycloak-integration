@@ -1,4 +1,4 @@
-package com.ibm.security.access.authenticator.fido.registration;
+package com.ibm.security.access.authenticator.webauthn.registration;
 
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.Authenticator;
@@ -32,7 +32,7 @@ public class CloudIdentityFidoRegistrationRequiredActionAuthenticatorFactory ext
 		final String methodName = "getDisplayType";
 		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
-		String displayName = "Cloud Identity FIDO Registration Required Action Authenticator";
+		String displayName = "Cloud Identity WebAuthN Registration";
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName, displayName);
 		return displayName;

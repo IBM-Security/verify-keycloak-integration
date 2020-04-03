@@ -1,7 +1,6 @@
-com.ibm.security.access.authenticator.CloudIdentityAuthenticatorFactory
+com.ibm.security.access.authenticator.otp.CloudIdentityOTPAuthenticatorFactory
 com.ibm.security.access.authenticator.demo.CloudIdentityDemoAuthenticatorFactory
-com.ibm.security.access.authenticator.fido.fido2.CloudIdentityFido2LoginAuthenticatorFactory
-com.ibm.security.access.authenticator.fido.registration.CloudIdentityFidoRegistrationRequiredActionAuthenticatorFactory
+com.ibm.security.access.authenticator.webauthn.fido2.CloudIdentityFido2LoginAuthenticatorFactory
+com.ibm.security.access.authenticator.webauthn.registration.CloudIdentityFidoRegistrationRequiredActionAuthenticatorFactory
 com.ibm.security.access.authenticator.verify.qr.CloudIdentityQrLoginAuthenticatorFactory
 com.ibm.security.access.authenticator.verify.registration.CloudIdentityVerifyRegistrationRequiredActionAuthenticatorFactory
-

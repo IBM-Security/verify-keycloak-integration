@@ -1,4 +1,4 @@
-package com.ibm.security.access.authenticator.fido.registration;
+package com.ibm.security.access.authenticator.webauthn.registration;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;

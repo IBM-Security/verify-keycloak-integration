@@ -1,4 +1,4 @@
-package com.ibm.security.access.authenticator.fido.fido2;
+package com.ibm.security.access.authenticator.webauthn.fido2;
 
 import java.util.List;
 

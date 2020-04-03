@@ -1,5 +1,5 @@
 <#import "template.ftl" as layout>
-<@layout.registrationLayout; section>
+<@layout.registrationLayout showAnotherWayIfPresent=false; section>
     <#if section = "title">
         ${msg("loginTitle",realm.name)}
     <#elseif section = "header">

@@ -84,7 +84,7 @@ public class CloudIdentityAuthenticatorFactory implements AuthenticatorFactory {
 		CloudIdentityLoggingUtilites.entry(logger, methodName);
 		logger.tracef("%s entry", methodName);
 		
-		String displayType = "Cloud Identity Authenticator";
+		String displayType = "Cloud Identity OTP Authenticator";
 		
 		CloudIdentityLoggingUtilites.exit(logger, methodName, displayType);
 		return displayType;

@@ -1,4 +1,4 @@
-package com.ibm.security.access.authenticator;
+package com.ibm.security.access.authenticator.otp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.keycloak.provider.ProviderConfigProperty;
 import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 
-public class CloudIdentityAuthenticatorFactory implements AuthenticatorFactory {
+public class CloudIdentityOTPAuthenticatorFactory implements AuthenticatorFactory {
 	
 	public static final String ID = "cloud-identity-authenticator";
 	
@@ -53,7 +53,7 @@ public class CloudIdentityAuthenticatorFactory implements AuthenticatorFactory {
 		CONFIG_PROPERTIES.add(property);
 	}
 	
-	private Logger logger = Logger.getLogger(CloudIdentityAuthenticatorFactory.class);
+	private Logger logger = Logger.getLogger(CloudIdentityOTPAuthenticatorFactory.class);
 
 	public void close() {
 		final String methodName = "close";
@@ -65,7 +65,7 @@ public class CloudIdentityAuthenticatorFactory implements AuthenticatorFactory {
 		final String methodName = "create";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, session);
 		
-		CloudIdentityAuthenticator instance = new CloudIdentityAuthenticator();
+		CloudIdentityOTPAuthenticator instance = new CloudIdentityOTPAuthenticator();
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName, instance);
 		return instance;

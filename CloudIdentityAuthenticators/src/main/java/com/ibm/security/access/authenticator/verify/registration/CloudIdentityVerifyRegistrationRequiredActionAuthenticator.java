@@ -69,6 +69,8 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implemen
 				boolean createdShadowUserSuccessfully = CloudIdentityUtilities.createCIShadowUser(context, user);
 				if (createdShadowUserSuccessfully) {
 					userId = CloudIdentityUtilities.getCIUserId(user);
+				} else {
+				    // TODO: Error page
 				}
 			}
 			if (userId != null) {

@@ -32,7 +32,7 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticatorFactory e
 		final String methodName = "getDisplayType";
 		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
-		String displayType = "Cloud Identity IBM Verify Registration Required Action Authenticator";
+		String displayType = "Cloud Identity IBM Verify Registration";
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName, displayType);
 		return displayType;
