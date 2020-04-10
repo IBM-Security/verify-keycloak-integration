@@ -113,11 +113,9 @@ public class FidoUtilities {
 				new StringEntity(completeRegistrationPayload
 						)
 			);
-            CloudIdentityLoggingUtilities.print(logger, EntityUtils.toString(postRequest.getEntity()));
 			CloseableHttpResponse response = httpClient.execute(postRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
-            CloudIdentityLoggingUtilities.print(logger, responseBody);
 			if (statusCode == 200) {
 				result = true;
 			}
