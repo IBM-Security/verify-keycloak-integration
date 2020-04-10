@@ -223,11 +223,6 @@ public class CloudIdentityUtilities {
 		return result;
 	}
 	
-	public static String getAuthenticatorId(String ciUserId) {
-	    
-	    return "";
-	}
-	
 	public static void setPromptedPasswordlessRegistration(AuthenticationFlowContext context) {
 		final String methodName = "setPromptedPasswordlessRegistration";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context);

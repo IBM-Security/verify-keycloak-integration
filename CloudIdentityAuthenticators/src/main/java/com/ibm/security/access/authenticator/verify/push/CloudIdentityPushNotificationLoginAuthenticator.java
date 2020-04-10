@@ -1,7 +1,5 @@
 package com.ibm.security.access.authenticator.verify.push;
 
-import java.util.List;
-
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -15,12 +13,9 @@ import org.keycloak.models.utils.FormMessage;
 
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 import com.ibm.security.access.authenticator.rest.PushNotificationUtilities;
-import com.ibm.security.access.authenticator.rest.PushNotificationUtilities.PushNotificationVerificationResponse;
+import com.ibm.security.access.authenticator.rest.PushNotificationUtilities.Pair;
 import com.ibm.security.access.authenticator.rest.QrUtilities;
-import com.ibm.security.access.authenticator.rest.QrUtilities.QrLoginInitiationResponse;
-import com.ibm.security.access.authenticator.rest.QrUtilities.QrLoginResponse;
 import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
-import com.ibm.security.access.authenticator.verify.registration.CloudIdentityVerifyRegistrationRequiredActionAuthenticator;
 
 public class CloudIdentityPushNotificationLoginAuthenticator implements Authenticator {
 
@@ -38,38 +33,50 @@ public class CloudIdentityPushNotificationLoginAuthenticator implements Authenti
         String action= formParams.getFirst(ACTION_PARAM);
 
         UserModel user = context.getUser();
-        String ciUserId = null;
-        if (user != null) {
-            // User is associated with the context
-            ciUserId = CloudIdentityUtilities.getCIUserId(user);
-        } else {
-            // TODO: Need to register first
-            // Error Page
+        if (user == null) {
+            // TODO: Error in flow set up - push notification is always 2FA and
+            // should require native keycloak username/pw auth before attempting 2FA
         }
         
-        PushNotificationVerificationResponse response = PushNotificationUtilities.getPushNotificationVerification(context);
+        if (RESEND_PARAM.equals(action)) {
+            context.getAuthenticationSession().removeAuthNote(
+                    PushNotificationUtilities.PUSH_NOTIFICATION_AUTHENTICATOR_ID);
+            context.getAuthenticationSession().removeAuthNote(
+                    PushNotificationUtilities.PUSH_NOTIFICATION_TRANSACTION_ID);
+            initiatePushNotification(context);
+            return;
+        }
+        
+        String pushNotificationState = PushNotificationUtilities.getPushNotificationVerification(context);
 
-//        TODO:      
-//        if (AUTHENTICATE_PARAM.equals(action) && 
-//                "VERIFY_SUCCESS".equals(response.state)) {
-//            context.success();
-//        } else if (AUTHENTICATE_PARAM.equals(action) && "PENDING".equals(response.state)) {
-//            return;
-//        } else if (AUTHENTICATE_PARAM.equals(action) && "TIMEOUT".equals(response.state)) {
-//            // Attempted but authentication timed out - resend page?
-//            Response challenge = context.form()
-//                    .setError("Timed out - resend?")
-//                    .createForm("push-notification-login-resend.ftl");
-//            context.challenge(challenge);
-//        } else {
-//            // failed - reset/start over page?
-//        }
+        if (AUTHENTICATE_PARAM.equals(action) && 
+                "VERIFY_SUCCESS".equals(pushNotificationState)) {
+            context.success();
+            return;
+        } else if (AUTHENTICATE_PARAM.equals(action) && "PENDING".equals(pushNotificationState)) {
+            Response challenge = context.form()
+                    .createForm("push-notification-login.ftl");
+            context.challenge(challenge);
+            return;
+        } else if (AUTHENTICATE_PARAM.equals(action) && "TIMEOUT".equals(pushNotificationState)) {
+            Response challenge = context.form()
+                    .addError(new FormMessage("pushNotificationExpiredError"))
+                    .createForm("push-notification-login-resend.ftl");
+            context.challenge(challenge);
+        } else {
+            // TODO:
+            // failed - reset/start over page?
+            // context.failureChallenge();
+        }
         
     }
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
-        initiatePushNotification(context);
+        if (context.getAuthenticationSession().getAuthNote(
+                PushNotificationUtilities.PUSH_NOTIFICATION_TRANSACTION_ID) == null) {
+            initiatePushNotification(context);
+        }
     }
     
     private void initiatePushNotification(AuthenticationFlowContext context) {
@@ -81,16 +88,16 @@ public class CloudIdentityPushNotificationLoginAuthenticator implements Authenti
             // User is associated with the context
             String userId = CloudIdentityUtilities.getCIUserId(user);
             if (userId == null) {
-                // TODO: Error - must register with IBM Verify first
+                requireVerifyRegistration(context, methodName);
+                return;
             } else {
-                // User has a CI User ID
                 boolean isRegistered = QrUtilities.doesUserHaveVerifyRegistered(context, userId);
                 if (!isRegistered) {
-                    // TODO: must register with IBM Verify first
+                    requireVerifyRegistration(context, methodName);
+                    return;
                 } else {          
-                    String sigId = PushNotificationUtilities.getSignatureEnrollmentId(userId);
-                    String authenticatorId = CloudIdentityUtilities.getAuthenticatorId(userId);
-                    PushNotificationUtilities.sendPushNotification(context, authenticatorId, sigId);
+                    Pair<String,String> result = PushNotificationUtilities.getSignatureEnrollmentAuthenticatorId(context, userId);
+                    PushNotificationUtilities.sendPushNotification(context, result.key, result.value);
                     
                     Response challenge = context.form()
                             .createForm("push-notification-login.ftl");
@@ -102,30 +109,32 @@ public class CloudIdentityPushNotificationLoginAuthenticator implements Authenti
             }
         } else {
             // TODO: Error in flow set up - push notification is always 2FA and
-            // should require registration before coming to the authenticator
+            // should require native keycloak username/pw auth before attempting 2FA
         }
         CloudIdentityLoggingUtilities.exit(logger, methodName);
     }
-
-    @Override
-    public boolean configuredFor(KeycloakSession arg0, RealmModel arg1,
-            UserModel arg2) {
-        return false;
+    
+    private void requireVerifyRegistration(AuthenticationFlowContext context, String methodName) {
+        context.form().addError(new FormMessage("ibmVerifyRegistrationRequired"));
+        context.attempted();
+        CloudIdentityLoggingUtilities.exit(logger, methodName);
     }
 
-    @Override
+    public void close() {
+        // No-op
+    }
+
+    public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
+        // Hardcode to true for the time being
+        // Only users with verify configured should use this authenticator
+        return true;
+    }
+    
     public boolean requiresUser() {
         return true;
     }
 
-    @Override
-    public void setRequiredActions(KeycloakSession arg0, RealmModel arg1,
-            UserModel arg2) {
-        
-    }
-    
-    @Override
-    public void close() {
-      
+    public void setRequiredActions(KeycloakSession session, RealmModel realm, UserModel user) {
+        // No-op for the time being
     }
 }
