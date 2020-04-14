@@ -33,6 +33,8 @@ public class CloudIdentityUtilities {
 	public static final String CONFIG_TENANT_FQDN = "tenant.fqdn";
 	public static final String CONFIG_CLIENT_ID = "client.id";
 	public static final String CONFIG_CLIENT_SECRET = "client.secret";
+	
+	public static final String CI_USER_ID_ATTR_NAME = "cloudIdentity.userId";
 
 	private static Logger logger = Logger.getLogger(CloudIdentityUtilities.class);
 	
@@ -68,14 +70,17 @@ public class CloudIdentityUtilities {
 					CloseableHttpResponse response = httpClient.execute(post);
 					int statusCode = response.getStatusLine().getStatusCode();
 					String responseBody = EntityUtils.toString(response.getEntity());
-					response.close();
+					EntityUtils.consume(response.getEntity());
 					if (statusCode == 200) {
 						Pattern accessTokenExtraction = Pattern.compile("\"access_token\":\"([a-zA-Z0-9]+)\"");
 						Matcher matcher = accessTokenExtraction.matcher(responseBody);
 						if (matcher.find()) {
 							accessToken = matcher.group(1);
 						}
-					}
+					} else {
+		                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+		            }
+					response.close();
 				}
 			}
 		} catch (URISyntaxException e) {
@@ -124,7 +129,7 @@ public class CloudIdentityUtilities {
 		UserModel matchingUser = null;
 		for (int i = 0; i < users.size(); i++) {
 			UserModel iterUser = users.get(i);
-			List<String> cloudIdentityUserIdValues = iterUser.getAttribute("cloudIdentity.userId");
+			List<String> cloudIdentityUserIdValues = iterUser.getAttribute(CI_USER_ID_ATTR_NAME);
 			if (!cloudIdentityUserIdValues.isEmpty()) {
 				if (userId.equals(cloudIdentityUserIdValues.get(0))){
 					matchingUser = iterUser;
@@ -142,7 +147,7 @@ public class CloudIdentityUtilities {
 		CloudIdentityLoggingUtilities.entry(logger, methodName, user);
 		
 		String userId = null;
-		List<String> cloudIdentityUserIdValues = user.getAttribute("cloudIdentity.userId");
+		List<String> cloudIdentityUserIdValues = user.getAttribute(CI_USER_ID_ATTR_NAME);
 		if (!cloudIdentityUserIdValues.isEmpty()) {
 			userId = cloudIdentityUserIdValues.get(0);
 		}
@@ -155,7 +160,7 @@ public class CloudIdentityUtilities {
 		final String methodName = "setCIUserId";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, user, ciUserId);
 		
-		user.setSingleAttribute("cloudIdentity.userId", ciUserId);
+		user.setSingleAttribute(CI_USER_ID_ATTR_NAME, ciUserId);
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
@@ -188,9 +193,8 @@ public class CloudIdentityUtilities {
 			postRequest.setEntity(new StringEntity(createUserPayload));
 			CloseableHttpResponse response = httpClient.execute(postRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
-			logger.logv(Level.TRACE, "{0}#{1} createUser response code [{2}]", CloudIdentityUtilities.class.getName(), methodName, statusCode);
 			String responseBody = EntityUtils.toString(response.getEntity());
-			logger.logv(Level.TRACE, "{0}#{1} createUser response [{2}]", CloudIdentityUtilities.class.getName(), methodName, responseBody);
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 201) {
 				Pattern idExtraction = Pattern.compile("\"id\":\\s*\"(\\w+)\"");
 				Matcher matcher = idExtraction.matcher(responseBody);
@@ -201,7 +205,9 @@ public class CloudIdentityUtilities {
 						result = true;
 					}
 				}
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();

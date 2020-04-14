@@ -40,9 +40,9 @@ public class CloudIdentityPushNotificationLoginAuthenticator implements Authenti
         
         if (RESEND_PARAM.equals(action)) {
             context.getAuthenticationSession().removeAuthNote(
-                    PushNotificationUtilities.PUSH_NOTIFICATION_AUTHENTICATOR_ID);
+                    PushNotificationUtilities.PUSH_NOTIFICATION_AUTHENTICATOR_ID_ATTR_NAME);
             context.getAuthenticationSession().removeAuthNote(
-                    PushNotificationUtilities.PUSH_NOTIFICATION_TRANSACTION_ID);
+                    PushNotificationUtilities.PUSH_NOTIFICATION_TRANSACTION_ID_ATTR_NAME);
             initiatePushNotification(context);
             return;
         }
@@ -74,7 +74,7 @@ public class CloudIdentityPushNotificationLoginAuthenticator implements Authenti
     @Override
     public void authenticate(AuthenticationFlowContext context) {
         if (context.getAuthenticationSession().getAuthNote(
-                PushNotificationUtilities.PUSH_NOTIFICATION_TRANSACTION_ID) == null) {
+                PushNotificationUtilities.PUSH_NOTIFICATION_TRANSACTION_ID_ATTR_NAME) == null) {
             initiatePushNotification(context);
         }
     }

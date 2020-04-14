@@ -11,6 +11,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 
+import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 import com.ibm.security.access.authenticator.rest.QrUtilities;
 import com.ibm.security.access.authenticator.rest.QrUtilities.QrLoginInitiationResponse;
 import com.ibm.security.access.authenticator.rest.QrUtilities.QrLoginResponse;
@@ -47,7 +48,7 @@ public class CloudIdentityQrLoginAuthenticator implements Authenticator {
 			for (int i = 0; i < users.size(); i++) {
 				UserModel iterUser = users.get(i);
 				List<String> cloudIdentityUserIdValues = 
-				        iterUser.getAttribute("cloudIdentity.userId");
+				        iterUser.getAttribute(CloudIdentityUtilities.CI_USER_ID_ATTR_NAME);
 				if (!cloudIdentityUserIdValues.isEmpty()) {
 					if (qrResponse.userId.equals(cloudIdentityUserIdValues.get(0))) {
 						matchingUser = iterUser;

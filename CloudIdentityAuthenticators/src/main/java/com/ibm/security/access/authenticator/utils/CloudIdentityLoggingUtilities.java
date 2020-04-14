@@ -8,6 +8,14 @@ public class CloudIdentityLoggingUtilities {
         logger.info(msg);
     }
 
+    public static void error(Logger logger, String msg) {
+        logger.error(msg);
+    }
+
+    public static void error(Logger logger, String methodName, String errorMsg) {
+        logger.errorf("ERROR [%s]", methodName, errorMsg);
+    }
+
     public static void entry(Logger logger, String methodName, Object... arguments) {
 		if (logger.isTraceEnabled()) {
 			logger.tracef("%s entry", methodName, arguments);

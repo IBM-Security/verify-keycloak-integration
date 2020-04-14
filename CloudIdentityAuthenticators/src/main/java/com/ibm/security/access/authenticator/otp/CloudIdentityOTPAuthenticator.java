@@ -46,8 +46,8 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 	private static final String OTP_CORRELATION_FORM_VALUE_ATTR_NAME = "otpCorrelationValue";
 
 	private static final String OTP_TYPE_LABEL_ATTR_NAME = "otpTypeLabel";
-	private static final String OTP_EMAIL_SUBMISSION_LABEL = "Enter your email OTP:";
-	private static final String OTP_SMS_SUBMISSION_LABEL = "Enter your SMS OTP:";
+	private static final String OTP_EMAIL_SUBMISSION_LABEL = "Enter your email OTP";
+	private static final String OTP_SMS_SUBMISSION_LABEL = "Enter your SMS OTP";
 
 	/**
 	 * Constants used in user session attribute storage
@@ -192,14 +192,9 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 	public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
 		final String methodName = "configuredFor";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, session, realm, user);
-
-		boolean result = false;
-		// Only run this authenticator for our test realm and for users with an email configured
-		if ("test-realm".equals(realm.getName()) &&
-				user.getEmail() != null) {
-			result = true;
-		}
-
+		
+		boolean result = true;
+		
 		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
@@ -245,6 +240,7 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 			CloseableHttpResponse response = httpClient.execute(post);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 202) {
 				String correlation = null;
 				Pattern correlationExtraction = Pattern.compile("\"correlation\":\"([a-zA-Z0-9]+)\"");
@@ -261,7 +257,9 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 				if (correlation != null && transactionId != null) {
 					transientOtpResponse = new TransientOtpResponse(correlation, transactionId);
 				}
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -307,6 +305,7 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 			CloseableHttpResponse response = httpClient.execute(post);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 202) {
 				String correlation = null;
 				Pattern correlationExtraction = Pattern.compile("\"correlation\":\"([a-zA-Z0-9]+)\"");
@@ -323,6 +322,8 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 				if (correlation != null && transactionId != null) {
 					transientOtpResponse = new TransientOtpResponse(correlation, transactionId);
 				}
+			} else {
+			    CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
 			}
 			response.close();
 		} catch (URISyntaxException e) {
@@ -378,9 +379,12 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 			post.addHeader("Accept", "application/json");
 			CloseableHttpResponse response = httpClient.execute(post);
 			int statusCode = response.getStatusLine().getStatusCode();
+			String responseBody = EntityUtils.toString(response.getEntity());
 			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				result = true;
+			} else {
+			    CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
 			}
 			response.close();
 		} catch (URISyntaxException e) {
@@ -426,10 +430,13 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 			post.addHeader("Accept", "application/json");
 			CloseableHttpResponse response = httpClient.execute(post);
 			int statusCode = response.getStatusLine().getStatusCode();
+			String responseBody = EntityUtils.toString(response.getEntity());
 			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				result = true;
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();

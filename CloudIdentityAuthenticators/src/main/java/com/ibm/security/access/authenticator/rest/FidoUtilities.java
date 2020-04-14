@@ -58,9 +58,12 @@ public class FidoUtilities {
 			CloseableHttpResponse response = httpClient.execute(postRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				fidoInitResponse = responseBody;
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -116,9 +119,12 @@ public class FidoUtilities {
 			CloseableHttpResponse response = httpClient.execute(postRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				result = true;
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -195,9 +201,12 @@ public class FidoUtilities {
 			CloseableHttpResponse response = httpClient.execute(postRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				fidoInitResponse = responseBody;
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -259,13 +268,16 @@ public class FidoUtilities {
 			CloseableHttpResponse response = httpClient.execute(postRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				Pattern userIdExtraction = Pattern.compile("\"userId\":\\s*\"([a-zA-Z0-9]+)\"");
 				Matcher matcher = userIdExtraction.matcher(responseBody);
 				if (matcher.find()) {
 					result = matcher.group(1);
 				}
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -326,13 +338,16 @@ public class FidoUtilities {
 			CloseableHttpResponse response = httpClient.execute(getRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				Pattern idExtraction = Pattern.compile("\"id\":\"([a-fA-F0-9\\-]+)\"");
 				Matcher matcher = idExtraction.matcher(responseBody);
 				if (matcher.find()) {
 					rpId = matcher.group(1);
 				}
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -376,13 +391,16 @@ public class FidoUtilities {
 			CloseableHttpResponse response = httpClient.execute(getRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				Pattern idExtraction = Pattern.compile("\"id\":\"[a-fA-F0-9\\-]+\"");
 				Matcher matcher = idExtraction.matcher(responseBody);
 				if (matcher.find()) {
 					result = true;
 				}
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();

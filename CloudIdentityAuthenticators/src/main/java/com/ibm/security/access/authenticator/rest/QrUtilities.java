@@ -45,13 +45,16 @@ public class QrUtilities {
 			CloseableHttpResponse response = httpClient.execute(getRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				Pattern idExtraction = Pattern.compile("\"id\":\"([a-fA-F0-9\\-]+)\"");
 				Matcher matcher = idExtraction.matcher(responseBody);
 				if (matcher.find()) {
 					verifyProfileId = matcher.group(1);
 				}
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -98,13 +101,16 @@ public class QrUtilities {
 			CloseableHttpResponse response = httpClient.execute(postRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				Pattern qrExtraction = Pattern.compile("\"qrcode\":\\s*\"([^\"]+)\"");
 				Matcher matcher = qrExtraction.matcher(responseBody);
 				if (matcher.find()) {
 					qrCode = matcher.group(1);
 				}
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -149,6 +155,7 @@ public class QrUtilities {
 			CloseableHttpResponse response = httpClient.execute(getRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				String qrCode = null;
 				Pattern qrExtraction = Pattern.compile("\"qrCode\":\\s*\"([^\"]+)\"");
@@ -169,7 +176,9 @@ public class QrUtilities {
 					dsi = matcher.group(1);
 				}
 				qrResponse = new QrLoginInitiationResponse(qrCode, id, dsi);
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -229,6 +238,7 @@ public class QrUtilities {
 			CloseableHttpResponse response = httpClient.execute(getRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				String state = null;
 				Pattern stateExtraction = Pattern.compile("\"state\":\\s*\"([a-zA-Z]+)\"");
@@ -243,7 +253,9 @@ public class QrUtilities {
 					userId = matcher.group(1);
 				}
 				qrResponse = new QrLoginResponse(state, userId);
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -297,13 +309,16 @@ public class QrUtilities {
 			CloseableHttpResponse response = httpClient.execute(getRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
 			String responseBody = EntityUtils.toString(response.getEntity());
+			EntityUtils.consume(response.getEntity());
 			if (statusCode == 200) {
 				Pattern idExtraction = Pattern.compile("\"id\":\"[a-fA-F0-9\\-]+\"");
 				Matcher matcher = idExtraction.matcher(responseBody);
 				if (matcher.find()) {
 					result = true;
 				}
-			}
+			} else {
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
+            }
 			response.close();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();

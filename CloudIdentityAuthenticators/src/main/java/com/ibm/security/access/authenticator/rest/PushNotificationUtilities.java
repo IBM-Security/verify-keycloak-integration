@@ -24,8 +24,8 @@ import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities
 public class PushNotificationUtilities {
     
     private static Logger logger = Logger.getLogger(PushNotificationUtilities.class);
-    final public static String PUSH_NOTIFICATION_AUTHENTICATOR_ID = "push.notification.authenticator.id";
-    final public static String PUSH_NOTIFICATION_TRANSACTION_ID = "push.notification.transaction.id";
+    final public static String PUSH_NOTIFICATION_AUTHENTICATOR_ID_ATTR_NAME = "push.notification.authenticator.id";
+    final public static String PUSH_NOTIFICATION_TRANSACTION_ID_ATTR_NAME = "push.notification.transaction.id";
     
     
     public static Pair<String, String> getSignatureEnrollmentAuthenticatorId(AuthenticationFlowContext context, String ciUserId) {
@@ -54,6 +54,7 @@ public class PushNotificationUtilities {
             CloseableHttpResponse response = httpClient.execute(getRequest);
             int statusCode = response.getStatusLine().getStatusCode();
             String responseBody = EntityUtils.toString(response.getEntity());
+            EntityUtils.consume(response.getEntity());
             if (statusCode == 200) {
                 Pattern sigIdExtraction = Pattern.compile("\"id\":\\s*\"([a-fA-F0-9\\-]+)\"");
                 Pattern authenticatorIdExtraction = Pattern.compile("\"authenticatorId\":\\s*\"([a-fA-F0-9\\-]+)\"");
@@ -66,7 +67,7 @@ public class PushNotificationUtilities {
                     authId = authMatcher.group(1);
                 }
             } else {
-                // TODO: Log error response
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
             }
             response.close();
         } catch (URISyntaxException e) {
@@ -125,17 +126,18 @@ public class PushNotificationUtilities {
             CloseableHttpResponse response = httpClient.execute(postRequest);
             int statusCode = response.getStatusLine().getStatusCode();
             String responseBody = EntityUtils.toString(response.getEntity());
+            EntityUtils.consume(response.getEntity());
             if (statusCode == 202) {
                 Pattern transactionIdExtraction = Pattern.compile("\"authenticatorId\":.*\"id\":\\s*\"([a-fA-F0-9\\-]+)\"");
                 Matcher matcher = transactionIdExtraction.matcher(responseBody);
                 
                 if (matcher.find()) {
                     transactionId = matcher.group(1);
-                    context.getAuthenticationSession().setAuthNote(PUSH_NOTIFICATION_AUTHENTICATOR_ID, authenticatorId);
-                    context.getAuthenticationSession().setAuthNote(PUSH_NOTIFICATION_TRANSACTION_ID, transactionId);
+                    context.getAuthenticationSession().setAuthNote(PUSH_NOTIFICATION_AUTHENTICATOR_ID_ATTR_NAME, authenticatorId);
+                    context.getAuthenticationSession().setAuthNote(PUSH_NOTIFICATION_TRANSACTION_ID_ATTR_NAME, transactionId);
                 }
             } else {
-                // TODO: Log error response
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
             }
             response.close();
         } catch (URISyntaxException e) {
@@ -164,8 +166,8 @@ public class PushNotificationUtilities {
         final String methodName = "getPushNotificationVerification";
         CloudIdentityLoggingUtilities.entry(logger, methodName);
         
-        String authenticatorId = context.getAuthenticationSession().getAuthNote(PUSH_NOTIFICATION_AUTHENTICATOR_ID);
-        String transactionId = context.getAuthenticationSession().getAuthNote(PUSH_NOTIFICATION_TRANSACTION_ID);
+        String authenticatorId = context.getAuthenticationSession().getAuthNote(PUSH_NOTIFICATION_AUTHENTICATOR_ID_ATTR_NAME);
+        String transactionId = context.getAuthenticationSession().getAuthNote(PUSH_NOTIFICATION_TRANSACTION_ID_ATTR_NAME);
         if (authenticatorId == null || transactionId == null) {
             // TODO: Error!
         }
@@ -190,6 +192,7 @@ public class PushNotificationUtilities {
             CloseableHttpResponse response = httpClient.execute(getRequest);
             int statusCode = response.getStatusLine().getStatusCode();
             String responseBody = EntityUtils.toString(response.getEntity());
+            EntityUtils.consume(response.getEntity());
             if (statusCode == 200) {
                 Pattern idExtraction = Pattern.compile("\"state\":\\s*\"([a-zA-Z\\_]+)\"");
                 Matcher matcher = idExtraction.matcher(responseBody);
@@ -197,7 +200,7 @@ public class PushNotificationUtilities {
                     pushNotificationState = matcher.group(1);
                 }
             } else {
-                // TODO: Log error response
+                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
             }
             response.close();
         } catch (URISyntaxException e) {
