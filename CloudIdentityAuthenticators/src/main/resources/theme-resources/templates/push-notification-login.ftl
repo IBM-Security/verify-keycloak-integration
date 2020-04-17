@@ -8,7 +8,7 @@
         <div align="center">
             <form id="kc-qr-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
                 <div class="${properties.kcFormGroupClass!}">
-                    <div class="${properties.kcLabelWrapperClass!}">${msg("pushNotificationLoginSentMessage")}</div>
+                    <div class="${properties.kcLabelWrapperClass!}">${msg("pushNotificationFormLoginSentMessage")}</div>
                 </div>
                 <input type="hidden" name="action" id="action-input" value="authenticate"/>
             </form>

@@ -8,13 +8,12 @@
         <div align="center">
             <form id="kc-qr-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
                 <div class="${properties.kcFormGroupClass!}">
-                    <div class="${properties.kcLabelWrapperClass!}">Scan this QR Code with your IBM Verify mobile application.</div>
-                    <div class="${properties.kcLabelWrapperClass!}">Once scanned, your authentication will complete automatically.</div>
+                    <div class="${properties.kcLabelWrapperClass!}">${msg("qrFormMessage")}</div>
                 </div>
                 <input type="hidden" name="action" id="action-input" value="authenticate"/>
             </form>
             <button id="registration-required" class="btn btn-primary btn-block btn-lg">
-                ${msg("ibmVerifyRegisterButton")}
+                ${msg("verifyFormRegisterButton")}
             </button>
         </div>
         <script type="text/javascript">

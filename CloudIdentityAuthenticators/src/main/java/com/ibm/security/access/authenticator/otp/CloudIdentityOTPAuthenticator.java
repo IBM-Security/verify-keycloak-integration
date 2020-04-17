@@ -49,6 +49,7 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 	private static final String OTP_EMAIL_SUBMISSION_LABEL = "Enter your email OTP";
 	private static final String OTP_SMS_SUBMISSION_LABEL = "Enter your SMS OTP";
 
+	private static final String OTP_SMS_ATTR_NAME = "phone.number";
 	/**
 	 * Constants used in user session attribute storage
 	 */
@@ -96,7 +97,7 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 		} else {
 			// OTP has not been sent yet, the choice has just been made
 			String email = context.getUser().getEmail();
-			List<String> phoneValues = context.getUser().getAttribute("phone");
+			List<String> phoneValues = context.getUser().getAttribute(OTP_SMS_ATTR_NAME);
 			String otpType = formParams.getFirst("otpType");
 			if (OTP_TYPE_EMAIL.equals(otpType)) {
 				setOtpType(context, OTP_TYPE_EMAIL);
@@ -138,7 +139,7 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 
 		String email = context.getUser().getEmail();
-		List<String> phoneValues = context.getUser().getAttribute("phone");
+		List<String> phoneValues = context.getUser().getAttribute(OTP_SMS_ATTR_NAME);
 
 		if (email != null && !phoneValues.isEmpty()) {
 			// OTP Selection page

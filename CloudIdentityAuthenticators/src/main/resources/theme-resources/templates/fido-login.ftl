@@ -11,10 +11,10 @@
                 <input type="hidden" name="action" id="action-input" value="authenticate"/>
             </form>
             <button id="fido" class="btn btn-primary btn-block btn-lg">
-                Sign in with a FIDO2 device
+                ${msg("fidoFormLoginButton")}
             </button>
             <button id="registration-required" class="btn btn-default btn-block btn-lg">
-                Not registered? Register your device
+                ${msg("fidoFormRegisterButton")}
             </button>
         </div>
         <script type="text/javascript">

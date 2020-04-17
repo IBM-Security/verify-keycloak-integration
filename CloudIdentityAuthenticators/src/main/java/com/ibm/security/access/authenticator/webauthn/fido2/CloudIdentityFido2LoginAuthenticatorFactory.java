@@ -3,6 +3,7 @@ package com.ibm.security.access.authenticator.webauthn.fido2;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.logging.Logger;
 import org.keycloak.Config.Scope;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
@@ -12,11 +13,14 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
 
+import com.ibm.security.access.authenticator.otp.CloudIdentityOTPAuthenticator;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
+import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 
 public class CloudIdentityFido2LoginAuthenticatorFactory implements AuthenticatorFactory {
     
     public static final String ID = "ci-fido2-login-authenticator";
+    private static final CloudIdentityFido2LoginAuthenticator SINGLETON = new CloudIdentityFido2LoginAuthenticator();
     
     private static final List<ProviderConfigProperty> CONFIG_PROPERTIES = new ArrayList<ProviderConfigProperty>();
     
@@ -27,21 +31,21 @@ public class CloudIdentityFido2LoginAuthenticatorFactory implements Authenticato
     
     static {
         ProviderConfigProperty property;
-        
+
         property = new ProviderConfigProperty();
         property.setName(CloudIdentityUtilities.CONFIG_TENANT_FQDN);
         property.setLabel("Tenant Fully Qualified Domain Name");
         property.setType(ProviderConfigProperty.STRING_TYPE);
         property.setHelpText("The FQDN of your Cloud Identity tenant");
         CONFIG_PROPERTIES.add(property);
-        
+
         property = new ProviderConfigProperty();
         property.setName(CloudIdentityUtilities.CONFIG_CLIENT_ID);
         property.setLabel("API Client ID");
         property.setType(ProviderConfigProperty.STRING_TYPE);
         property.setHelpText("Client ID from your Cloud Identity API Client");
         CONFIG_PROPERTIES.add(property);
-        
+
         property = new ProviderConfigProperty();
         property.setName(CloudIdentityUtilities.CONFIG_CLIENT_SECRET);
         property.setLabel("API Client Secret");
@@ -51,12 +55,16 @@ public class CloudIdentityFido2LoginAuthenticatorFactory implements Authenticato
         CONFIG_PROPERTIES.add(property);
     }
 
+    private Logger logger = Logger.getLogger(CloudIdentityOTPAuthenticator.class);
+
     public void close() {
         // no-op
     }
 
     public Authenticator create(KeycloakSession session) {
-        return new CloudIdentityFido2LoginAuthenticator();
+        final String methodName = "create";
+        CloudIdentityLoggingUtilities.entry(logger, methodName, session);
+        return SINGLETON;
     }
 
     public List<ProviderConfigProperty> getConfigProperties() {
@@ -69,7 +77,7 @@ public class CloudIdentityFido2LoginAuthenticatorFactory implements Authenticato
     }
 
     public String getHelpText() {
-        return "Cloud Identity FIDO2 Login Authenticator help text";
+        return "Login using your FIDO2 device";
     }
 
     public String getId() {

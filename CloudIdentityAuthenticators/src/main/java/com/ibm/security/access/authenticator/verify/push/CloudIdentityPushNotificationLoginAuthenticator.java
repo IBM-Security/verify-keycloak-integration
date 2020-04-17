@@ -19,10 +19,12 @@ import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities
 
 public class CloudIdentityPushNotificationLoginAuthenticator implements Authenticator {
 
+    private static final String PUSH_NOTIFICATION_LOGIN_TEMPLATE = "push-notification-login.ftl";
+    private static final String PUSH_NOTIFICATION_LOGIN_RESEND_TEMPLATE = "push-notification-login-resend.ftl";
+
     private static final String ACTION_PARAM = "action";
     private static final String AUTHENTICATE_PARAM = "authenticate";
     private static final String RESEND_PARAM = "resend";
-//    private static final String REGISTER_ACTION = "register";
     
     private Logger logger = Logger.getLogger(CloudIdentityPushNotificationLoginAuthenticator.class);
 
@@ -55,13 +57,13 @@ public class CloudIdentityPushNotificationLoginAuthenticator implements Authenti
             return;
         } else if (AUTHENTICATE_PARAM.equals(action) && "PENDING".equals(pushNotificationState)) {
             Response challenge = context.form()
-                    .createForm("push-notification-login.ftl");
+                    .createForm(PUSH_NOTIFICATION_LOGIN_TEMPLATE);
             context.challenge(challenge);
             return;
         } else if (AUTHENTICATE_PARAM.equals(action) && "TIMEOUT".equals(pushNotificationState)) {
             Response challenge = context.form()
-                    .addError(new FormMessage("pushNotificationExpiredError"))
-                    .createForm("push-notification-login-resend.ftl");
+                    .addError(new FormMessage("pushNotificationFormExpiredError"))
+                    .createForm(PUSH_NOTIFICATION_LOGIN_RESEND_TEMPLATE);
             context.challenge(challenge);
         } else {
             // TODO:
@@ -100,7 +102,7 @@ public class CloudIdentityPushNotificationLoginAuthenticator implements Authenti
                     PushNotificationUtilities.sendPushNotification(context, result.key, result.value);
                     
                     Response challenge = context.form()
-                            .createForm("push-notification-login.ftl");
+                            .createForm(PUSH_NOTIFICATION_LOGIN_TEMPLATE);
                     context.challenge(challenge);
                     
                     CloudIdentityLoggingUtilities.exit(logger, methodName);
@@ -115,7 +117,7 @@ public class CloudIdentityPushNotificationLoginAuthenticator implements Authenti
     }
     
     private void requireVerifyRegistration(AuthenticationFlowContext context, String methodName) {
-        context.form().addError(new FormMessage("ibmVerifyRegistrationRequired"));
+        context.form().addError(new FormMessage("verifyRegistrationRequired"));
         context.attempted();
         CloudIdentityLoggingUtilities.exit(logger, methodName);
     }

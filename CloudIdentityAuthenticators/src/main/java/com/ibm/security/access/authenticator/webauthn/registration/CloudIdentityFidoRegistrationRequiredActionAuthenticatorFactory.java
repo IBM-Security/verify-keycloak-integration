@@ -11,6 +11,7 @@ import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities
 public class CloudIdentityFidoRegistrationRequiredActionAuthenticatorFactory extends AbstractCloudIdentityAuthenticatorFactory {
 
 	private static final String ID = "ci-fido-reg";
+	private static final CloudIdentityFidoRegistrationRequiredActionAuthenticator SINGLETON = new CloudIdentityFidoRegistrationRequiredActionAuthenticator();
 	
 	private static final Requirement[] REQUIREMENT_CHOICES = {
 			Requirement.REQUIRED
@@ -19,20 +20,16 @@ public class CloudIdentityFidoRegistrationRequiredActionAuthenticatorFactory ext
 	private Logger logger = Logger.getLogger(CloudIdentityFidoRegistrationRequiredActionAuthenticatorFactory.class);
 	
 	public Authenticator create(KeycloakSession session) {
-		final String methodName = "create";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, session);
-		
-		CloudIdentityFidoRegistrationRequiredActionAuthenticator instance = new CloudIdentityFidoRegistrationRequiredActionAuthenticator();
-		
-		CloudIdentityLoggingUtilities.exit(logger, methodName, instance);
-		return instance;
+	    final String methodName = "create";
+        CloudIdentityLoggingUtilities.entry(logger, methodName, session);
+        return SINGLETON;
 	}
 
 	public String getDisplayType() {
 		final String methodName = "getDisplayType";
 		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
-		String displayName = "Cloud Identity WebAuthN Registration";
+		String displayName = "Cloud Identity FIDO2 Registration";
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName, displayName);
 		return displayName;
@@ -42,7 +39,7 @@ public class CloudIdentityFidoRegistrationRequiredActionAuthenticatorFactory ext
 		final String methodName = "getHelpText";
 		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
-		String helpText = "Checks if the user (authenticated from a prior execution in the authentiation flow) already has a FIDO device registered. Prompts the user to register if necessary.";
+		String helpText = "Register your FIDO2 device. Requires an authenticated user in the current authentication context.";
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName, helpText);
 		return helpText;

@@ -8,18 +8,18 @@
         <form id="kc-totp-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="totp" class="${properties.kcLabelClass!}">Select how you would like to receive a OTP</label>
+                    <label for="totp" class="${properties.kcLabelClass!}">${msg("otpSelectionFormMsg")}</label>
                 </div>
 
                 <div class="${properties.kcInputWrapperClass!}">
 					<!-- The enumeration of OTP methods should be dynamic based on what's available for the user. -->
                 	<div style="display: flex; flex-direction: row; align-items: center;">
-                    	<input id="email" name="otpType" type="radio" class="${properties.kcInputClass!}" value="email" style="display: inline; width: unset"/>
-                    	<label for="email" style="margin-bottom: 0;">&nbsp;Email</label>
+                        <input id="email" name="otpType" type="radio" class="${properties.kcInputClass!}" value="email" style="display: inline; width: unset"/>
+                        <label for="email" style="margin-bottom: 0; text-indent: 5px">${msg("otpSelectionFormEmail")}</label>
                     </div>
                     <div style="display: flex; flex-direction: row; align-items: center;">
 	                    <input id="sms" name="otpType" type="radio" class="${properties.kcInputClass!}" value="sms" style="display: inline; width: unset"/>
-	                    <label for="sms" style="margin-bottom: 0;">&nbsp;SMS</label>
+	                    <label for="sms" style="margin-bottom: 0; text-indent: 5px">${msg("otpSelectionFormSms")}</label>
 	                </div>
                 </div>
             </div>

@@ -16,11 +16,14 @@ import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 import com.ibm.security.access.authenticator.rest.FidoUtilities;
 
 public class CloudIdentityFidoRegistrationRequiredActionAuthenticator implements Authenticator {
-	
+    private static final String FIDO_REGISTRATION_TEMPLATE = "fido-registration.ftl";
+
 	private static final String ACTION_PARAM = "action";
 	private static final String REGISTER_ACTION = "register";
-	private static final String BYPASS_ACTION = "bypass";
-	
+
+	private static final String FIDO_REG_INIT_ATTR_NAME = "fidoRegInit";
+	private static final String FIDO_AUTHN_INIT_ATTR_NAME = "fidoAuthnInit";
+
 	private Logger logger = Logger.getLogger(CloudIdentityFidoRegistrationRequiredActionAuthenticator.class);
 
 	public void action(AuthenticationFlowContext context) {
@@ -73,9 +76,9 @@ public class CloudIdentityFidoRegistrationRequiredActionAuthenticator implements
 					// User does not have a FIDO authn device registered
 					String fidoInitRegResp = FidoUtilities.initiateFidoRegistration(context, userId);
 					Response challenge = context.form()
-							.setAttribute("fidoRegInit", fidoInitRegResp)
-							.setAttribute("fidoAuthnInit", "{}")
-							.createForm("fido-registration.ftl");
+							.setAttribute(FIDO_REG_INIT_ATTR_NAME, fidoInitRegResp)
+							.setAttribute(FIDO_AUTHN_INIT_ATTR_NAME, "{}")
+							.createForm(FIDO_REGISTRATION_TEMPLATE);
 					context.challenge(challenge);
 					CloudIdentityUtilities.setPromptedPasswordlessRegistration(context);
 					CloudIdentityLoggingUtilities.exit(logger, methodName);

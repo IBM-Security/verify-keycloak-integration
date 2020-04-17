@@ -20,30 +20,30 @@ abstract public class AbstractCloudIdentityAuthenticatorFactory implements Authe
 	private static final List<ProviderConfigProperty> CONFIG_PROPERTIES = new ArrayList<ProviderConfigProperty>();
 	
 	static {
-		ProviderConfigProperty property;
-		
-		property = new ProviderConfigProperty();
-		property.setName(CloudIdentityUtilities.CONFIG_TENANT_FQDN);
-		property.setLabel("Tenant Fully Qualified Domain Name");
-		property.setType(ProviderConfigProperty.STRING_TYPE);
-		property.setHelpText("The FQDN of your Cloud Identity tenant");
-		CONFIG_PROPERTIES.add(property);
-		
-		property = new ProviderConfigProperty();
-		property.setName(CloudIdentityUtilities.CONFIG_CLIENT_ID);
-		property.setLabel("API Client ID");
-		property.setType(ProviderConfigProperty.STRING_TYPE);
-		property.setHelpText("Client ID from your Cloud Identity API Client");
-		CONFIG_PROPERTIES.add(property);
-		
-		property = new ProviderConfigProperty();
-		property.setName(CloudIdentityUtilities.CONFIG_CLIENT_SECRET);
-		property.setLabel("API Client Secret");
-		property.setType(ProviderConfigProperty.STRING_TYPE);
-		property.setHelpText("Client Secret from your Cloud Identity API Client");
-		property.setSecret(true);
-		CONFIG_PROPERTIES.add(property);
-	}
+        ProviderConfigProperty property;
+
+        property = new ProviderConfigProperty();
+        property.setName(CloudIdentityUtilities.CONFIG_TENANT_FQDN);
+        property.setLabel("Tenant Fully Qualified Domain Name");
+        property.setType(ProviderConfigProperty.STRING_TYPE);
+        property.setHelpText("The FQDN of your Cloud Identity tenant");
+        CONFIG_PROPERTIES.add(property);
+
+        property = new ProviderConfigProperty();
+        property.setName(CloudIdentityUtilities.CONFIG_CLIENT_ID);
+        property.setLabel("API Client ID");
+        property.setType(ProviderConfigProperty.STRING_TYPE);
+        property.setHelpText("Client ID from your Cloud Identity API Client");
+        CONFIG_PROPERTIES.add(property);
+
+        property = new ProviderConfigProperty();
+        property.setName(CloudIdentityUtilities.CONFIG_CLIENT_SECRET);
+        property.setLabel("API Client Secret");
+        property.setType(ProviderConfigProperty.STRING_TYPE);
+        property.setHelpText("Client Secret from your Cloud Identity API Client");
+        property.setSecret(true);
+        CONFIG_PROPERTIES.add(property);
+    }
 	
 	private Logger logger = Logger.getLogger(AbstractCloudIdentityAuthenticatorFactory.class);
 	

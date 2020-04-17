@@ -17,6 +17,10 @@ import com.ibm.security.access.authenticator.rest.QrUtilities;
 
 public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implements Authenticator {
 
+    private static final String VERIFY_REGISTRATION_TEMPLATE = "verify-registration.ftl";
+    private static final String QR_CODE_ATTR_NAME = "qrCode";
+    private static final String VERIFY_REGISTRATION_FRIENDLY_NAME = "Keycloak SSO";
+
 	private static final String ACTION_PARAM = "action";
 	private static final String REGISTER_ACTION = "register";
 	
@@ -82,18 +86,18 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implemen
 					String qrCode = QrUtilities.getVerifyRegistrationQrCode(context);
 					if (qrCode == null) {
 						// No verify registration initiated yet, let's start it up
-						qrCode = QrUtilities.initiateVerifyAuthenticatorRegistration(context, userId, "RedHat SSO Demo");
+						qrCode = QrUtilities.initiateVerifyAuthenticatorRegistration(context, userId, VERIFY_REGISTRATION_FRIENDLY_NAME);
 						QrUtilities.setVerifyRegistrationQrCode(context, qrCode);
 					}
 					Response challenge = context.form()
-							.setAttribute("qrCode", qrCode)
-							.createForm("verify-registration.ftl");
+							.setAttribute(QR_CODE_ATTR_NAME, qrCode)
+							.createForm(VERIFY_REGISTRATION_TEMPLATE);
 					context.challenge(challenge);
 					
 					CloudIdentityLoggingUtilities.exit(logger, methodName);
 					return;
 				} else {
-				    context.form().addSuccess(new FormMessage("ibmVerifyRegistrationVerified"));
+				    context.form().addSuccess(new FormMessage("verifyRegistrationVerified"));
 				    context.resetFlow();
 				    return;
 				}

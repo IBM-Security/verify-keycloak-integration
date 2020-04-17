@@ -10,6 +10,7 @@ import org.keycloak.authentication.Authenticator;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.models.utils.FormMessage;
 
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 import com.ibm.security.access.authenticator.rest.QrUtilities;
@@ -17,6 +18,10 @@ import com.ibm.security.access.authenticator.rest.QrUtilities.QrLoginInitiationR
 import com.ibm.security.access.authenticator.rest.QrUtilities.QrLoginResponse;
 
 public class CloudIdentityQrLoginAuthenticator implements Authenticator {
+
+    private static final String QR_LOGIN_TEMPLATE = "qr-login.ftl";
+
+    private static final String QR_CODE_ATTR_NAME = "qrCode";
 
     private static final String ACTION_PARAM = "action";
     private static final String AUTHENTICATE_PARAM = "authenticate";
@@ -61,14 +66,14 @@ public class CloudIdentityQrLoginAuthenticator implements Authenticator {
 		} else if (AUTHENTICATE_PARAM.equals(action) && "FAILED".equals(qrResponse.state)) {
 		    // Attempted but authentication failed (not registered with IBM Verify)
 		    Response challenge = context.form()
-                    .setAttribute("qrCode", qrLoginImage)
-                    .setError("QR Code Authentication Unsuccessful. Please register with IBM Verify to enable passwordless authentication.")
-                    .createForm("qr-login.ftl");
+                    .setAttribute(QR_CODE_ATTR_NAME, qrLoginImage)
+                    .setError(new FormMessage("qrVerifyRegistrationRequiredError").getMessage())
+                    .createForm(QR_LOGIN_TEMPLATE);
             context.challenge(challenge);
 		} else {
 			Response challenge = context.form()
-					.setAttribute("qrCode", qrLoginImage)
-					.createForm("qr-login.ftl");
+					.setAttribute(QR_CODE_ATTR_NAME, qrLoginImage)
+					.createForm(QR_LOGIN_TEMPLATE);
 			context.challenge(challenge);
 		}
 	}
@@ -80,8 +85,8 @@ public class CloudIdentityQrLoginAuthenticator implements Authenticator {
 		QrUtilities.setQrLoginDsi(context, qrResponse.dsi);
 		QrUtilities.setQrLoginImage(context, qrResponse.qrBase64Content);
 		Response challenge = context.form()
-				.setAttribute("qrCode", qrResponse.qrBase64Content)
-				.createForm("qr-login.ftl");
+				.setAttribute(QR_CODE_ATTR_NAME, qrResponse.qrBase64Content)
+				.createForm(QR_LOGIN_TEMPLATE);
 		context.challenge(challenge);
 	}
 	

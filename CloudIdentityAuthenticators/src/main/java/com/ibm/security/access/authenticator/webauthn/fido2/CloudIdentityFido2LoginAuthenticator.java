@@ -1,7 +1,5 @@
 package com.ibm.security.access.authenticator.webauthn.fido2;
 
-import java.util.List;
-
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -18,7 +16,7 @@ import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities
 
 public class CloudIdentityFido2LoginAuthenticator implements Authenticator {
 
-    private static final String INITIAL_LOGIN_PAGE_TEMPLATE = "fido-login.ftl";
+    private static final String FIDO_LOGIN_PAGE_TEMPLATE = "fido-login.ftl";
 
     private static final String ACTION_PARAM = "action";
     private static final String AUTHENTICATE_PARAM = "authenticate";
@@ -77,7 +75,7 @@ public class CloudIdentityFido2LoginAuthenticator implements Authenticator {
         Response challenge = context.form()
                 .setAttribute(FIDO_REG_INIT_MACRO, "{}")
                 .setAttribute(FIDO_AUTHN_INIT_MACRO, fidoInitAuthnResponse)
-                .createForm(INITIAL_LOGIN_PAGE_TEMPLATE);
+                .createForm(FIDO_LOGIN_PAGE_TEMPLATE);
         context.forceChallenge(challenge);
         
         CloudIdentityLoggingUtilities.exit(logger, methodName);

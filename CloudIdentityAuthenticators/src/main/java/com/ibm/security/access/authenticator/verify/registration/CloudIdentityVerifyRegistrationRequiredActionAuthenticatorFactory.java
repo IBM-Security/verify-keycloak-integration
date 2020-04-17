@@ -10,7 +10,8 @@ import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities
 
 public class CloudIdentityVerifyRegistrationRequiredActionAuthenticatorFactory extends AbstractCloudIdentityAuthenticatorFactory {
 
-	private static final String ID = "ci-verify-reg";
+	public static final String ID = "ci-verify-reg";
+	private static final CloudIdentityVerifyRegistrationRequiredActionAuthenticator SINGLETON = new CloudIdentityVerifyRegistrationRequiredActionAuthenticator();
 	
 	private static final Requirement[] REQUIREMENT_CHOICES = {
 			Requirement.REQUIRED
@@ -19,13 +20,9 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticatorFactory e
 	private Logger logger = Logger.getLogger(CloudIdentityVerifyRegistrationRequiredActionAuthenticatorFactory.class);
 	
 	public Authenticator create(KeycloakSession session) {
-		final String methodName = "create";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, session);
-		
-		CloudIdentityVerifyRegistrationRequiredActionAuthenticator instance = new CloudIdentityVerifyRegistrationRequiredActionAuthenticator();
-		
-		CloudIdentityLoggingUtilities.exit(logger, methodName, instance);
-		return instance;
+	    final String methodName = "create";
+        CloudIdentityLoggingUtilities.entry(logger, methodName, session);
+        return SINGLETON;
 	}
 
 	public String getDisplayType() {
@@ -42,7 +39,7 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticatorFactory e
 		final String methodName = "getHelpText";
 		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
-		String helpText = "Checks if the user (authenticated from a prior execution in the authentiation flow) already has IBM Verify registered. Prompts the user to register if necessary.";
+		String helpText = "Register with IBM Verify. Requires an authenticated user in the current authentication context.";
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName, helpText);
 		return helpText;

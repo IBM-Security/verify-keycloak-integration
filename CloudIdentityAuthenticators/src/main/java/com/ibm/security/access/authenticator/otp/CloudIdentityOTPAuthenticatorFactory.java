@@ -19,6 +19,7 @@ import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 public class CloudIdentityOTPAuthenticatorFactory implements AuthenticatorFactory {
 	
 	public static final String ID = "cloud-identity-authenticator";
+	private static final CloudIdentityOTPAuthenticator SINGLETON = new CloudIdentityOTPAuthenticator();
 	
 	private static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
 			AuthenticationExecutionModel.Requirement.REQUIRED,
@@ -28,30 +29,30 @@ public class CloudIdentityOTPAuthenticatorFactory implements AuthenticatorFactor
 	private static final List<ProviderConfigProperty> CONFIG_PROPERTIES = new ArrayList<ProviderConfigProperty>();
 	
 	static {
-		ProviderConfigProperty property;
-		
-		property = new ProviderConfigProperty();
-		property.setName(CloudIdentityUtilities.CONFIG_TENANT_FQDN);
-		property.setLabel("Tenant Fully Qualified Domain Name");
-		property.setType(ProviderConfigProperty.STRING_TYPE);
-		property.setHelpText("The FQDN of your Cloud Identity tenant");
-		CONFIG_PROPERTIES.add(property);
-		
-		property = new ProviderConfigProperty();
-		property.setName(CloudIdentityUtilities.CONFIG_CLIENT_ID);
-		property.setLabel("API Client ID");
-		property.setType(ProviderConfigProperty.STRING_TYPE);
-		property.setHelpText("Client ID from your Cloud Identity API Client");
-		CONFIG_PROPERTIES.add(property);
-		
-		property = new ProviderConfigProperty();
-		property.setName(CloudIdentityUtilities.CONFIG_CLIENT_SECRET);
-		property.setLabel("API Client Secret");
-		property.setType(ProviderConfigProperty.STRING_TYPE);
-		property.setHelpText("Client Secret from your Cloud Identity API Client");
-		property.setSecret(true);
-		CONFIG_PROPERTIES.add(property);
-	}
+        ProviderConfigProperty property;
+
+        property = new ProviderConfigProperty();
+        property.setName(CloudIdentityUtilities.CONFIG_TENANT_FQDN);
+        property.setLabel("Tenant Fully Qualified Domain Name");
+        property.setType(ProviderConfigProperty.STRING_TYPE);
+        property.setHelpText("The FQDN of your Cloud Identity tenant");
+        CONFIG_PROPERTIES.add(property);
+
+        property = new ProviderConfigProperty();
+        property.setName(CloudIdentityUtilities.CONFIG_CLIENT_ID);
+        property.setLabel("API Client ID");
+        property.setType(ProviderConfigProperty.STRING_TYPE);
+        property.setHelpText("Client ID from your Cloud Identity API Client");
+        CONFIG_PROPERTIES.add(property);
+
+        property = new ProviderConfigProperty();
+        property.setName(CloudIdentityUtilities.CONFIG_CLIENT_SECRET);
+        property.setLabel("API Client Secret");
+        property.setType(ProviderConfigProperty.STRING_TYPE);
+        property.setHelpText("Client Secret from your Cloud Identity API Client");
+        property.setSecret(true);
+        CONFIG_PROPERTIES.add(property);
+    }
 	
 	private Logger logger = Logger.getLogger(CloudIdentityOTPAuthenticatorFactory.class);
 
@@ -64,11 +65,7 @@ public class CloudIdentityOTPAuthenticatorFactory implements AuthenticatorFactor
 	public Authenticator create(KeycloakSession session) {
 		final String methodName = "create";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, session);
-		
-		CloudIdentityOTPAuthenticator instance = new CloudIdentityOTPAuthenticator();
-		
-		CloudIdentityLoggingUtilities.exit(logger, methodName, instance);
-		return instance;
+		return SINGLETON;
 	}
 	
 	public List<ProviderConfigProperty> getConfigProperties() {
@@ -84,7 +81,7 @@ public class CloudIdentityOTPAuthenticatorFactory implements AuthenticatorFactor
 		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		logger.tracef("%s entry", methodName);
 		
-		String displayType = "Cloud Identity Authenticator";
+		String displayType = "Cloud Identity OTP Authenticator";
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName, displayType);
 		return displayType;
@@ -94,7 +91,7 @@ public class CloudIdentityOTPAuthenticatorFactory implements AuthenticatorFactor
 		final String methodName = "getHelpText";
 		CloudIdentityLoggingUtilities.entry(logger, methodName);
 		
-		String helpText = "Cloud Identity Authenticator help text";
+		String helpText = "Send a one time password via Email or SMS";
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName, helpText);
 		return helpText;

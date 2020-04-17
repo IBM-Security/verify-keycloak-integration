@@ -18,7 +18,7 @@
             </form>
             <br><br>
 		    <button id="registration-required" class="btn btn-primary btn-block btn-lg">
-                ${msg("fidoRegister")}
+                ${msg("fidoRegisterButton")}
             </button>
 		</div>
         <script type="text/javascript">
