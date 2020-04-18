@@ -14,7 +14,7 @@ import org.keycloak.models.utils.FormMessage;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
 import com.ibm.security.access.authenticator.rest.PushNotificationUtilities;
 import com.ibm.security.access.authenticator.rest.PushNotificationUtilities.Pair;
-import com.ibm.security.access.authenticator.rest.QrUtilities;
+import com.ibm.security.access.authenticator.rest.VerifyUtilities;
 import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 
 public class CloudIdentityPushNotificationLoginAuthenticator implements Authenticator {
@@ -93,7 +93,7 @@ public class CloudIdentityPushNotificationLoginAuthenticator implements Authenti
                 requireVerifyRegistration(context, methodName);
                 return;
             } else {
-                boolean isRegistered = QrUtilities.doesUserHaveVerifyRegistered(context, userId);
+                boolean isRegistered = VerifyUtilities.doesUserHaveVerifyRegistered(context, userId);
                 if (!isRegistered) {
                     requireVerifyRegistration(context, methodName);
                     return;

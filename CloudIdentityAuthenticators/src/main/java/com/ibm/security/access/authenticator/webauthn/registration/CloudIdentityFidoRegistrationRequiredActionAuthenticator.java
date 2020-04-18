@@ -48,15 +48,6 @@ public class CloudIdentityFidoRegistrationRequiredActionAuthenticator implements
 	public void authenticate(AuthenticationFlowContext context) {
 		final String methodName = "authenticate";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
-		
-		/*
-		boolean hasPromptedRegistration = CloudIdentityUtilities.hasPromptedPasswordlessRegistration(context);
-		if (hasPromptedRegistration) {
-			context.success();
-			CloudIdentityLoggingUtilities.exit(logger, methodName);
-			return;
-		}
-		*/
 
 		UserModel user = context.getUser();
 		if (user != null) {
@@ -80,7 +71,7 @@ public class CloudIdentityFidoRegistrationRequiredActionAuthenticator implements
 							.setAttribute(FIDO_AUTHN_INIT_ATTR_NAME, "{}")
 							.createForm(FIDO_REGISTRATION_TEMPLATE);
 					context.challenge(challenge);
-					CloudIdentityUtilities.setPromptedPasswordlessRegistration(context);
+
 					CloudIdentityLoggingUtilities.exit(logger, methodName);
 					return;
 				} else {
@@ -89,7 +80,6 @@ public class CloudIdentityFidoRegistrationRequiredActionAuthenticator implements
                     return;
 				}
 			}
-			context.success();
 		} else {
 		    // User must be configured
 		    context.failure(null);

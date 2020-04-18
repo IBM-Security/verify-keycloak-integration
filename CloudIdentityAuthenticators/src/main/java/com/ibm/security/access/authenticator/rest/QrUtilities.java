@@ -9,9 +9,7 @@ import java.util.regex.Pattern;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -23,122 +21,14 @@ import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities
 public class QrUtilities {
 	
 	private static Logger logger = Logger.getLogger(QrUtilities.class);
-	
-	public static String getVerifyProfileId(AuthenticationFlowContext context) {
-		final String methodName = "getVerifyProfileId";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
-		
-		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
-		String accessToken = CloudIdentityUtilities.getAccessToken(context);
-		String verifyProfileId = null;
-		CloseableHttpClient httpClient = null;
-		try {
-			httpClient = HttpClients.createDefault();
-			URI uri = new URIBuilder()
-					.setScheme("https")
-					.setHost(tenantHostname)
-					.setPath("/v1.0/authenticators/clients")
-					.build();
-			HttpGet getRequest = new HttpGet(uri);
-			getRequest.addHeader("Authorization", "Bearer " + accessToken);
-			getRequest.addHeader("Accept", "application/json");
-			CloseableHttpResponse response = httpClient.execute(getRequest);
-			int statusCode = response.getStatusLine().getStatusCode();
-			String responseBody = EntityUtils.toString(response.getEntity());
-			EntityUtils.consume(response.getEntity());
-			if (statusCode == 200) {
-				Pattern idExtraction = Pattern.compile("\"id\":\"([a-fA-F0-9\\-]+)\"");
-				Matcher matcher = idExtraction.matcher(responseBody);
-				if (matcher.find()) {
-					verifyProfileId = matcher.group(1);
-				}
-			} else {
-                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
-            }
-			response.close();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (httpClient != null) {
-				try {
-					httpClient.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		CloudIdentityLoggingUtilities.exit(logger, methodName, verifyProfileId);
-		return verifyProfileId;
-	}
-	
-	public static String initiateVerifyAuthenticatorRegistration(AuthenticationFlowContext context, String userId, String friendlyName) {
-		final String methodName = "initiateVerifyAuthenticatorRegistration";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context, userId, friendlyName);
-		
-		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
-		String accessToken = CloudIdentityUtilities.getAccessToken(context);
-		String verifyProfileId = getVerifyProfileId(context);
-		CloseableHttpClient httpClient = null;
-		String qrCode = null;
-		try {
-			httpClient = HttpClients.createDefault();
-			URI uri = new URIBuilder()
-					.setScheme("https")
-					.setHost(tenantHostname)
-					.setPath("/v1.0/authenticators/initiation")
-					.setParameter("qrcodeInResponse", "true")
-					.build();
-			HttpPost postRequest = new HttpPost(uri);
-			postRequest.addHeader("Authorization", "Bearer " + accessToken);
-			postRequest.addHeader("Accept", "application/json");
-			postRequest.addHeader("Content-type", "application/json");
-			postRequest.setEntity(new StringEntity("{\"clientId\": \"" + verifyProfileId + "\", \"owner\": \"" + userId + "\", \"accountName\": \"" + friendlyName + "\"}"));
-			CloseableHttpResponse response = httpClient.execute(postRequest);
-			int statusCode = response.getStatusLine().getStatusCode();
-			String responseBody = EntityUtils.toString(response.getEntity());
-			EntityUtils.consume(response.getEntity());
-			if (statusCode == 200) {
-				Pattern qrExtraction = Pattern.compile("\"qrcode\":\\s*\"([^\"]+)\"");
-				Matcher matcher = qrExtraction.matcher(responseBody);
-				if (matcher.find()) {
-					qrCode = matcher.group(1);
-				}
-			} else {
-                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
-            }
-			response.close();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (httpClient != null) {
-				try {
-					httpClient.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		CloudIdentityLoggingUtilities.exit(logger, methodName, qrCode);
-		return qrCode;
-	}
-	
+
 	public static QrLoginInitiationResponse initiateQrLogin(AuthenticationFlowContext context) {
 		final String methodName = "initiateQrLogin";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 		
 		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
 		String accessToken = CloudIdentityUtilities.getAccessToken(context);
-		String verifyProfileId = getVerifyProfileId(context);
+		String verifyProfileId = VerifyUtilities.getVerifyProfileId(context);
 		CloseableHttpClient httpClient = null;
 		QrLoginInitiationResponse qrResponse = null;
 		try {
@@ -199,7 +89,7 @@ public class QrUtilities {
 		CloudIdentityLoggingUtilities.exit(logger, methodName, qrResponse);
 		return qrResponse;
 	}
-	
+
 	public static class QrLoginInitiationResponse {
 		public String qrBase64Content;
 		public String id;
@@ -215,7 +105,7 @@ public class QrUtilities {
 			return "id=[" + id + "] dsi=[" + dsi + "] qrBase64Content=[" + qrBase64Content + "]";
 		}
 	}
-	
+
 	public static QrLoginResponse pollQrLoginStatus(AuthenticationFlowContext context, String qrLoginId, String qrLoginDsi) {
 		final String methodName = "pollQrLoginStatus";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context, qrLoginId, qrLoginDsi);
@@ -276,7 +166,7 @@ public class QrUtilities {
 		CloudIdentityLoggingUtilities.exit(logger, methodName, qrResponse);
 		return qrResponse;
 	}
-	
+
 	public static class QrLoginResponse {
 		public String state;
 		public String userId;
@@ -286,60 +176,7 @@ public class QrUtilities {
 			this.userId = userId;
 		}
 	}
-	
-	public static boolean doesUserHaveVerifyRegistered(AuthenticationFlowContext context, String userId) {
-		final String methodName = "doesUserHaveVerifyRegistered";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context, userId);
-		
-		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
-		String accessToken = CloudIdentityUtilities.getAccessToken(context);
-		boolean result= false;
-		CloseableHttpClient httpClient = null;
-		try {
-			httpClient = HttpClients.createDefault();
-			URI uri = new URIBuilder()
-					.setScheme("https")
-					.setHost(tenantHostname)
-					.setPath("/v1.0/authenticators")
-					.setParameter("search", "owner=\"" + userId + "\"")
-					.build();
-			HttpGet getRequest = new HttpGet(uri);
-			getRequest.addHeader("Authorization", "Bearer " + accessToken);
-			getRequest.addHeader("Accept", "application/json");
-			CloseableHttpResponse response = httpClient.execute(getRequest);
-			int statusCode = response.getStatusLine().getStatusCode();
-			String responseBody = EntityUtils.toString(response.getEntity());
-			EntityUtils.consume(response.getEntity());
-			if (statusCode == 200) {
-				Pattern idExtraction = Pattern.compile("\"id\":\"[a-fA-F0-9\\-]+\"");
-				Matcher matcher = idExtraction.matcher(responseBody);
-				if (matcher.find()) {
-					result = true;
-				}
-			} else {
-                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
-            }
-			response.close();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (httpClient != null) {
-				try {
-					httpClient.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
-		return result;
-	}
-	
+
 	public static String getQrLoginId(AuthenticationFlowContext context) {
 		final String methodName = "getQrLoginId";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
@@ -349,7 +186,7 @@ public class QrUtilities {
 		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
-	
+
 	public static void setQrLoginId(AuthenticationFlowContext context, String qrLoginId) {
 		final String methodName = "setQrLoginId";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context, qrLoginId);
@@ -358,7 +195,7 @@ public class QrUtilities {
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
-	
+
 	public static String getQrLoginDsi(AuthenticationFlowContext context) {
 		final String methodName = "getQrLoginDsi";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
@@ -368,7 +205,7 @@ public class QrUtilities {
 		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
-	
+
 	public static void setQrLoginDsi(AuthenticationFlowContext context, String qrLoginDsi) {
 		final String methodName = "setQrLoginDsi";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context, qrLoginDsi);
@@ -377,7 +214,7 @@ public class QrUtilities {
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
-	
+
 	public static String getQrLoginImage(AuthenticationFlowContext context) {
 		final String methodName = "getQrLoginImage";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
@@ -387,7 +224,7 @@ public class QrUtilities {
 		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
 		return result;
 	}
-	
+
 	public static void setQrLoginImage(AuthenticationFlowContext context, String qrLoginImage) {
 		final String methodName = "setQrLoginImage";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context, qrLoginImage);
@@ -396,24 +233,4 @@ public class QrUtilities {
 		
 		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
-	
-	public static String getVerifyRegistrationQrCode(AuthenticationFlowContext context) {
-		final String methodName = "getVerifyRegistrationQrCode";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
-		
-		String result = context.getAuthenticationSession().getUserSessionNotes().get("verify.registration.qr");
-		
-		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
-		return result;
-	}
-	
-	public static void setVerifyRegistrationQrCode(AuthenticationFlowContext context, String qrCode) {
-		final String methodName = "setVerifyRegistrationQrCode";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context, qrCode);
-		
-		context.getAuthenticationSession().setUserSessionNote("verify.registration.qr", qrCode);
-		
-		CloudIdentityLoggingUtilities.exit(logger, methodName);
-	}
-
 }

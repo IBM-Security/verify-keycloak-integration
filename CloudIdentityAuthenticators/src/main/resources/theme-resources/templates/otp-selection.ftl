@@ -33,7 +33,6 @@
                 <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
                     <div class="${properties.kcFormButtonsWrapperClass!}">
                         <input class="btn btn-primary btn-block btn-lg" name="login" name="login" id="kc-login" type="submit" value="${msg("doLogIn")}"/>
-                        <input class="btn btn-default btn-block btn-lg" name="login" name="cancel" id="kc-cancel" type="submit" value="${msg("doCancel")}"/>
                     </div>
                 </div>
             </div>

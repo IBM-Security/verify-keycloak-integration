@@ -13,7 +13,7 @@ import org.keycloak.models.utils.FormMessage;
 
 import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
-import com.ibm.security.access.authenticator.rest.QrUtilities;
+import com.ibm.security.access.authenticator.rest.VerifyUtilities;
 
 public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implements Authenticator {
 
@@ -35,11 +35,8 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implemen
 		if (REGISTER_ACTION.equals(action)) {
 			// User has not yet cancelled the registration attempt. Let's poll for registration status
 			initiateAndPoll(context);
-		} else {
-			// Bypassing the registration phase since it's optional
-			context.success();
 		}
-		
+
 		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
@@ -79,15 +76,15 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implemen
 			}
 			if (userId != null) {
 				// User has a CI User ID
-				boolean isRegistered = QrUtilities.doesUserHaveVerifyRegistered(context, userId);
+				boolean isRegistered = VerifyUtilities.doesUserHaveVerifyRegistered(context, userId);
 				if (!isRegistered) {
 					// User does not have IBM Verify registered
 					// Check to see if we've already initiated the verify registration
-					String qrCode = QrUtilities.getVerifyRegistrationQrCode(context);
+					String qrCode = VerifyUtilities.getVerifyRegistrationQrCode(context);
 					if (qrCode == null) {
 						// No verify registration initiated yet, let's start it up
-						qrCode = QrUtilities.initiateVerifyAuthenticatorRegistration(context, userId, VERIFY_REGISTRATION_FRIENDLY_NAME);
-						QrUtilities.setVerifyRegistrationQrCode(context, qrCode);
+						qrCode = VerifyUtilities.initiateVerifyAuthenticatorRegistration(context, userId, VERIFY_REGISTRATION_FRIENDLY_NAME);
+						VerifyUtilities.setVerifyRegistrationQrCode(context, qrCode);
 					}
 					Response challenge = context.form()
 							.setAttribute(QR_CODE_ATTR_NAME, qrCode)
@@ -102,8 +99,11 @@ public class CloudIdentityVerifyRegistrationRequiredActionAuthenticator implemen
 				    return;
 				}
 			}
+		} else {
+		    // User must be configured
+		    context.failure(null);
 		}
-		context.success();
+
 		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 

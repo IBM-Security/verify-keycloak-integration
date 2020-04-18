@@ -26,7 +26,6 @@
 	
 	                <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
 	                    <input class="btn btn-primary btn-block btn-lg" name="login" id="kc-login" type="submit" value="${msg("doLogIn")}"/>
-	                    <input class="btn btn-default btn-block btn-lg" name="cancel" id="kc-cancel" type="submit" value="${msg("doCancel")}"/>
 	                </div>
 	            </div>
 	        </form>

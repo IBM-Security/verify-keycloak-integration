@@ -5,12 +5,14 @@
     <#elseif section = "header">
         ${msg("loginTitleHtml",realm.name)}
     <#elseif section = "form">
-        <form id="kc-qr-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
-            <div class="${properties.kcFormGroupClass!}">
-                <div class="${properties.kcLabelWrapperClass!}">${msg("verifyFormMessage")}</div>
-            </div>
-			<input type="hidden" name="action" id="action-input" value="register"/>
-        </form>
+        <div align="center">
+            <form id="kc-qr-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+                <div class="${properties.kcFormGroupClass!}">
+                    <div class="${properties.kcLabelWrapperClass!}">${msg("verifyFormMessage")}</div>
+                </div>
+			    <input type="hidden" name="action" id="action-input" value="register"/>
+            </form>
+        </div>
         <script type="text/javascript">
 			// Form and action input to specify the operation on page submit.
         	var form = document.getElementById('kc-qr-login-form');
