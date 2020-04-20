@@ -46,6 +46,8 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 	private static final String OTP_CORRELATION_FORM_VALUE_ATTR_NAME = "otpCorrelationValue";
 
 	private static final String OTP_TYPE_LABEL_ATTR_NAME = "otpTypeLabel";
+	private static final String OTP_EMAIL_HINT = "otpEmailHint";
+	private static final String OTP_SMS_HINT = "otpSmsHint";
 	private static final String OTP_EMAIL_SUBMISSION_LABEL = "Enter your email OTP";
 	private static final String OTP_SMS_SUBMISSION_LABEL = "Enter your SMS OTP";
 
@@ -100,6 +102,7 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 			List<String> phoneValues = context.getUser().getAttribute(OTP_SMS_ATTR_NAME);
 			String otpType = formParams.getFirst("otpType");
 			if (OTP_TYPE_EMAIL.equals(otpType)) {
+			    String emailHint = " (" + email.substring(0,3) + "..." + email.substring(email.indexOf("@"), email.length()) + ")";
 				setOtpType(context, OTP_TYPE_EMAIL);
 				TransientOtpResponse otpResponse = sendEmailOtp(context, email);
 				if (otpResponse != null) {
@@ -109,13 +112,14 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 							.setAttribute(OTP_FORM_NAME_ATTR_NAME, OTP_FORM_NAME_VALUE)
 							.setAttribute(OTP_CORRELATION_FORM_NAME_ATTR_NAME, OTP_CORRELATION_FORM_NAME_VALUE)
 							.setAttribute(OTP_CORRELATION_FORM_VALUE_ATTR_NAME, otpResponse.correlation)
-							.setAttribute(OTP_TYPE_LABEL_ATTR_NAME, OTP_EMAIL_SUBMISSION_LABEL)
+							.setAttribute(OTP_TYPE_LABEL_ATTR_NAME, OTP_EMAIL_SUBMISSION_LABEL + emailHint)
 							.createForm(OTP_SUBMISSION_TEMPLATE);
 					context.challenge(challenge);
 				}
 			} else if (OTP_TYPE_SMS.equals(otpType)) {
 				setOtpType(context, OTP_TYPE_SMS);
 				String phoneNumber = phoneValues.get(0);
+				String phoneHint = " (..." + phoneNumber.substring(phoneNumber.length() - 4) + ")";
 				TransientOtpResponse otpResponse = sendSmsOtp(context, phoneNumber );
 				if (otpResponse != null) {
 					setOtpCorrelation(context, otpResponse.correlation);
@@ -124,7 +128,7 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 							.setAttribute(OTP_FORM_NAME_ATTR_NAME, OTP_FORM_NAME_VALUE)
 							.setAttribute(OTP_CORRELATION_FORM_NAME_ATTR_NAME, OTP_CORRELATION_FORM_NAME_VALUE)
 							.setAttribute(OTP_CORRELATION_FORM_VALUE_ATTR_NAME, otpResponse.correlation)
-							.setAttribute(OTP_TYPE_LABEL_ATTR_NAME, OTP_SMS_SUBMISSION_LABEL)
+							.setAttribute(OTP_TYPE_LABEL_ATTR_NAME, OTP_SMS_SUBMISSION_LABEL + phoneHint)
 							.createForm(OTP_SUBMISSION_TEMPLATE);
 					context.challenge(challenge);
 				}
@@ -142,11 +146,16 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 		List<String> phoneValues = context.getUser().getAttribute(OTP_SMS_ATTR_NAME);
 
 		if (email != null && !phoneValues.isEmpty()) {
-			// OTP Selection page
+			// Allow user to select OTP method
+		    String emailHint = "(" + email.substring(0,3) + "..." + email.substring(email.indexOf("@"), email.length()) + ")";
+	        String phoneHint = "(..." + phoneValues.get(0).substring(phoneValues.get(0).length() - 4) + ")";
 			Response challenge = context.form()
+			        .setAttribute(OTP_EMAIL_HINT, emailHint)
+			        .setAttribute(OTP_SMS_HINT, phoneHint)
 					.createForm(OTP_SELECTION_TEMPLATE);
 			context.challenge(challenge);
 		} else if (email != null) {
+		    String emailHint = " (" + email.substring(0,3) + "..." + email.substring(email.indexOf("@"), email.length()) + ")";
 			setOtpType(context, OTP_TYPE_EMAIL);
 			TransientOtpResponse otpResponse = sendEmailOtp(context, email);
 			if (otpResponse != null) {
@@ -156,13 +165,14 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 						.setAttribute(OTP_FORM_NAME_ATTR_NAME, OTP_FORM_NAME_VALUE)
 						.setAttribute(OTP_CORRELATION_FORM_NAME_ATTR_NAME, OTP_CORRELATION_FORM_NAME_VALUE)
 						.setAttribute(OTP_CORRELATION_FORM_VALUE_ATTR_NAME, otpResponse.correlation)
-						.setAttribute(OTP_TYPE_LABEL_ATTR_NAME, OTP_EMAIL_SUBMISSION_LABEL)
+						.setAttribute(OTP_TYPE_LABEL_ATTR_NAME, OTP_EMAIL_SUBMISSION_LABEL + emailHint)
 						.createForm(OTP_SUBMISSION_TEMPLATE);
 				context.challenge(challenge);
 			}
 		} else if (!phoneValues.isEmpty()) {
 			setOtpType(context, OTP_TYPE_SMS);
 			String phoneNumber = phoneValues.get(0);
+			String phoneHint = " (..." + phoneNumber.substring(phoneNumber.length() - 4) + ")";
 			TransientOtpResponse otpResponse = sendSmsOtp(context, phoneNumber );
 			if (otpResponse != null) {
 				setOtpCorrelation(context, otpResponse.correlation);
@@ -171,12 +181,13 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 						.setAttribute(OTP_FORM_NAME_ATTR_NAME, OTP_FORM_NAME_VALUE)
 						.setAttribute(OTP_CORRELATION_FORM_NAME_ATTR_NAME, OTP_CORRELATION_FORM_NAME_VALUE)
 						.setAttribute(OTP_CORRELATION_FORM_VALUE_ATTR_NAME, otpResponse.correlation)
-						.setAttribute(OTP_TYPE_LABEL_ATTR_NAME, OTP_SMS_SUBMISSION_LABEL)
+						.setAttribute(OTP_TYPE_LABEL_ATTR_NAME, OTP_SMS_SUBMISSION_LABEL + phoneHint)
 						.createForm(OTP_SUBMISSION_TEMPLATE);
 				context.challenge(challenge);
 			}
 		} else {
 			// neither sms or email available
+		    // TODO: Error
 			context.success();
 		}
 

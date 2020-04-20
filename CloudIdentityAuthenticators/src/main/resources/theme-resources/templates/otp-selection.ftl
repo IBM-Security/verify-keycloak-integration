@@ -15,11 +15,11 @@
 					<!-- The enumeration of OTP methods should be dynamic based on what's available for the user. -->
                 	<div style="display: flex; flex-direction: row; align-items: center;">
                         <input id="email" name="otpType" type="radio" class="${properties.kcInputClass!}" value="email" style="display: inline; width: unset"/>
-                        <label for="email" style="margin-bottom: 0; text-indent: 5px">${msg("otpSelectionFormEmail")}</label>
+                        <label for="email" style="margin-bottom: 0; text-indent: 5px">${msg("otpSelectionFormEmail")} ${otpEmailHint}</label>
                     </div>
                     <div style="display: flex; flex-direction: row; align-items: center;">
 	                    <input id="sms" name="otpType" type="radio" class="${properties.kcInputClass!}" value="sms" style="display: inline; width: unset"/>
-	                    <label for="sms" style="margin-bottom: 0; text-indent: 5px">${msg("otpSelectionFormSms")}</label>
+	                    <label for="sms" style="margin-bottom: 0; text-indent: 5px">${msg("otpSelectionFormSms")} ${otpSmsHint}</label>
 	                </div>
                 </div>
             </div>
