@@ -28,6 +28,8 @@ import org.keycloak.models.UserModel;
 
 import com.ibm.security.access.authenticator.utils.CloudIdentityLoggingUtilities;
 import com.ibm.security.access.authenticator.rest.CloudIdentityUtilities;
+import com.ibm.security.access.authenticator.rest.OtpUtilities;
+import com.ibm.security.access.authenticator.rest.OtpUtilities.TransientOtpResponse;
 
 public class CloudIdentityOTPAuthenticator implements Authenticator {
 
@@ -52,12 +54,6 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 	private static final String OTP_SMS_SUBMISSION_LABEL = "Enter your SMS OTP";
 
 	private static final String OTP_SMS_ATTR_NAME = "phone.number";
-	/**
-	 * Constants used in user session attribute storage
-	 */
-	private static final String OTP_CORRELATION_KEY = "otp.correlation";
-	private static final String OTP_TRANSACTION_ID_KEY = "otp.transactionId";
-	private static final String OTP_TYPE_KEY = "otp.type";
 
 	private static final String OTP_TYPE_EMAIL = "email";
 	private static final String OTP_TYPE_SMS = "sms";
@@ -68,20 +64,20 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 		final String methodName = "action";
 		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
 
-		String incomingOtpType = getOtpType(context);
+		String incomingOtpType = OtpUtilities.getOtpType(context);
 		MultivaluedMap<String, String> formParams = context.getHttpRequest().getDecodedFormParameters();
 		if (OTP_TYPE_EMAIL.equals(incomingOtpType) || OTP_TYPE_SMS.equals(incomingOtpType)) {
-			String correlation = getOtpCorrelation(context);
-			String transactionId = getOtpTransactionId(context);
+			String correlation = OtpUtilities.getOtpCorrelation(context);
+			String transactionId = OtpUtilities.getOtpTransactionId(context);
 			String otpValue = formParams.getFirst(OTP_FORM_NAME_VALUE);
 
 			boolean isOtpValid = false;
 			String otpSubmissionLabel = null;
 			if (OTP_TYPE_EMAIL.equals(incomingOtpType)) {
-				isOtpValid = validateEmailOtp(context, transactionId, otpValue);
+				isOtpValid = OtpUtilities.validateEmailOtp(context, transactionId, otpValue);
 				otpSubmissionLabel = OTP_EMAIL_SUBMISSION_LABEL;
 			} else {
-				isOtpValid = validateSmsOtp(context, transactionId, otpValue);
+				isOtpValid = OtpUtilities.validateSmsOtp(context, transactionId, otpValue);
 				otpSubmissionLabel = OTP_SMS_SUBMISSION_LABEL;
 			}
 			if (isOtpValid) {
@@ -103,11 +99,11 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 			String otpType = formParams.getFirst("otpType");
 			if (OTP_TYPE_EMAIL.equals(otpType)) {
 			    String emailHint = " (" + email.substring(0,3) + "..." + email.substring(email.indexOf("@"), email.length()) + ")";
-				setOtpType(context, OTP_TYPE_EMAIL);
-				TransientOtpResponse otpResponse = sendEmailOtp(context, email);
+			    OtpUtilities.setOtpType(context, OTP_TYPE_EMAIL);
+				TransientOtpResponse otpResponse = OtpUtilities.sendEmailOtp(context, email);
 				if (otpResponse != null) {
-					setOtpCorrelation(context, otpResponse.correlation);
-					setOtpTransactionId(context, otpResponse.transactionId);
+				    OtpUtilities.setOtpCorrelation(context, otpResponse.correlation);
+				    OtpUtilities.setOtpTransactionId(context, otpResponse.transactionId);
 					Response challenge = context.form()
 							.setAttribute(OTP_FORM_NAME_ATTR_NAME, OTP_FORM_NAME_VALUE)
 							.setAttribute(OTP_CORRELATION_FORM_NAME_ATTR_NAME, OTP_CORRELATION_FORM_NAME_VALUE)
@@ -117,13 +113,13 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 					context.challenge(challenge);
 				}
 			} else if (OTP_TYPE_SMS.equals(otpType)) {
-				setOtpType(context, OTP_TYPE_SMS);
+			    OtpUtilities.setOtpType(context, OTP_TYPE_SMS);
 				String phoneNumber = phoneValues.get(0);
 				String phoneHint = " (..." + phoneNumber.substring(phoneNumber.length() - 4) + ")";
-				TransientOtpResponse otpResponse = sendSmsOtp(context, phoneNumber );
+				TransientOtpResponse otpResponse = OtpUtilities.sendSmsOtp(context, phoneNumber );
 				if (otpResponse != null) {
-					setOtpCorrelation(context, otpResponse.correlation);
-					setOtpTransactionId(context, otpResponse.transactionId);
+				    OtpUtilities.setOtpCorrelation(context, otpResponse.correlation);
+				    OtpUtilities.setOtpTransactionId(context, otpResponse.transactionId);
 					Response challenge = context.form()
 							.setAttribute(OTP_FORM_NAME_ATTR_NAME, OTP_FORM_NAME_VALUE)
 							.setAttribute(OTP_CORRELATION_FORM_NAME_ATTR_NAME, OTP_CORRELATION_FORM_NAME_VALUE)
@@ -156,11 +152,11 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 			context.challenge(challenge);
 		} else if (email != null) {
 		    String emailHint = " (" + email.substring(0,3) + "..." + email.substring(email.indexOf("@"), email.length()) + ")";
-			setOtpType(context, OTP_TYPE_EMAIL);
-			TransientOtpResponse otpResponse = sendEmailOtp(context, email);
+		    OtpUtilities.setOtpType(context, OTP_TYPE_EMAIL);
+			TransientOtpResponse otpResponse = OtpUtilities.sendEmailOtp(context, email);
 			if (otpResponse != null) {
-				setOtpCorrelation(context, otpResponse.correlation);
-				setOtpTransactionId(context, otpResponse.transactionId);
+			    OtpUtilities.setOtpCorrelation(context, otpResponse.correlation);
+			    OtpUtilities.setOtpTransactionId(context, otpResponse.transactionId);
 				Response challenge = context.form()
 						.setAttribute(OTP_FORM_NAME_ATTR_NAME, OTP_FORM_NAME_VALUE)
 						.setAttribute(OTP_CORRELATION_FORM_NAME_ATTR_NAME, OTP_CORRELATION_FORM_NAME_VALUE)
@@ -170,13 +166,13 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 				context.challenge(challenge);
 			}
 		} else if (!phoneValues.isEmpty()) {
-			setOtpType(context, OTP_TYPE_SMS);
+		    OtpUtilities.setOtpType(context, OTP_TYPE_SMS);
 			String phoneNumber = phoneValues.get(0);
 			String phoneHint = " (..." + phoneNumber.substring(phoneNumber.length() - 4) + ")";
-			TransientOtpResponse otpResponse = sendSmsOtp(context, phoneNumber );
+			TransientOtpResponse otpResponse = OtpUtilities.sendSmsOtp(context, phoneNumber );
 			if (otpResponse != null) {
-				setOtpCorrelation(context, otpResponse.correlation);
-				setOtpTransactionId(context, otpResponse.transactionId);
+			    OtpUtilities.setOtpCorrelation(context, otpResponse.correlation);
+			    OtpUtilities.setOtpTransactionId(context, otpResponse.transactionId);
 				Response challenge = context.form()
 						.setAttribute(OTP_FORM_NAME_ATTR_NAME, OTP_FORM_NAME_VALUE)
 						.setAttribute(OTP_CORRELATION_FORM_NAME_ATTR_NAME, OTP_CORRELATION_FORM_NAME_VALUE)
@@ -229,302 +225,6 @@ public class CloudIdentityOTPAuthenticator implements Authenticator {
 		CloudIdentityLoggingUtilities.exit(logger, methodName);
 	}
 
-	private TransientOtpResponse sendEmailOtp(AuthenticationFlowContext context, String emailAddress) {
-		final String methodName = "sendEmailOtp";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context, emailAddress);
-
-		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
-		String accessToken = CloudIdentityUtilities.getAccessToken(context);
-		TransientOtpResponse transientOtpResponse = null;
-		CloseableHttpClient httpClient = null;
-		try {
-			httpClient = HttpClients.createDefault();
-			URI uri = new URIBuilder()
-					.setScheme("https")
-					.setHost(tenantHostname)
-					.setPath("/v1.0/authnmethods/emailotp/transient/verification")
-					.build();
-			HttpPost post = new HttpPost(uri);
-			post.setEntity(new StringEntity("{\"otpDeliveryEmailAddress\": \"" + emailAddress + "\"}"));
-			post.addHeader("Authorization", "Bearer " + accessToken);
-			post.addHeader("Content-Type", "application/json");
-			post.addHeader("Accept", "application/json");
-			CloseableHttpResponse response = httpClient.execute(post);
-			int statusCode = response.getStatusLine().getStatusCode();
-			String responseBody = EntityUtils.toString(response.getEntity());
-			EntityUtils.consume(response.getEntity());
-			if (statusCode == 202) {
-				String correlation = null;
-				Pattern correlationExtraction = Pattern.compile("\"correlation\":\"([a-zA-Z0-9]+)\"");
-				Matcher matcher = correlationExtraction.matcher(responseBody);
-				if (matcher.find()) {
-					correlation = matcher.group(1);
-				}
-				String transactionId = null;
-				Pattern transactionIdExtraction = Pattern.compile("\"id\":\"([a-zA-Z0-9\\-]+)\"");
-				matcher = transactionIdExtraction.matcher(responseBody);
-				if (matcher.find()) {
-					transactionId = matcher.group(1);
-				}
-				if (correlation != null && transactionId != null) {
-					transientOtpResponse = new TransientOtpResponse(correlation, transactionId);
-				}
-			} else {
-                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
-            }
-			response.close();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (httpClient != null) {
-				try {
-					httpClient.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		CloudIdentityLoggingUtilities.exit(logger, methodName, transientOtpResponse);
-		return transientOtpResponse;
-	}
-
-	private TransientOtpResponse sendSmsOtp(AuthenticationFlowContext context, String phoneNumber) {
-		final String methodName = "sendSmsOtp";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context, phoneNumber);
-
-		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
-		String accessToken = CloudIdentityUtilities.getAccessToken(context);
-		TransientOtpResponse transientOtpResponse = null;
-		CloseableHttpClient httpClient = null;
-		try {
-			httpClient = HttpClients.createDefault();
-			URI uri = new URIBuilder()
-					.setScheme("https")
-					.setHost(tenantHostname)
-					.setPath("/v1.0/authnmethods/smsotp/transient/verification")
-					.build();
-			HttpPost post = new HttpPost(uri);
-			String normalizedPhoneNumber = "+" + phoneNumber.replaceAll("(?:\\-|\\+)", "");
-			post.setEntity(new StringEntity("{\"otpDeliveryMobileNumber\": \"" + normalizedPhoneNumber + "\"}"));
-			post.addHeader("Authorization", "Bearer " + accessToken);
-			post.addHeader("Content-Type", "application/json");
-			post.addHeader("Accept", "application/json");
-			CloseableHttpResponse response = httpClient.execute(post);
-			int statusCode = response.getStatusLine().getStatusCode();
-			String responseBody = EntityUtils.toString(response.getEntity());
-			EntityUtils.consume(response.getEntity());
-			if (statusCode == 202) {
-				String correlation = null;
-				Pattern correlationExtraction = Pattern.compile("\"correlation\":\"([a-zA-Z0-9]+)\"");
-				Matcher matcher = correlationExtraction.matcher(responseBody);
-				if (matcher.find()) {
-					correlation = matcher.group(1);
-				}
-				String transactionId = null;
-				Pattern transactionIdExtraction = Pattern.compile("\"id\":\"([a-zA-Z0-9\\-]+)\"");
-				matcher = transactionIdExtraction.matcher(responseBody);
-				if (matcher.find()) {
-					transactionId = matcher.group(1);
-				}
-				if (correlation != null && transactionId != null) {
-					transientOtpResponse = new TransientOtpResponse(correlation, transactionId);
-				}
-			} else {
-			    CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
-			}
-			response.close();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (httpClient != null) {
-				try {
-					httpClient.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		CloudIdentityLoggingUtilities.exit(logger, methodName, transientOtpResponse);
-		return transientOtpResponse;
-	}
-
-	static class TransientOtpResponse {
-		String correlation;
-		String transactionId;
-
-		TransientOtpResponse(String correlation, String transactionId) {
-			this.correlation = correlation;
-			this.transactionId = transactionId;
-		}
-	}
-
-	private boolean validateEmailOtp(AuthenticationFlowContext context, String transactionId, String otp) {
-		final String methodName = "validateEmailOtp";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context, transactionId, otp);
-
-		boolean result = false;
-
-		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
-		String accessToken = CloudIdentityUtilities.getAccessToken(context);
-		CloseableHttpClient httpClient = null;
-		try {
-			httpClient = HttpClients.createDefault();
-			URI uri = new URIBuilder()
-					.setScheme("https")
-					.setHost(tenantHostname)
-					.setPath("/v1.0/authnmethods/emailotp/transient/verification/" + transactionId)
-					.build();
-			HttpPost post = new HttpPost(uri);
-			post.setEntity(new StringEntity("{\"otp\": \"" + otp + "\"}"));
-			post.addHeader("Authorization", "Bearer " + accessToken);
-			post.addHeader("Content-Type", "application/json");
-			post.addHeader("Accept", "application/json");
-			CloseableHttpResponse response = httpClient.execute(post);
-			int statusCode = response.getStatusLine().getStatusCode();
-			String responseBody = EntityUtils.toString(response.getEntity());
-			EntityUtils.consume(response.getEntity());
-			if (statusCode == 200) {
-				result = true;
-			} else {
-			    CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
-			}
-			response.close();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (httpClient != null) {
-				try {
-					httpClient.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
-		return result;
-	}
-
-	private boolean validateSmsOtp(AuthenticationFlowContext context, String transactionId, String otp) {
-		final String methodName = "validateSmsOtp";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context, transactionId, otp);
-
-		boolean result = false;
-
-		String tenantHostname = CloudIdentityUtilities.getTenantHostname(context);
-		String accessToken = CloudIdentityUtilities.getAccessToken(context);
-		CloseableHttpClient httpClient = null;
-		try {
-			httpClient = HttpClients.createDefault();
-			URI uri = new URIBuilder()
-					.setScheme("https")
-					.setHost(tenantHostname)
-					.setPath("/v1.0/authnmethods/smsotp/transient/verification/" + transactionId)
-					.build();
-			HttpPost post = new HttpPost(uri);
-			post.setEntity(new StringEntity("{\"otp\": \"" + otp + "\"}"));
-			post.addHeader("Authorization", "Bearer " + accessToken);
-			post.addHeader("Content-Type", "application/json");
-			post.addHeader("Accept", "application/json");
-			CloseableHttpResponse response = httpClient.execute(post);
-			int statusCode = response.getStatusLine().getStatusCode();
-			String responseBody = EntityUtils.toString(response.getEntity());
-			EntityUtils.consume(response.getEntity());
-			if (statusCode == 200) {
-				result = true;
-			} else {
-                CloudIdentityLoggingUtilities.error(logger, methodName, String.format("%s: $s", statusCode, responseBody));
-            }
-			response.close();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (httpClient != null) {
-				try {
-					httpClient.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		CloudIdentityLoggingUtilities.exit(logger, methodName, result);
-		return result;
-	}
-
-	private String getOtpTransactionId(AuthenticationFlowContext context) {
-		final String methodName = "getOtpTransactionId";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
-
-		String trxnId = context.getAuthenticationSession().getUserSessionNotes().get(OTP_TRANSACTION_ID_KEY);
-
-		CloudIdentityLoggingUtilities.exit(logger, methodName, trxnId);
-		return trxnId;
-	}
-
-	private void setOtpTransactionId(AuthenticationFlowContext context, String transactionId) {
-		final String methodName = "setOtpTransactionId";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context, transactionId);
-
-		context.getAuthenticationSession().setUserSessionNote(OTP_TRANSACTION_ID_KEY, transactionId);
-
-		CloudIdentityLoggingUtilities.exit(logger, methodName);
-	}
-
-	private String getOtpCorrelation(AuthenticationFlowContext context) {
-		final String methodName = "getOtpCorrelation";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
-
-		String otpCorrelation = context.getAuthenticationSession().getUserSessionNotes().get(OTP_CORRELATION_KEY);
-
-		CloudIdentityLoggingUtilities.exit(logger, methodName, otpCorrelation);
-		return otpCorrelation;
-	}
-
-	private void setOtpCorrelation(AuthenticationFlowContext context, String correlation) {
-		final String methodName = "setOtpCorrelation";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context, correlation);
-
-		context.getAuthenticationSession().setUserSessionNote(OTP_CORRELATION_KEY, correlation);
-
-		CloudIdentityLoggingUtilities.exit(logger, methodName);
-	}
-
-	private String getOtpType(AuthenticationFlowContext context) {
-		final String methodName = "getOtpType";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context);
-
-		String otpType = context.getAuthenticationSession().getUserSessionNotes().get(OTP_TYPE_KEY);
-
-		CloudIdentityLoggingUtilities.exit(logger, methodName, otpType);
-		return otpType;
-	}
-
-	private void setOtpType(AuthenticationFlowContext context, String type) {
-		final String methodName = "setOtpType";
-		CloudIdentityLoggingUtilities.entry(logger, methodName, context, type);
-
-		context.getAuthenticationSession().setUserSessionNote(OTP_TYPE_KEY, type.toString());
-
-		CloudIdentityLoggingUtilities.exit(logger, methodName);
-	}
+	
 
 }
