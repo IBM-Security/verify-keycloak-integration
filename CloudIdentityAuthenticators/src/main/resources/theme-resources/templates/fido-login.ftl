@@ -165,10 +165,14 @@
 			
 			var regBtn = document.getElementById('registration-required');
             if (regBtn) {
-                regBtn.addEventListener('click', (event) => {
-                    actionInput.value = 'register';
-                    form.submit();
-                });
+                if (${fidoHideRegButton?c}) {
+                    regBtn.style.display = "none";
+	            } else {
+	                regBtn.addEventListener('click', (event) => {
+	                    actionInput.value = 'register';
+	                    form.submit();
+	                });
+	            }
             }
 
 			// FIDO Authentication

@@ -11,6 +11,7 @@
                     <div class="${properties.kcLabelWrapperClass!}">${msg("qrFormMessage")}</div>
                 </div>
                 <input type="hidden" name="action" id="action-input" value="authenticate"/>
+                <input type="hidden" name="hideBtn" id="hide-btn" value=""/>
             </form>
             <button id="registration-required" class="btn btn-primary btn-block btn-lg">
                 ${msg("verifyFormRegisterButton")}
@@ -20,6 +21,7 @@
 			// Form and action input to specify the operation on page submit.
         	var form = document.getElementById('kc-qr-login-form');
             var actionInput = document.getElementById('action-input');
+            var hideRegBtn = document.getElementById('hide-btn');
         	var qrCodeImg = document.createElement('img');
         	var qrSrc = '${qrCode}';
         	qrCodeImg.src = 'data:image/png;base64,' + qrSrc;
@@ -27,14 +29,19 @@
 
             var regBtn = document.getElementById('registration-required');
             if (regBtn) {
-                regBtn.addEventListener('click', (event) => {
-                    actionInput.value = 'register';
-                    form.submit();
-                });
+                if (${verifyHideRegButton?c}) {
+                    regBtn.style.display = "none";
+	            } else {
+	                regBtn.addEventListener('click', (event) => {
+	                    actionInput.value = 'register';
+	                    form.submit();
+                    });
+                }
             }
 
 			// Poll in 5 seconds to see if the login is completed.
         	setTimeout(function() {
+                hideRegBtn.value = ${verifyHideRegButton?c};
 	        	form.submit();
         	}, 5000);
 
