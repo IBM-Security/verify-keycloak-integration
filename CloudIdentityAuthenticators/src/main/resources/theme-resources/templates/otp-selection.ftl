@@ -14,7 +14,7 @@
                 <div class="${properties.kcInputWrapperClass!}">
 					<!-- The enumeration of OTP methods should be dynamic based on what's available for the user. -->
                 	<div style="display: flex; flex-direction: row; align-items: center;">
-                        <input id="email" name="otpType" type="radio" class="${properties.kcInputClass!}" value="email" style="display: inline; width: unset"/>
+                        <input id="email" name="otpType" type="radio" class="${properties.kcInputClass!}" value="email" style="display: inline; width: unset"/ checked>
                         <label for="email" style="margin-bottom: 0; text-indent: 5px">${msg("otpSelectionFormEmail")} ${otpEmailHint}</label>
                     </div>
                     <div style="display: flex; flex-direction: row; align-items: center;">

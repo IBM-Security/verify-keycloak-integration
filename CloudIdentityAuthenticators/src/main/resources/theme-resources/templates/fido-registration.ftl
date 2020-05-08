@@ -13,7 +13,7 @@
 			    <input type="hidden" name="rawId" id="raw-id-input" />
 			    <input type="hidden" name="clientDataJSON" id="client-data-json-input" />
 			    <input type="hidden" name="attestationObject" id="attestation-object-input" />
-                <label for="fidoDevicenickname" class="control-label" align="left">FIDO2 device nickname</label>
+                <label for="fidoDevicenickname" class="control-label" align="left">FIDO2 Device Nickname</label>
                 <input type="text" name="fidoDeviceNickname" id="fidoDevicenickname" class="form-control">
             </form>
             <br><br>

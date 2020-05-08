@@ -11,18 +11,22 @@
   <artifactId>CloudIdentityAuthenticators</artifactId>
   <name>CloudIdentityAuthenticators</name>
   <packaging>jar</packaging>
-    
+
+  <properties>
+    <keycloak.version>9.0.3</keycloak.version>
+  </properties>
+
   <dependencies>
   	<dependency>
   		<groupId>org.keycloak</groupId>
   		<artifactId>keycloak-core</artifactId>
-  		<version>9.0.0</version>
+  		<version>${keycloak.version}</version>
   		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.keycloak</groupId>
   		<artifactId>keycloak-server-spi-private</artifactId>
-  		<version>9.0.2</version>
+  		<version>${keycloak.version}</version>
   		<scope>provided</scope>
   	</dependency>
   	<dependency>
@@ -34,7 +38,7 @@
   	<dependency>
   		<groupId>org.keycloak</groupId>
   		<artifactId>keycloak-server-spi</artifactId>
-  		<version>9.0.2</version>
+  		<version>${keycloak.version}</version>
   		<scope>provided</scope>
   	</dependency>
   	<dependency>

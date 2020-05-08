@@ -6,7 +6,6 @@
         ${msg("loginTitleHtml",realm.name)}
     <#elseif section = "form">
    	    <div align="center">
-            <h2>IBM LOGO HERE<h2>
             <form id="kc-fido-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
                 <input type="hidden" name="action" id="action-input" value="authenticate"/>
             </form>
@@ -17,7 +16,7 @@
                 ${msg("fidoFormRegisterButton")}
             </button>
         </div>
-        <script type="text/javascript">
+        <script type="text/javascript">       
 			// Various base 64 utilities used with FIDO operations
 			const b64map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 			const b64pad = '=';
@@ -158,6 +157,11 @@
 			// Form and associated action input element references
 			var form = document.getElementById('kc-fido-login-form');
 			var actionInput = document.getElementById('action-input');
+            var fidoImg = document.createElement('img');
+        	fidoImg.src = '${url.resourcesPath}/img/fido.png';;
+        	fidoImg.style['max-width'] = '100%';
+        	fidoImg.style['height'] = 'auto';
+        	form.appendChild(fidoImg);
 			
 			var regBtn = document.getElementById('registration-required');
             if (regBtn) {

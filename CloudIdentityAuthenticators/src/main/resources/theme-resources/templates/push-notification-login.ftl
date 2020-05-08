@@ -17,6 +17,11 @@
 			// Form and action input to specify the operation on page submit.
         	var form = document.getElementById('kc-qr-login-form');
             var actionInput = document.getElementById('action-input');
+            var pushImg = document.createElement('img');
+        	pushImg.src = '${url.resourcesPath}/img/push_notification.png';
+        	pushImg.style['max-width'] = '100%';
+        	pushImg.style['height'] = 'auto';
+        	form.appendChild(pushImg);
 
 			// Poll in 5 seconds to see if the push notification was completed.
         	setTimeout(function() {
