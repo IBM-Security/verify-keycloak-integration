@@ -1,3 +1,3 @@
 #!/bin/bash
-# Start ci-keycloak image
-docker-compose -f ../ci-keycloak.yml up
+# Start verify-keycloak image
+docker-compose -f ../verify-keycloak.yml up
