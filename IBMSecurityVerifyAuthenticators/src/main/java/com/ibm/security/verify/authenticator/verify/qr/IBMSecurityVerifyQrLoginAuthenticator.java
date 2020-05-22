@@ -16,9 +16,7 @@ import com.ibm.security.verify.authenticator.rest.IBMSecurityVerifyUtilities;
 import com.ibm.security.verify.authenticator.rest.QrUtilities;
 import com.ibm.security.verify.authenticator.rest.QrUtilities.QrLoginInitiationResponse;
 import com.ibm.security.verify.authenticator.rest.QrUtilities.QrLoginResponse;
-import com.ibm.security.verify.authenticator.utils.IBMSecurityVerifyLoggingUtilities;
 import com.ibm.security.verify.authenticator.verify.registration.IBMSecurityVerifyRegistrationRequiredActionAuthenticator;
-import com.ibm.security.verify.authenticator.webauthn.registration.IBMSecurityVerifyFidoRegistrationRequiredActionAuthenticator;
 
 public class IBMSecurityVerifyQrLoginAuthenticator implements Authenticator {
 

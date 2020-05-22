@@ -13,7 +13,6 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
 
-import com.ibm.security.verify.authenticator.otp.IBMSecurityVerifyOtpLoginAuthenticator;
 import com.ibm.security.verify.authenticator.rest.IBMSecurityVerifyUtilities;
 import com.ibm.security.verify.authenticator.utils.IBMSecurityVerifyLoggingUtilities;
 

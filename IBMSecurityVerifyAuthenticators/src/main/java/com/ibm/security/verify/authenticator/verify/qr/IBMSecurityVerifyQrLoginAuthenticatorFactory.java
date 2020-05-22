@@ -15,7 +15,6 @@ import org.keycloak.provider.ProviderConfigProperty;
 
 import com.ibm.security.verify.authenticator.rest.IBMSecurityVerifyUtilities;
 import com.ibm.security.verify.authenticator.utils.IBMSecurityVerifyLoggingUtilities;
-import com.ibm.security.verify.authenticator.verify.push.IBMSecurityVerifyPushNotificationLoginAuthenticatorFactory;
 
 public class IBMSecurityVerifyQrLoginAuthenticatorFactory implements AuthenticatorFactory {
 	
