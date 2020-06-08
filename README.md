@@ -2,7 +2,7 @@
 
 This repository contains development of a set of authenticator extensions for enhancing authentication capabilities with Keycloak and/or RedHat SSO with IBM Security Verify.
 
-## Developer Point of Contact
+## Point of Contact
 Jason Choi <jason.choi1@ibm.com>
 
 ## Setting up a development environment
