@@ -32,7 +32,7 @@ By default, the deployed instance can be accessed on [http://localhost:8080](htt
 
 ## Contributing to the Verify Authenticator Extensions Project
 ### Process
-* Create a branch of `master` and name it after the feature you are implementing (e.g. account_attribute_support)
+* Create a fork of `master` and name it after the feature you are implementing (e.g. account_attribute_support)
 * Follow the [Project Structure & Coding Guidelines](#project-structure--coding-guidelines)
 * Create a pull request when feature is complete
 
