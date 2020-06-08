@@ -3,12 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ibm.security.access.keycloak</groupId>
   <artifactId>verify-keycloak-integration</artifactId>
-  <version>0.0.1</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
-
-  <!--properties>
-	<docker.registry.host>${env.DOCKER_REGISTRY}</docker.registry.host>
-  </properties-->
   
   <modules>
     <module>IBMSecurityVerifyAuthenticators</module>
@@ -25,31 +21,6 @@
 	  </activation>
 	  <build>
 		<plugins>
-		  <!--plugin>
-			<artifactId>maven-resources-plugin</artifactId>
-			<version>3.0.2</version>
-			<executions>
-			  <execution>
-				<id>copy-dockerfile</id>
-				<phase>package</phase>
-				<goals>
-				  <goal>copy-resources</goal>
-				</goals>
-				<configuration>
-				  <outputDirectory>${project.build.directory}</outputDirectory>
-				  <resources>
-					<resource>
-					  <directory>${basedir}</directory>
-					  <excludes>
-						<exclude>target/**</exclude>
-					  </excludes>
-					  <filtering>true</filtering>
-					</resource>
-				  </resources>
-				</configuration>
-			  </execution>
-			</executions>
-		  </plugin-->
 		  <plugin>
 			<groupId>org.codehaus.mojo</groupId>
 			<artifactId>exec-maven-plugin</artifactId>
