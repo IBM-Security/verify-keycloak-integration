@@ -1,6 +1,9 @@
-# verify-keycloak-integration
+# IBM Security Verify Authenticator Extensions for Keycloak/RedHat SSO
 
 This repository contains development of a set of authenticator extensions for enhancing authentication capabilities with Keycloak and/or RedHat SSO with IBM Security Verify.
+
+## Developer Point of Contact
+Jason Choi <jason.choi1@ibm.com>
 
 ## Setting up a development environment
 ### Software Requirements
@@ -27,7 +30,7 @@ By default, the deployed instance can be accessed on [http://localhost:8080](htt
 ## Contributing to the Verify Authenticator Extensions Project
 ### Process
 * Create a branch of `master` and name it after the feature you are implementing (e.g. account_attribute_support)
-* Follow the [Project Structure & Coding Guidelines](#project-structure-&-coding-guidelines)
+* Follow the [Project Structure & Coding Guidelines](#project-structure--coding-guidelines)
 * Create a pull request when feature is complete
 
 ### Project Structure & Coding Guidelines
@@ -43,7 +46,9 @@ By default, the deployed instance can be accessed on [http://localhost:8080](htt
 * dev - Docker YAML file and utility scripts
 * pom.xml - Main Maven build file
 
-### Reporting Issues
+### 
+
+## Reporting Issues
 Please open a GitHub Issue to report any problems with the authenticator. The repository is actively monitored
 
 
