@@ -2,8 +2,8 @@
 
 This repository contains development of a set of authenticator extensions for enhancing authentication capabilities with Keycloak and/or RedHat SSO with IBM Security Verify.
 
-## Point of Contact
-Jason Choi <jason.choi1@ibm.com>
+## Current Support Level
+Current version extensions support Keycloak 10.0.1 and RedHat SSO 7.4. Please refer to the Release Notes for version specific support levels.
 
 ## Setting up a development environment
 ### Software Requirements
@@ -52,6 +52,9 @@ By default, the deployed instance can be accessed on [http://localhost:8080](htt
 
 ## Reporting Issues
 Please open a GitHub issue to report any problems with the authenticator. The repository is actively monitored
+
+## Point of Contact
+Jason Choi <jason.choi1@ibm.com>
 
 ## License
 This project is [Apache 2.0 licensed](./LICENSE).
