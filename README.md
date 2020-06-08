@@ -34,7 +34,7 @@ By default, the deployed instance can be accessed on [http://localhost:8080](htt
 * Create a pull request when feature is complete
 
 ### Project Structure & Coding Guidelines
-* verify-keycloak
+* IBMSecurityVerifyAuthenticators
   * src/main/java
       * com.ibm.security.verify.authenticator - Abstract classes
       * com.ibm.security.verify.authenticator.<authenticator_name> - Authenticator specific implementations
@@ -43,6 +43,7 @@ By default, the deployed instance can be accessed on [http://localhost:8080](htt
   * src/main/resources
       * META-INF/services - Authenticator registration
       * theme-resources - Localization, images, and templates
+* verify-keycloak - Docker image builder
 * dev - Docker YAML file and utility scripts
 * pom.xml - Main Maven build file
 
