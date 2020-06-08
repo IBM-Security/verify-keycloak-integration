@@ -46,11 +46,11 @@ By default, the deployed instance can be accessed on [http://localhost:8080](htt
 * dev - Docker YAML file and utility scripts
 * pom.xml - Main Maven build file
 
-### 
+### Demo Application
+[IBM Airways](https://github.com/jason-choi1/ibm-airways-keycloak-sso) is a demo application developed with ReactJS and Carbon Design System components that demonstrates Keycloak SSO integration in a consumer application. More information on usage can be found in the project's repository. 
 
 ## Reporting Issues
-Please open a GitHub Issue to report any problems with the authenticator. The repository is actively monitored
+Please open a GitHub issue to report any problems with the authenticator. The repository is actively monitored
 
-
-
-This code is [Apache 2.0 licensed](./LICENSE).
+## License
+This project is [Apache 2.0 licensed](./LICENSE).
