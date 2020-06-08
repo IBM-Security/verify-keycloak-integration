@@ -5,7 +5,10 @@ This repository contains development of a set of authenticator extensions for en
 ## Current Support Level
 Current version extensions support Keycloak 10.0.1 and RedHat SSO 7.4. Please refer to the Release Notes for version specific support levels.
 
-## Setting up a development environment
+## Usage
+Please refer to the User Guide attached to each release for detailed information on deploying and using the extensions.
+
+## Setting Up a Development Environment
 ### Software Requirements
 * IBM JRE 1.8
 * Docker
