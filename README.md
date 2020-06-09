@@ -13,7 +13,7 @@ Please refer to the User Guide attached to each [release](https://github.com/IBM
 * IBM JRE 1.8
 * Docker
 * Maven
-* [IBM Security Verify Trial](https://www.ibm.com/account/reg/signup?formid=urx-44536)
+* [IBM Security Verify (Free Version)](https://www.ibm.com/account/reg/signup?formid=urx-44536)
 * IBM Verify Mobile Application (iOS & Android)
 
 ### Build
