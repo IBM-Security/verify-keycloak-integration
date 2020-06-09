@@ -3,16 +3,18 @@
 This repository contains development of a set of authenticator extensions for enhancing authentication capabilities with Keycloak and/or RedHat SSO with IBM Security Verify.
 
 ## Current Support Level
-Current version extensions support Keycloak 10.0.1 and RedHat SSO 7.4. Please refer to the Release Notes for version specific support levels.
+Current version extensions support Keycloak 10.0.1 and RedHat SSO 7.4. Please refer to the Release Notes in the User Guide for version specific support levels.
 
 ## Usage
-Please refer to the User Guide attached to each release for detailed information on deploying and using the extensions.
+Please refer to the User Guide attached to each [release](https://github.com/IBM-Security/verify-keycloak-integration/releases) for detailed information on deploying and using the extensions.
 
 ## Setting Up a Development Environment
 ### Software Requirements
 * IBM JRE 1.8
 * Docker
 * Maven
+* [IBM Security Verify Trial](https://www.ibm.com/account/reg/signup?formid=urx-44536)
+* IBM Verify Mobile Application (iOS & Android)
 
 ### Build
 `mvn clean install` from the root directory - creates a ci-keycloak Docker image
