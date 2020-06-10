@@ -17,7 +17,7 @@ Please refer to the User Guide attached to each [release](https://github.com/IBM
 * IBM Verify Mobile Application (iOS & Android)
 
 ### Build
-`mvn clean install` from the root directory - creates a ci-keycloak Docker image
+`mvn clean install` from the root directory - creates a verify-keycloak Docker image
 
 The build process creates a Keycloak/RedHat SSO compatible extensions JAR with the IBM Security Verify authenticator extensions. The JAR file is placed into a Keycloak SSO docker image into the `<root_dir>/standalone/deployments` directory and will be deployed automatically when the image is started. Please refer to [Deployment Scripts](#deployment-scripts) for a list of commands that manage the built image.
 
