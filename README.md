@@ -59,7 +59,7 @@ By default, the deployed instance can be accessed on [http://localhost:8080](htt
 Please open a GitHub issue to report any problems with the authenticator. The repository is actively monitored
 
 ## Point of Contact
-Jason Choi <jason.choi1@ibm.com>
+Jason Choi: <jason.choi1@ibm.com>
 
 ## License
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
